@@ -2,7 +2,7 @@ QT += widgets serialport
 QT += testlib
 requires(qtConfig(combobox))
 
-TARGET = terminal
+TARGET = debug-flow
 TEMPLATE = app
 
 SOURCES += \
@@ -36,9 +36,9 @@ FORMS += \
     settingsdialog.ui
 
 RESOURCES += \
-    terminal.qrc
+    debug-flow.qrc
 INCLUDEPATH += \
     circularbuffer \
     nodes
-target.path = $$[QT_INSTALL_EXAMPLES]/serialport/terminal
+target.path = C:/debug-flow/builds
 INSTALLS += target
