@@ -4,6 +4,7 @@
 #include <QHBoxLayout>
 #include <QScrollBar>
 #include <QComboBox>
+#include <QTextDocument>
 
 #include "outputnode.h"
 #include "tagfilter.h"
@@ -21,7 +22,9 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:
+    QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     TagFilter *tagFilter = nullptr;
+    void applyANSICode(ANSICode &ansiCode);
 };
 

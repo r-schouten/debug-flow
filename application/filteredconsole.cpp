@@ -33,16 +33,45 @@ void FilteredConsole::notifyBufferUpdate()
     QString result;
     result.reserve(bufferReader->availableSize());
 
-    tagFilter->filterData(&result, bufferReader);
+    ANSICode ansiCode = tagFilter->filterData(&result, bufferReader);
 
     //qDebug("result: %s",destination.toStdString().c_str());
     //qDebug() << result;
     console->moveCursor(QTextCursor::End);
+    console->setCurrentCharFormat(currentCharFormat);
     console->insertPlainText(result);
     console->moveCursor(QTextCursor::End);
 
+    if(ansiCode.type != ANSIType::NONE)
+    {
+        applyANSICode(ansiCode);
+        //when ansi is found the filter stops searching and is perhaps not empty, read it again
+        notifyBufferUpdate();
+    }
 }
+void FilteredConsole::applyANSICode(ANSICode& ansiCode)
+{
+    if(ansiCode.type == ANSIType::FORMATTING)
+    {
+        if(ansiCode.value == 0)
+        {
+            QTextCharFormat format;
+            currentCharFormat = format;
+        }
+        else if((ansiCode.value >= 30) && (ansiCode.value <= 37))
+        {
+            QList<QColor> ansiColors;
+            ansiColors << Qt::black << Qt::red << Qt::green << Qt::yellow << Qt::blue << Qt::magenta << Qt::cyan << Qt::white;
 
+            currentCharFormat.setForeground(ansiColors[ansiCode.value-30]);
+        }
+    }
+    else if(ansiCode.type == ANSIType::ERROR)
+    {
+        console->moveCursor(QTextCursor::End);
+        console->insertPlainText("{ansi error}");
+    }
+}
 void FilteredConsole::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
