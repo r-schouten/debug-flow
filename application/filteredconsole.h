@@ -8,12 +8,12 @@
 
 #include "outputnode.h"
 #include "tagfilter.h"
-class FilteredConsole : public QWidget , public OutputNode
+class FilteredConsole : public QWidget , public InputNode
 {
 public:
     explicit FilteredConsole(QWidget *parent = nullptr);
     void clear();
-    void notifyBufferUpdate()override;
+    void NotifyBufferUpdate(Subscription *source)override;
 
 protected:
     void keyPressEvent(QKeyEvent *e) override;

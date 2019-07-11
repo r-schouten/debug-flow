@@ -5,12 +5,26 @@ OutputNode::OutputNode()
 
 }
 
-void OutputNode::addParentNode(InputNode *parent)
+Subscription* OutputNode::subscribe(InputNode *inputNode)
 {
-    parentNode = parent;
-    bufferReader = parent->getCircularBufferReader();
-    if(bufferReader == nullptr)
+    if(inputNode == nullptr)
     {
-        qFatal("OutputNode::addParentNode() : bufferReader == nullptr");
+        qFatal("OutputNode::subscribe() : inputNode == nullptr ");
     }
+    CircularBufferReader* reader = circularBuffer->requestNewReader();
+    Subscription* subscription = new Subscription(inputNode, this, reader);
+    subscribers.append(subscription);
+    return subscription;
 }
+
+void OutputNode::notifyUnsubscribe(Subscription *subscription)
+{
+    subscribers.removeOne(subscription);
+}
+void OutputNode::NotifyAllSubscriptions()
+{
+    QListIterator<Subscription*> i(subscribers);
+    while (i.hasNext())
+        i.next()->notifyBufferUpdate();
+}
+

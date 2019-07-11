@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <iostream>
 #include <QMainWindow>
 #include <QSerialPort>
@@ -26,7 +25,7 @@ QT_END_NAMESPACE
 class FilteredConsole;
 class SettingsDialog;
 
-class MainWindow : public QMainWindow , public InputNode
+class MainWindow : public QMainWindow , public OutputNode
 {
     Q_OBJECT
 

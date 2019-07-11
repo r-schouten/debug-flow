@@ -1,17 +1,20 @@
 #pragma once
-#include "nodebase.h"
-#include "inputnode.h"
 #include "circularbuffer.h"
+#include "inputnode.h"
+#include "subscription.h"
 
+class InputNode;
+class Subscription;
 class OutputNode : public NodeBase
 {
 public:
     OutputNode();
-    void addParentNode(InputNode *parent);
-    virtual void notifyBufferUpdate() = 0;
+    Subscription* subscribe(InputNode* inputNode);
+    void notifyUnsubscribe(Subscription* subscription);
 protected:
-    NodeBase* parentNode;
-    CircularBufferReader* bufferReader;
+    void NotifyAllSubscriptions();
+    QList<Subscription*> subscribers;
+    CircularBuffer* circularBuffer;
 
 };
 

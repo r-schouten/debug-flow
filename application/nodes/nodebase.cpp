@@ -1,4 +1,4 @@
-#include "nodes/nodebase.h"
+#include "nodebase.h"
 
 NodeBase::NodeBase()
 {

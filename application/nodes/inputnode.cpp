@@ -4,7 +4,13 @@ InputNode::InputNode()
 {
 
 }
-CircularBufferReader* InputNode::getCircularBufferReader()
+
+void InputNode::notifyUnsubscribe(Subscription *subscription)
 {
-    return circularBuffer->requestNewReader();
+    subScriptions.removeOne(subscription);
+}
+
+void InputNode::addSubscription(OutputNode *outputNode)
+{
+    subScriptions.append(outputNode->subscribe(this));
 }

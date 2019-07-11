@@ -25,16 +25,16 @@ FilteredConsole::FilteredConsole(QWidget *parent)
     tagFilter = new TagFilter();
 }
 
-void FilteredConsole::notifyBufferUpdate()
+void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {
-    if(bufferReader == nullptr){
+    if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
     }
     QString result;
-    result.reserve(bufferReader->availableSize());
+    result.reserve(source->bufferReader->availableSize());
 
     QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = tagFilter->filterData(&result, bufferReader, &currentCharFormat);
+    bool styleChanged = tagFilter->filterData(&result, source->bufferReader, &currentCharFormat);
 
     //qDebug("result: %s",destination.toStdString().c_str());
     //qDebug() << result;
@@ -46,7 +46,7 @@ void FilteredConsole::notifyBufferUpdate()
     if(styleChanged)
     {
         //when ansi is found the filter stops searching and is perhaps not empty, read it again
-        notifyBufferUpdate();
+        NotifyBufferUpdate(source);
     }
 }
 

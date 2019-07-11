@@ -9,11 +9,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    circularBuffer = new CircularBuffer(1000,10000);
+
     filteredConsole = dynamic_cast<FilteredConsole*>(m_ui->consoleWidget);
     if(!filteredConsole) qFatal("promote from qwidget to FilteredConsole failed");
 
-    circularBuffer = new CircularBuffer(1000,10000);
-    filteredConsole->addParentNode(this);
+    filteredConsole->addSubscription(this);
 
 
     m_ui->actionConnect->setEnabled(true);
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(m_serial, &QSerialPort::errorOccurred, this, &MainWindow::handleError);
     connect(m_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
+
 }
 
 MainWindow::~MainWindow()
@@ -88,7 +90,7 @@ void MainWindow::readData()
     circularBuffer->append(&data);
     //circularBuffer->print();
 
-    filteredConsole->notifyBufferUpdate();
+    NotifyAllSubscriptions();
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
