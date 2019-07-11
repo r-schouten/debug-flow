@@ -25,6 +25,5 @@ private:
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     TagFilter *tagFilter = nullptr;
-    void applyANSICode(ANSICode &ansiCode);
 };
 
