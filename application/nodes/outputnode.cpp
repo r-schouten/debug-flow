@@ -11,6 +11,10 @@ Subscription* OutputNode::subscribe(InputNode *inputNode)
     {
         qFatal("OutputNode::subscribe() : inputNode == nullptr ");
     }
+    if(circularBuffer == nullptr)
+    {
+        qFatal("OutputNode::subscribe() circularBuffer == nullptr");
+    }
     CircularBufferReader* reader = circularBuffer->requestNewReader();
     Subscription* subscription = new Subscription(inputNode, this, reader);
     subscribers.append(subscription);

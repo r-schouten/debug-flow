@@ -14,7 +14,7 @@ public:
 protected:
     void NotifyAllSubscriptions();
     QList<Subscription*> subscribers;
-    CircularBuffer* circularBuffer;
+    CircularBuffer* circularBuffer = nullptr;
 
 };
 

@@ -9,7 +9,6 @@ SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
     filteredconsole.cpp \
-    inputNodes/serialnode.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -17,6 +16,7 @@ SOURCES += \
     nodes/outputnode.cpp \
     nodes/subscription.cpp \
     settingsdialog.cpp \
+    sourceNodes/serialnode.cpp \
     tagfilter.cpp \
     test/circularbuffertest.cpp
 
@@ -24,7 +24,6 @@ HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
     filteredconsole.h \
-    inputNodes/serialnode.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \
@@ -32,6 +31,7 @@ HEADERS += \
     nodes/outputnode.h \
     nodes/subscription.h \
     settingsdialog.h \
+    sourceNodes/serialnode.h \
     tagfilter.h \
     test/circularbuffertest.h
 
@@ -44,6 +44,7 @@ RESOURCES += \
 INCLUDEPATH += \
     circularbuffer \
     nodes \
-    inputNodes
+    inputNodes \
+    sourceNodes
 target.path = C:/debug-flow/builds
 INSTALLS += target
