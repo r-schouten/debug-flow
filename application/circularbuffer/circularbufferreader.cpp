@@ -28,10 +28,10 @@ char &CircularBufferReader::operator [] (int i)
 void CircularBufferReader::release(int length)
 {
 #ifdef QT_DEBUG
-    if(length == 0)
-    {
-        qDebug("error CircularBufferReader::release(int length) : length == 0");
-    }
+//    if(length == 0)
+//    {
+//        qDebug("error CircularBufferReader::release(int length) : length == 0");
+//    }
     if(length < 0)
     {
         qFatal("error CircularBufferReader::release(int length) : length < 0");

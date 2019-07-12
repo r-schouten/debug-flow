@@ -12,7 +12,6 @@ CircularBuffer::CircularBuffer(const int _capacity, const  int _maxCapacity)
     head = 0;
 
 #ifdef QT_DEBUG
-    std::cout << "constructor " << capacity<<std::endl;
     memset(data, 'x',capacity * sizeof(char));
 #endif
 

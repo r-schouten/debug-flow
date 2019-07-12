@@ -1,16 +1,24 @@
-#include "filteredconsole.h"
+#include "filteredterminal.h"
+#include "ui_filteredterminal.h"
 
-FilteredConsole::FilteredConsole(QWidget *parent)
+FilteredTerminal::FilteredTerminal(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::FilteredTerminal)
 {
-    console = new QPlainTextEdit(parent);
+    ui->setupUi(this);
+    setAttribute(Qt::WA_DeleteOnClose);
+
+    show();
+
+    console = new QPlainTextEdit(this);
     console->setReadOnly(true);
     console->document()->setMaximumBlockCount(1000);
 
-    QComboBox *combobox = new QComboBox(parent);
-    QComboBox *combobox2 = new QComboBox(parent);
+    QComboBox *combobox = new QComboBox(this);
+    QComboBox *combobox2 = new QComboBox(this);
 
-    QVBoxLayout *layout = new QVBoxLayout(parent);
-    QHBoxLayout *verticalLayout = new QHBoxLayout(parent);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QHBoxLayout *verticalLayout = new QHBoxLayout(this);
     verticalLayout->addWidget(combobox);
     verticalLayout->addWidget(combobox2);
 
@@ -25,7 +33,12 @@ FilteredConsole::FilteredConsole(QWidget *parent)
     tagFilter = new TagFilter();
 }
 
-void FilteredConsole::NotifyBufferUpdate(Subscription *source)
+FilteredTerminal::~FilteredTerminal()
+{
+    delete ui;
+}
+
+void FilteredTerminal::NotifyBufferUpdate(Subscription *source)
 {
     if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
@@ -50,7 +63,7 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     }
 }
 
-void FilteredConsole::keyPressEvent(QKeyEvent *e)
+void FilteredTerminal::keyPressEvent(QKeyEvent *e)
 {
     switch (e->key()) {
         case Qt::Key_Backspace:
@@ -62,22 +75,22 @@ void FilteredConsole::keyPressEvent(QKeyEvent *e)
         }
 }
 
-void FilteredConsole::mousePressEvent(QMouseEvent *e)
+void FilteredTerminal::mousePressEvent(QMouseEvent *e)
 {
     Q_UNUSED(e)
     console->setFocus();
 }
 
-void FilteredConsole::mouseDoubleClickEvent(QMouseEvent *e)
+void FilteredTerminal::mouseDoubleClickEvent(QMouseEvent *e)
 {
     Q_UNUSED(e)
 }
 
-void FilteredConsole::contextMenuEvent(QContextMenuEvent *e)
+void FilteredTerminal::contextMenuEvent(QContextMenuEvent *e)
 {
     Q_UNUSED(e)
 }
-void FilteredConsole::clear()
+void FilteredTerminal::clear()
 {
     console->clear();
 }

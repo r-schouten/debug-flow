@@ -8,13 +8,13 @@
 class SerialNode : public OutputNode, public QObject
 {
 public:
-    SerialNode(SettingsDialog *settingDialog);
+    SerialNode();
 public slots:
     void openSerialPort();
     void closeSerialPort();
     void writeData(const QByteArray &data);
     void readData();
-
+    void openSettings();
     void handleError(QSerialPort::SerialPortError error);
 private:
     QSerialPort *m_serial = nullptr;

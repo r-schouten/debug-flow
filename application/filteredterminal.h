@@ -1,21 +1,23 @@
 #pragma once
 
-
-#include <QPlainTextEdit>
-#include <QHBoxLayout>
-#include <QScrollBar>
-#include <QComboBox>
-
-
-#include "outputnode.h"
 #include "tagfilter.h"
 
+#include <QDialog>
+#include <QTextCharFormat>
+#include <inputnode.h>
+#include <qplaintextedit.h>
 
-class FilteredConsole  : public QWidget, public InputNode
+namespace Ui {
+class FilteredTerminal;
+}
+
+class FilteredTerminal : public QDialog , public InputNode
 {
     Q_OBJECT
+
 public:
-    explicit FilteredConsole(QWidget *parent = nullptr);
+    explicit FilteredTerminal(QWidget *parent = nullptr);
+    ~FilteredTerminal();
     void clear();
     void NotifyBufferUpdate(Subscription *source)override;
 
@@ -29,6 +31,6 @@ private:
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     TagFilter *tagFilter = nullptr;
-
+    Ui::FilteredTerminal *ui;
 };
 

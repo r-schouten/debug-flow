@@ -7,10 +7,11 @@
 
 #include "inputnode.h"
 #include "ui_mainwindow.h"
+
 #include "filteredconsole.h"
-#include "settingsdialog.h"
-#include "circularbuffer.h"
 #include "serialnode.h"
+#include "filteredterminal.h"
+#include "dialogwindow.h"
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -22,7 +23,6 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class FilteredConsole;
-class SettingsDialog;
 
 class MainWindow : public QMainWindow
 {
@@ -45,6 +45,6 @@ private:
     Ui::MainWindow *m_ui = nullptr;
     QLabel *m_status = nullptr;
     FilteredConsole *filteredConsole = nullptr;
-    SettingsDialog *m_settings = nullptr;
+    FilteredTerminal *terminal = nullptr;
 
 };

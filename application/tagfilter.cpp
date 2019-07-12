@@ -5,8 +5,6 @@ TagFilter::TagFilter()
 
 }
 bool keepTag = true;
-bool readingInTag = false;
-bool readingANSIEscape = false;
 bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     auto lambda = [&](char character) mutable {destination->append(character);};
@@ -26,17 +24,17 @@ bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferRea
 
 bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
-    bool styleChanged = false;
     int tagBeginIndex = 0;
     int ANSIBeginIndex = 0;
     int releaseLength = 0;
-    readingInTag = false;
-    readingANSIEscape = false;
+
+    bool readingInTag = false;
+    bool readingANSIEscape = false;
+    bool styleChanged = false;
     int availableSize = bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
-        //std::cout << character;
         if(readingInTag)
         {
             if((*bufferReader)[i] == ']')
@@ -55,7 +53,6 @@ bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::
         }
         else if(readingANSIEscape)
         {
-            std::cout << (*bufferReader)[i];
             bool done = processANSIEscape(bufferReader, format, ANSIBeginIndex,i);
             if(done)
             {

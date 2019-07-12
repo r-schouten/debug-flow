@@ -1,8 +1,8 @@
 #include "serialnode.h"
 
-SerialNode::SerialNode(SettingsDialog* settingDialog)
-    :m_settings(settingDialog)
+SerialNode::SerialNode()
 {
+    m_settings = new SettingsDialog();
     circularBuffer = new CircularBuffer(1000,10000);
     m_serial = new QSerialPort(this);
 
@@ -50,9 +50,13 @@ void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
     circularBuffer->append(&data);
-    //circularBuffer->print();
 
     NotifyAllSubscriptions();
+}
+
+void SerialNode::openSettings()
+{
+    m_settings->show();
 }
 
 void SerialNode::handleError(QSerialPort::SerialPortError error)
