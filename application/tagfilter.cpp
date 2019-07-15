@@ -4,7 +4,7 @@ TagFilter::TagFilter()
 {
 
 }
-bool keepTag = true;
+bool keepContext = true;
 bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     auto lambda = [&](char character) mutable {destination->append(character);};
@@ -24,31 +24,31 @@ bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferRea
 
 bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
-    int tagBeginIndex = 0;
+    int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
     int releaseLength = 0;
 
-    bool readingInTag = false;
+    bool readingInContext = false;
     bool readingANSIEscape = false;
     bool styleChanged = false;
     int availableSize = bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
-        if(readingInTag)
+        if(readingInContext)
         {
-            if((*bufferReader)[i] == ']')
+            if(character == ']')
             {
-                processTag(tagBeginIndex,i);
-                if(keepTag)
+                processContext(bufferReader,contextBeginIndex,i);
+                if((keepContext)&&(showCurrentContext))
                 {
-                    for(int j=tagBeginIndex;j<=i;j++)
+                    for(int j=contextBeginIndex;j<=i;j++)
                     {
                         addChar((*bufferReader)[j]);
                     }
                 }
-                releaseLength += i - tagBeginIndex + 1;
-                readingInTag = false;
+                releaseLength += i - contextBeginIndex + 1;
+                readingInContext = false;
             }
         }
         else if(readingANSIEscape)
@@ -63,18 +63,22 @@ bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::
             }
         }
         else {
-            if((*bufferReader)[i] == '[')
+            if(character == '[')
             {
-                readingInTag = true;
-                tagBeginIndex = i;
+                readingInContext = true;
+                contextBeginIndex = i;
             }
-            else if((*bufferReader)[i] == '\033')
+
+            else if(character == '\033')
             {
                 readingANSIEscape = true;
                 ANSIBeginIndex = i;
             }
             else {
-                addChar((*bufferReader)[i]);
+                if(showCurrentContext)
+                {
+                    addChar(character);
+                }
                 releaseLength++;
             }
         }
@@ -90,10 +94,51 @@ bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::
     bufferReader->release(releaseLength);
     return styleChanged;
 }
-void TagFilter::processTag(int begin, int end)
+void TagFilter::processContext(CircularBufferReader *bufferReader, int begin, int end)
 {
+    showCurrentContext = true;
+    int beginOfProperty = begin+1;
+    int propertyIndex = 0;
+    QString property;
+    property.reserve(end - begin);
+    for(int i = begin+1;i<end;i++)
+    {
+        const char character = (*bufferReader)[i];
 
+        if((character == ',')||(character == ' '))
+        {
+            processproperty(property,propertyIndex);
+            beginOfProperty = i + 1;
+            propertyIndex++;
+            property.clear();
+        }
+        else {
+            property.append(character);
+        }
+    }
+    processproperty(property,propertyIndex);
 }
+void TagFilter::processproperty(QString& properyName, int propertyIndex)
+{
+    if(context.size() <= propertyIndex)
+    {
+        context.append(new Property);
+    }
+    Property* property = context.at(propertyIndex);
+    PropertyOption* option = property->getOption(properyName);
+    if(option == nullptr)
+    {
+        property->options.append(new PropertyOption(properyName,true));
+        emit propertyChanged(property);
+    }
+    else {
+        if(option->getEnabled() == false)
+        {
+            showCurrentContext = false;
+        }
+    }
+}
+
 //only supports SGR parameters
 //https://en.wikipedia.org/wiki/ANSI_escape_code
 bool TagFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat* format,int beginIndex, int endIndex)

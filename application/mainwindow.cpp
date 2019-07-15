@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-#include <mdiwindow.cpp>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,11 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     WindowBase* window = new MdiWindow(m_ui->mdiArea);
     FilteredConsole* console = new FilteredConsole(window);
-    //newSubWindow->setWidget(console);
-    //m_ui->mdiArea->addSubWindow(newSubWindow);
-
-
     console->addSubscription(serialNode);
+
+    WindowBase* window2 = new MdiWindow(m_ui->mdiArea);
+    FilteredConsole* console2 = new FilteredConsole(window2);
+    console2->addSubscription(serialNode);
 
     m_ui->actionConnect->setEnabled(true);
     m_ui->actionDisconnect->setEnabled(true);
@@ -32,23 +32,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initActionsConnections();
 
+    nodeScene = new NodeScene();
+    m_ui->nodesScene->setScene(nodeScene);
+
+    VisualSerialNode *node = new VisualSerialNode();
+    nodeScene->addItem(node);
+
+    UiUpdatetimer = new QTimer(this);
+    connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
+    UiUpdatetimer->start(30);
 }
 
 MainWindow::~MainWindow()
 {
     delete m_ui;
+    delete UiUpdatetimer;
 }
-
-
-
-void MainWindow::about()
+void MainWindow::updateUI()
 {
-    QMessageBox::about(this, tr("About Simple Terminal"),
-                       tr("The <b>Simple Terminal</b> example demonstrates how to "
-                          "use the Qt Serial Port module in modern GUI applications "
-                          "using Qt, with a menu bar, toolbars, and a status bar."));
+    //m_ui->nodesScene->fitInView(0, 0, 1000, 300, Qt::KeepAspectRatio);
+    m_ui->nodesScene->setSceneRect(0, 0, 1000, 300);
+    nodeScene->update();
 }
-
 
 
 void MainWindow::initActionsConnections()
@@ -58,8 +63,6 @@ void MainWindow::initActionsConnections()
     connect(m_ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
     connect(m_ui->actionConfigure, &QAction::triggered, serialNode, &SerialNode::openSettings);
     connect(m_ui->actionClear, &QAction::triggered, filteredConsole, &FilteredConsole::clear);
-    connect(m_ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
-    connect(m_ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
 }
 
 void MainWindow::showStatusMessage(const QString &message)

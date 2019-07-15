@@ -19,6 +19,5 @@ public:
     void notifyBufferUpdate();
     CircularBufferReader* bufferReader;
 
-
 };
 

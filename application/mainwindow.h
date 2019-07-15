@@ -4,14 +4,20 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QMessageBox>
+#include <QTimer>
+#include <QGraphicsView>
+#include <mdiwindow.cpp>
 
+#include "nodescene.h"
+#include "visualserialnode.h"
 #include "inputnode.h"
 #include "ui_mainwindow.h"
 
 #include "filteredconsole.h"
 #include "serialnode.h"
-#include "filteredterminal.h"
 #include "dialogwindow.h"
+
+#include "visualnodebase.h"
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -32,9 +38,8 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
-    void about();
-
+public slots:
+    void updateUI();
 
 private:
     void initActionsConnections();
@@ -45,6 +50,6 @@ private:
     Ui::MainWindow *m_ui = nullptr;
     QLabel *m_status = nullptr;
     FilteredConsole *filteredConsole = nullptr;
-    FilteredTerminal *terminal = nullptr;
-
+    NodeScene *nodeScene = nullptr;
+    QTimer *UiUpdatetimer = nullptr;
 };

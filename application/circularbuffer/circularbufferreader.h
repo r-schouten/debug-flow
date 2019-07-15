@@ -16,7 +16,6 @@ public:
     int availableSize();
     char &operator [](int i);
     void release(int index);
-    int getAvailableSize();
 
     friend CircularBuffer;
 };

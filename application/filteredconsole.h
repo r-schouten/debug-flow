@@ -5,6 +5,8 @@
 #include <QHBoxLayout>
 #include <QScrollBar>
 #include <QComboBox>
+#include <QStandardItemModel>
+#include <QSignalMapper>
 
 
 #include "outputnode.h"
@@ -26,9 +28,18 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:
+    QWidget *parent = nullptr;
+    QVBoxLayout *layout = nullptr;
+    QHBoxLayout *verticalLayout = nullptr;
+
+    QList<QStandardItem*> items;
+    QList<QStandardItemModel*> properyBoxes;
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     TagFilter *tagFilter = nullptr;
 
+public slots:
+    void propertyChanged(Property *property);
+    void slot_changed(QObject *property);
 };
 

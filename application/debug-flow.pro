@@ -9,7 +9,6 @@ SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
     filteredconsole.cpp \
-    filteredterminal.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -20,6 +19,10 @@ SOURCES += \
     sourceNodes/serialnode.cpp \
     tagfilter.cpp \
     test/circularbuffertest.cpp \
+    visualNodes/graphicsview.cpp \
+    visualNodes/nodescene.cpp \
+    visualNodes/visualnodebase.cpp \
+    visualNodes/visualserialnode.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
     windows/windowbase.cpp
@@ -28,7 +31,6 @@ HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
     filteredconsole.h \
-    filteredterminal.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \
@@ -39,12 +41,15 @@ HEADERS += \
     sourceNodes/serialnode.h \
     tagfilter.h \
     test/circularbuffertest.h \
+    visualNodes/graphicsview.h \
+    visualNodes/nodescene.h \
+    visualNodes/visualnodebase.h \
+    visualNodes/visualserialnode.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h
 
 FORMS += \
-    filteredterminal.ui \
     mainwindow.ui \
     settingsdialog.ui
 
@@ -55,6 +60,7 @@ INCLUDEPATH += \
     nodes \
     inputNodes \
     sourceNodes \
-    windows
+    windows \
+    visualNodes
 target.path = C:/debug-flow/builds
 INSTALLS += target

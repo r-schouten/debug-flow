@@ -1,18 +1,15 @@
 #include "filteredconsole.h"
 
 FilteredConsole::FilteredConsole(QWidget *parent)
+    :parent(parent)
 {
     console = new QPlainTextEdit(parent);
     console->setReadOnly(true);
     console->document()->setMaximumBlockCount(1000);
 
-    QComboBox *combobox = new QComboBox(parent);
-    QComboBox *combobox2 = new QComboBox(parent);
 
-    QVBoxLayout *layout = new QVBoxLayout(parent);
-    QHBoxLayout *verticalLayout = new QHBoxLayout(parent);
-    verticalLayout->addWidget(combobox);
-    verticalLayout->addWidget(combobox2);
+    layout = new QVBoxLayout(parent);
+    verticalLayout = new QHBoxLayout(parent);
 
     layout->addLayout(verticalLayout);
     layout->addWidget(console);
@@ -23,6 +20,53 @@ FilteredConsole::FilteredConsole(QWidget *parent)
     console->setPalette(p);
 
     tagFilter = new TagFilter();
+    connect(tagFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
+
+}
+void FilteredConsole::propertyChanged(Property* property)
+{
+    qDebug() << "propery changed";
+
+    if(property->itemModel == nullptr)
+    {
+        QComboBox* newBox = new QComboBox;
+        property->itemModel = new QStandardItemModel();
+        newBox->setModel(property->itemModel);
+        verticalLayout->addWidget(newBox);
+        properyBoxes.append(property->itemModel);
+    }
+
+    QListIterator<PropertyOption*> iterator(property->options);
+    while(iterator.hasNext())
+    {
+        PropertyOption* option = iterator.next();
+        if(option->standardItem == nullptr)
+        {
+            option->standardItem = new QStandardItem();
+
+//            connect(property->itemModel, SIGNAL(itemChanged(QStandardItem*)),
+//                    &option->mapper, SLOT(map()));
+
+//            option->mapper.setMapping(property->itemModel, option);
+//            connect(&option->mapper, SIGNAL(mapped(QObject*)),
+//                    this, SLOT(slot_changed(QObject*)));
+
+            option->standardItem->setText(option->name);
+            option->standardItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+            option->standardItem->setData(Qt::Checked, Qt::CheckStateRole);
+
+            property->itemModel->appendRow(option->standardItem);
+        }
+    }
+
+}
+void FilteredConsole::slot_changed(QObject* propertyOption)
+{
+    PropertyOption* option = dynamic_cast<PropertyOption*>(propertyOption);
+    if(!option)return;
+    qDebug("slot changed");
+
+    option->setEnabled(option->standardItem->checkState());
 }
 
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)

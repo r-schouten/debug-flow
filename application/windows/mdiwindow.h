@@ -11,6 +11,7 @@ class MdiWindow : public WindowBase
 public:
     MdiWindow(QMdiArea* mdiArea)
     {
+        mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);
         mdiArea->addSubWindow(this);
     }
 };
