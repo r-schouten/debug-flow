@@ -18,6 +18,7 @@
 #include "dialogwindow.h"
 
 #include "visualnodebase.h"
+#include "itemlist.h"
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -33,7 +34,6 @@ class FilteredConsole;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -45,11 +45,10 @@ private:
     void initActionsConnections();
 
 private:
-    void showStatusMessage(const QString &message);
     SerialNode* serialNode = nullptr;
     Ui::MainWindow *m_ui = nullptr;
-    QLabel *m_status = nullptr;
     FilteredConsole *filteredConsole = nullptr;
     NodeScene *nodeScene = nullptr;
+    ItemList* itemList = nullptr;
     QTimer *UiUpdatetimer = nullptr;
 };

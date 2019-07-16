@@ -20,6 +20,7 @@ SOURCES += \
     settingsdialog.cpp \
     tagfilter.cpp \
     test/circularbuffertest.cpp \
+    visualNodes/itemlist.cpp \
     visualNodes/nodestylebase.cpp \
     visualNodes/prossesing_nodes/processingstyle.cpp \
     visualNodes/prossesing_nodes/visualcontextfilter.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     settingsdialog.h \
     tagfilter.h \
     test/circularbuffertest.h \
+    visualNodes/itemlist.h \
     visualNodes/nodestylebase.h \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visualcontextfilter.h \
@@ -57,11 +59,13 @@ HEADERS += \
     visualNodes/visualnodebase.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
-    windows/windowbase.h
+    windows/windowbase.h \
+    ui_mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    settingsdialog.ui
+    mainwindow_old.ui \
+    settingsdialog.ui \
+    testwindow.ui
 
 RESOURCES += \
     debug-flow.qrc

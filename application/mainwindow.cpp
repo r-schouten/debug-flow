@@ -4,15 +4,13 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    m_ui(new Ui::MainWindow),
-    m_status(new QLabel)
+    m_ui(new Ui::MainWindow)
 {
-    //terminal = new FilteredTerminal();
     m_ui->setupUi(this);
+    itemList = new ItemList(m_ui->resourceList);
+    initActionsConnections();
 
-    //if(!terminal) qFatal("promote from qwidget to FilteredConsole failed");
     serialNode = new SerialNode();
-    //terminal->addSubscription(serialNode);
     m_ui->mdiArea->setViewMode(QMdiArea::TabbedView);
 
     WindowBase* window = new MdiWindow(m_ui->mdiArea);
@@ -24,13 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     console2->addSubscription(serialNode);
 
     m_ui->actionConnect->setEnabled(true);
-    m_ui->actionDisconnect->setEnabled(true);
-    m_ui->actionQuit->setEnabled(true);
-    m_ui->actionConfigure->setEnabled(true);
 
-    m_ui->statusBar->addWidget(m_status);
-
-    initActionsConnections();
 
     nodeScene = new NodeScene();
     m_ui->nodesScene->setScene(nodeScene);
@@ -60,18 +52,8 @@ void MainWindow::updateUI()
     m_ui->nodesScene->setSceneRect(0, 0, 1000, 300);
     nodeScene->update();
 }
-
-
 void MainWindow::initActionsConnections()
 {
     connect(m_ui->actionConnect, &QAction::triggered, serialNode, &SerialNode::openSerialPort);
-    connect(m_ui->actionDisconnect, &QAction::triggered, serialNode, &SerialNode::closeSerialPort);
-    connect(m_ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
-    connect(m_ui->actionConfigure, &QAction::triggered, serialNode, &SerialNode::openSettings);
-    connect(m_ui->actionClear, &QAction::triggered, filteredConsole, &FilteredConsole::clear);
 }
 
-void MainWindow::showStatusMessage(const QString &message)
-{
-    m_status->setText(message);
-}
