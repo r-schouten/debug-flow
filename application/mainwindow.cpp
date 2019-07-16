@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-
+#include <visualcontextfilter.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     VisualSerialNode *node2 = new VisualSerialNode();
     nodeScene->addItem(node2);
+
+    VisualContextFilter* node3 = new VisualContextFilter();
+    nodeScene->addItem(node3);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);

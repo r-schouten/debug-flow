@@ -5,7 +5,7 @@
 
 class InputNode;
 class Subscription;
-class OutputNode : public NodeBase
+class OutputNode
 {
 public:
     OutputNode();

@@ -2,7 +2,7 @@
 
 OutputNode::OutputNode()
 {
-    nodeHaveOutput = true;
+
 }
 
 Subscription* OutputNode::subscribe(InputNode *inputNode)

@@ -11,6 +11,9 @@ protected:
     int y = 100;
     const int width = 100;
     const int height = 50;
+
+    int connectionDiameter = 10;
+
 public:
     VisualNodeBase();
 
@@ -20,6 +23,8 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
     // QGraphicsItem interface
+    QRectF getLeftConnection();
+    QRectF getRightConnection();
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -29,5 +34,9 @@ protected:
     void paintBase(QPainter *painter, QColor baseColor, QString name);
     void drawConnectionLeft(QPainter *painter);
     void drawConnectionRight(QPainter *painter);
+
+    static QList<VisualNodeBase*> selectedItems;
+    bool isSelected();
+
 };
 

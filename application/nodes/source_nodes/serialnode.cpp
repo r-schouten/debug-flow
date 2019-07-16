@@ -2,12 +2,22 @@
 
 SerialNode::SerialNode()
 {
+    if(dynamic_cast<InputNode*>(this))
+    {
+        hasInput = true;
+    }
+    if(dynamic_cast<OutputNode*>(this))
+    {
+        hasOutput = true;
+    }
+
     m_settings = new SettingsDialog();
     circularBuffer = new CircularBuffer(1000,10000);
     m_serial = new QSerialPort(this);
 
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
     connect(m_serial, &QSerialPort::readyRead, this, &SerialNode::readData);
+
 }
 void SerialNode::openSerialPort()
 {

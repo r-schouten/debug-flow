@@ -7,11 +7,11 @@ VisualSerialNode::VisualSerialNode()
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     paintBase(painter,QColor::fromRgbF(0.7, 0.7, 0.3, 0.7),"Serial");
-    if(node->nodeHaveInput)
+    if(node->hasInput)
     {
         drawConnectionLeft(painter);
     }
-    if(node->nodeHaveOutput)
+    if(node->hasOutput)
     {
         drawConnectionRight(painter);
     }

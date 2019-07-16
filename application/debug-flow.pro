@@ -15,9 +15,9 @@ SOURCES += \
     nodes/nodebase.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilter.cpp \
+    nodes/source_nodes/serialnode.cpp \
     nodes/subscription.cpp \
     settingsdialog.cpp \
-    sourceNodes/serialnode.cpp \
     tagfilter.cpp \
     test/circularbuffertest.cpp \
     visualNodes/nodestylebase.cpp \
@@ -42,9 +42,9 @@ HEADERS += \
     nodes/nodebase.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilter.h \
+    nodes/source_nodes/serialnode.h \
     nodes/subscription.h \
     settingsdialog.h \
-    sourceNodes/serialnode.h \
     tagfilter.h \
     test/circularbuffertest.h \
     visualNodes/nodestylebase.h \
@@ -75,6 +75,7 @@ INCLUDEPATH += \
     visualNodes/source_nodes \
     visualNodes/scene \
     visualNodes/prossesing_nodes \
-    nodes/processing_nodes
+    nodes/processing_nodes \
+    nodes/source_nodes
 target.path = C:/debug-flow/builds
 INSTALLS += target

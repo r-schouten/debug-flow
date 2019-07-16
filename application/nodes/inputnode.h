@@ -4,7 +4,7 @@
 #include "subscription.h"
 class OutputNode;
 class Subscription;
-class InputNode : public NodeBase
+class InputNode
 {
 
 public:
