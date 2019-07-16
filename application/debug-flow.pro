@@ -14,15 +14,20 @@ SOURCES += \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
     nodes/outputnode.cpp \
+    nodes/processing_nodes/contextfilter.cpp \
     nodes/subscription.cpp \
     settingsdialog.cpp \
     sourceNodes/serialnode.cpp \
     tagfilter.cpp \
     test/circularbuffertest.cpp \
-    visualNodes/graphicsview.cpp \
-    visualNodes/nodescene.cpp \
+    visualNodes/nodestylebase.cpp \
+    visualNodes/prossesing_nodes/processingstyle.cpp \
+    visualNodes/prossesing_nodes/visualcontextfilter.cpp \
+    visualNodes/scene/graphicsview.cpp \
+    visualNodes/scene/nodescene.cpp \
+    visualNodes/source_nodes/sourcestyle.cpp \
+    visualNodes/source_nodes/visualserialnode.cpp \
     visualNodes/visualnodebase.cpp \
-    visualNodes/visualserialnode.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
     windows/windowbase.cpp
@@ -36,15 +41,20 @@ HEADERS += \
     nodes/inputnode.h \
     nodes/nodebase.h \
     nodes/outputnode.h \
+    nodes/processing_nodes/contextfilter.h \
     nodes/subscription.h \
     settingsdialog.h \
     sourceNodes/serialnode.h \
     tagfilter.h \
     test/circularbuffertest.h \
-    visualNodes/graphicsview.h \
-    visualNodes/nodescene.h \
+    visualNodes/nodestylebase.h \
+    visualNodes/prossesing_nodes/processingstyle.h \
+    visualNodes/prossesing_nodes/visualcontextfilter.h \
+    visualNodes/scene/graphicsview.h \
+    visualNodes/scene/nodescene.h \
+    visualNodes/source_nodes/sourcestyle.h \
+    visualNodes/source_nodes/visualserialnode.h \
     visualNodes/visualnodebase.h \
-    visualNodes/visualserialnode.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h
@@ -59,8 +69,12 @@ INCLUDEPATH += \
     circularbuffer \
     nodes \
     inputNodes \
-    sourceNodes \
     windows \
-    visualNodes
+    visualNodes \
+    sourceNodes \
+    visualNodes/source_nodes \
+    visualNodes/scene \
+    visualNodes/prossesing_nodes \
+    nodes/processing_nodes
 target.path = C:/debug-flow/builds
 INSTALLS += target

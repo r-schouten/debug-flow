@@ -7,7 +7,6 @@
 class VisualNodeBase : public QGraphicsItem
 {
 protected:
-    NodeBase *node = nullptr;
     int x = 100;
     int y = 100;
     const int width = 100;
@@ -16,6 +15,8 @@ public:
     VisualNodeBase();
 
     QRectF boundingRect() const;
+    QRectF innerRect() const;
+
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
     // QGraphicsItem interface
@@ -24,5 +25,9 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
+    void paintBase(QPainter *painter, QColor baseColor, QString name);
+    void drawConnectionLeft(QPainter *painter);
+    void drawConnectionRight(QPainter *painter);
 };
 

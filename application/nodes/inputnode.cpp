@@ -2,7 +2,7 @@
 
 InputNode::InputNode()
 {
-
+    nodeHaveInput = true;
 }
 
 void InputNode::notifyUnsubscribe(Subscription *subscription)

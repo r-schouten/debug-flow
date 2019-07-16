@@ -38,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     VisualSerialNode *node = new VisualSerialNode();
     nodeScene->addItem(node);
 
+    VisualSerialNode *node2 = new VisualSerialNode();
+    nodeScene->addItem(node2);
+
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
     UiUpdatetimer->start(30);
