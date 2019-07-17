@@ -3,17 +3,24 @@
 VisualSerialNode::VisualSerialNode()
 {
     node = new SerialNode();
-}
-void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    paintBase(painter,QColor::fromRgbF(0.7, 0.7, 0.3, 0.7),"Serial");
+    name = "Serial node";
     if(node->hasInput)
     {
-        drawConnectionLeft(painter);
+        addInputConnector();
     }
     if(node->hasOutput)
     {
-        drawConnectionRight(painter);
+        addOutputConnector();
     }
+}
+
+VisualNodeBase* VisualSerialNode::clone()
+{
+    return new VisualSerialNode();
+}
+void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    paintBase(painter,this,"Serial");
+    drawConnectors(painter);
 
 }

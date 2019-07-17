@@ -14,11 +14,11 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QTreeWidget" name="treeWidget">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>120</y>
+      <x>180</x>
+      <y>190</y>
       <width>256</width>
       <height>192</height>
      </rect>

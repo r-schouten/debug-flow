@@ -4,6 +4,7 @@ GraphicsView::GraphicsView(QWidget *parent)
     :QGraphicsView(parent)
 {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    setMouseTracking(true);
 }
 
 int _numScheduledScalings = 0;

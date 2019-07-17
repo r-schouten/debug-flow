@@ -49,6 +49,6 @@ private:
     Ui::MainWindow *m_ui = nullptr;
     FilteredConsole *filteredConsole = nullptr;
     NodeScene *nodeScene = nullptr;
-    ItemList* itemList = nullptr;
+    ItemList* itemsList = nullptr;
     QTimer *UiUpdatetimer = nullptr;
 };

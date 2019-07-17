@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui(new Ui::MainWindow)
 {
     m_ui->setupUi(this);
-    itemList = new ItemList(m_ui->resourceList);
     initActionsConnections();
 
     serialNode = new SerialNode();
@@ -23,18 +22,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_ui->actionConnect->setEnabled(true);
 
-
+    m_ui->nodesScene->setAcceptDrops(true);
     nodeScene = new NodeScene();
     m_ui->nodesScene->setScene(nodeScene);
 
     VisualSerialNode *node = new VisualSerialNode();
     nodeScene->addItem(node);
 
-    VisualSerialNode *node2 = new VisualSerialNode();
+    VisualContextFilter *node2 = new VisualContextFilter();
     nodeScene->addItem(node2);
 
-    VisualContextFilter* node3 = new VisualContextFilter();
-    nodeScene->addItem(node3);
+    itemsList = new ItemList(m_ui->resourceList,nodeScene);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);

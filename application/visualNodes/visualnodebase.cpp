@@ -1,4 +1,5 @@
 #include "visualnodebase.h"
+
 QList<VisualNodeBase*> VisualNodeBase::selectedItems;
 VisualNodeBase::VisualNodeBase()
 {
@@ -13,40 +14,59 @@ QRectF VisualNodeBase::innerRect() const
 {
     return QRectF(0,0,width,height);
 }
-QRectF VisualNodeBase::getLeftConnection()
+
+void VisualNodeBase::addInputConnector()
 {
-    return QRect(0-connectionDiameter/2, height/2-connectionDiameter/2, connectionDiameter, connectionDiameter);
-}
-QRectF VisualNodeBase::getRightConnection()
-{
-    return QRect(width-connectionDiameter/2, height/2-connectionDiameter/2, connectionDiameter, connectionDiameter);
-}
-void VisualNodeBase::drawConnectionLeft(QPainter* painter)
-{
-    painter->setPen(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
-    painter->setBrush(QColor::fromRgbF(1, 1, 1, 0.7));
-    painter->drawEllipse(getLeftConnection());
-}
-void VisualNodeBase::drawConnectionRight(QPainter* painter)
-{
-    painter->setPen(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
-    painter->setBrush(QColor::fromRgbF(1, 1, 1, 0.7));
-    painter->drawEllipse(getRightConnection());
+    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT,10);
+    connectors.append(connector);
 }
 
-
-void VisualNodeBase::paintBase(QPainter* painter, QColor baseColor, QString name)
+void VisualNodeBase::addOutputConnector()
 {
-    setPos(x-width/2,y-height/2);
+    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10);
+    connectors.append(connector);
+}
+bool VisualNodeBase::requestConnection(Connector *connector)
+{
+    qDebug("[debug][VisualNodeBase] request connection");
+    if(connector->type == ConnectorType::OUTPUT)
+    {
+        return true;
+    }
+    else if(connector->type == ConnectorType::INPUT)
+    {
+        int count = 0;
+        if(connector->connections.size() == 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+void VisualNodeBase::drawConnectors(QPainter* painter)
+{
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        painter->setPen(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
+        painter->setBrush(QColor::fromRgbF(1, 1, 1, 0.7));
+        painter->drawEllipse(connector->getRect(0));
+    }
+}
+
+void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QString name)
+{
+    setPos(centerX-width/2,centerY-height/2);
     QRectF rect = innerRect();
 
-    painter->setPen(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
-    painter->setBrush(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
+    painter->setPen(nodeStyle->nodeBackgroundColor);
+    painter->setBrush(nodeStyle->nodeBackgroundColor);
 
     painter->drawRoundRect(rect,10,10);
 
-    painter->setPen(baseColor);
-    painter->setBrush(baseColor);
+    painter->setPen(nodeStyle->nodeCategoryColor);
+    painter->setBrush(nodeStyle->nodeCategoryColor);
 
     QRect titleRect(0,0,width,20);
     painter->drawRoundRect(titleRect, 10,10);
@@ -78,39 +98,51 @@ bool VisualNodeBase::isSelected()
 
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem::mousePressEvent(event);
-    if(!isSelected())
+
+    qDebug("[info,VisualNodeBase] press");
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
     {
-        selectedItems.clear();
-        selectedItems.append(this);
+        Connector* connector = iterator.next();
+        if(connector->getRect(5).contains(event->pos()))
+        {
+            emit connectorPressed(this,connector);
+            pressedOnConnection = true;
+        }
     }
+    if(!pressedOnConnection)
+    {
+        if(!isSelected())
+        {
+            selectedItems.clear();
+            selectedItems.append(this);
+        }
+    }
+    QGraphicsItem::mousePressEvent(event);
+
 }
 void VisualNodeBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(getLeftConnection().marginsAdded(QMargins(5,5,5,5)).contains(event->pos()))
+    if(!pressedOnConnection)
     {
-        qDebug("[info,VisualNodeBase] leftconnection contains scenepos");
-        pressedOnConnection = true;
-    }
-    else if(getRightConnection().marginsAdded(QMargins(5,5,5,5)).contains(event->pos()))
-    {
-        qDebug("[info,VisualNodeBase] rigthconnection contains scenepos");
-        pressedOnConnection = true;
-
-    }
-    else
-    {
-        if(!pressedOnConnection)
-        {
-            QPointF p = event->scenePos();
-            x = p.x();
-            y = p.y();
-        }
+        QPointF p = event->scenePos();
+        centerX = p.x();
+        centerY = p.y();
     }
 }
-
 void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    qDebug("[info,VisualNodeBase] release");
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        if(connector->getRect(5).contains(event->pos()))
+        {
+            emit connectorReleased(this,connector);
+            pressedOnConnection = true;
+        }
+    }
     pressedOnConnection = false;
     QGraphicsItem::mouseReleaseEvent(event);
 }

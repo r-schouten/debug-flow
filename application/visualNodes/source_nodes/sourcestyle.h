@@ -4,5 +4,8 @@
 class SourceStyle : public NodeStyleBase
 {
 public:
-    SourceStyle();
+    SourceStyle()
+    {
+        nodeCategoryColor = QColor::fromRgbF(0.7, 0.7, 0.3, 0.7);
+    }
 };

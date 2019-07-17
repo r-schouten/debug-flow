@@ -4,6 +4,10 @@
         <file>images/disconnect.png</file>
         <file>images/application-exit.png</file>
         <file>images/settings.png</file>
+        <file>images/data_source_icon.png</file>
+        <file>images/filtering_icon.png</file>
+        <file>images/output_icon.png</file>
+        <file>images/processing_icon.png</file>
         <file>images/clear.png</file>
     </qresource>
 </RCC>

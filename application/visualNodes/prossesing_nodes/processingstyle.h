@@ -4,6 +4,9 @@
 class ProcessingStyle : public NodeStyleBase
 {
 public:
-    ProcessingStyle();
+    ProcessingStyle()
+    {
+        nodeCategoryColor = QColor::fromRgbF(0.7, 0.3, 0.7, 0.7);
+    }
 };
 

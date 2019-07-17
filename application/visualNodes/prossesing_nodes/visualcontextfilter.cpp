@@ -3,17 +3,23 @@
 VisualContextFilter::VisualContextFilter()
 {
     node = new ContextFilter();
-}
-void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    paintBase(painter,QColor::fromRgbF(0.7, 0.3, 0.7, 0.7),"context filter");
+    name = "Context filter";
     if(node->hasInput)
     {
-        drawConnectionLeft(painter);
+        addInputConnector();
     }
     if(node->hasOutput)
     {
-        drawConnectionRight(painter);
+        addOutputConnector();
     }
+}
 
+VisualNodeBase *VisualContextFilter::clone()
+{
+    return new VisualContextFilter;
+}
+void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    paintBase(painter,this,"context filter");
+    drawConnectors(painter);
 }
