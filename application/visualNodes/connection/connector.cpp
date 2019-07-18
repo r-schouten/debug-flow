@@ -19,3 +19,24 @@ QPoint Connector::getScenePos()
 {
     return QPoint(parent->x() + x ,parent->y() + y);
 }
+bool Connector::connect(VisualConnection *connection)
+{
+    connections.append(connection);
+    return true;
+}
+void Connector::disconnect(VisualConnection *connection)
+{
+    if(connections.contains(connection))
+    {
+        if(connections.removeOne(connection))
+        {
+
+        }
+        else {
+            qDebug("[error,Connector] remove connection failed");
+        }
+    }
+    else {
+        qDebug("[error,Connector] disconnect failed connection not in connections");
+    }
+}

@@ -17,6 +17,8 @@ public:
     QRectF getRect(int margins);
     QPoint getPoint();
     QPoint getScenePos();
+    bool connect(VisualConnection *connection);
+    void disconnect(VisualConnection* connection);
 
     int x;
     int y;

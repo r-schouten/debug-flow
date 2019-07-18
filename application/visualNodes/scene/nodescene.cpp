@@ -45,6 +45,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
     VisualConnection* newConnection = new VisualConnection(connector);
     connections.append(newConnection);
     currentTrackingConnection = newConnection;
+    connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
@@ -75,9 +76,26 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
     }
 
 }
+void NodeScene::onConnectionDelete(VisualConnection* connection)
+{
+    if(connections.removeOne(connection))
+    {
+
+    }
+    else {
+        qDebug("[error,NodeScene] failed to remove connection");
+    }
+    if(currentTrackingConnection == connection)
+    {
+        currentTrackingConnection = nullptr;
+    }
+}
+
 
 void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
+    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+
     QListIterator<VisualConnection*>iterator(connections);
     while(iterator.hasNext())
     {
@@ -98,6 +116,22 @@ void NodeScene::drawBackground(QPainter *painter, const QRectF &rect)
     drawGrid(painter,rect,50,&pen);
 
 }
+void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, QPen* pen)
+{
+    int left = rect.left() - (int(rect.left()) % gridSize);
+    int top = rect.top() - (int(rect.top()) % gridSize);
+
+    QVarLengthArray<QLineF, 100> lines;
+
+    for (int x = left; x < rect.right(); x += gridSize)
+        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
+    for (int y = top; y < rect.bottom(); y += gridSize)
+        lines.append(QLineF(rect.left(), y, rect.right(), y));
+
+    painter->setPen(*pen);
+    painter->drawLines(lines.data(), lines.size());
+}
+
 
 void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -123,15 +157,28 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         nodePlacementState = NodePlacementState::NOT_PLACING;
         nodeToPlace = nullptr;
     }
+    if(currentTrackingConnection == nullptr)
+    {
+        QListIterator<VisualConnection*>iterator(connections);
+        while(iterator.hasNext())
+        {
+            VisualConnection* currentConnection = iterator.next();
+            if(currentConnection->intersect(event->scenePos()))
+            {
+                delete currentConnection;
+            }
+        }
+    }
+
     QGraphicsScene::mousePressEvent(event);
     //after the super call all the childeren are checked
     qDebug("[debug][NodeScene] mousepress done");
 
     if(!anyConnectorPressed)
     {
+        delete currentTrackingConnection;
         currentTrackingConnection = nullptr;
     }
-
     anyConnectorPressed = false;
 
 }
@@ -147,19 +194,4 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
     }
     QGraphicsScene::mouseReleaseEvent(event);
-}
-void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, QPen* pen)
-{
-    int left = rect.left() - (int(rect.left()) % gridSize);
-    int top = rect.top() - (int(rect.top()) % gridSize);
-
-    QVarLengthArray<QLineF, 100> lines;
-
-    for (int x = left; x < rect.right(); x += gridSize)
-        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
-    for (int y = top; y < rect.bottom(); y += gridSize)
-        lines.append(QLineF(rect.left(), y, rect.right(), y));
-
-    painter->setPen(*pen);
-    painter->drawLines(lines.data(), lines.size());
 }

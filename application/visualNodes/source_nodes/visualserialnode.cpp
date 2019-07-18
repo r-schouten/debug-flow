@@ -20,6 +20,8 @@ VisualNodeBase* VisualSerialNode::clone()
 }
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+
     paintBase(painter,this,"Serial");
     drawConnectors(painter);
 
