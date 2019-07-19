@@ -1,9 +1,10 @@
 #pragma once
 #include <QGraphicsScene>
+
 #include <QPainter>
 #include "visualnodebase.h"
 #include "utils.h"
-
+#include "selectionmanager.h"
 class NodeScene:public QGraphicsScene
 {
     Q_OBJECT
@@ -50,5 +51,12 @@ private:
 
     //list with all nodes
     QList<VisualNodeBase*> nodes;
+
+    //selectionmanager singleton
+    SelectionManager* selectionManager;
+
+    //if true selected nodes will move with the mouse
+    bool moveSelected = false;
+    QPointF lastMousePosition;
 };
 

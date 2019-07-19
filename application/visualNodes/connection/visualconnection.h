@@ -3,6 +3,9 @@
 #include "visualnodebase.h"
 #include "connector.h"
 #include "utils.h"
+#include "selectionmanager.h"
+
+class SelectionManager;
 class Connector;
 class VisualNodeBase;
 class VisualConnection: public QObject
@@ -27,10 +30,15 @@ public:
     void disconnect2();
 
     void setMousePos(QPoint _mousePos);
+
+    //custom method, this class is not inherited from qgraphicsitem
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 private:
     Connector* connector1 = nullptr;
     Connector* connector2 = nullptr;
     QPoint mousePos;
+    SelectionManager* selectionManager;
+
 signals:
     void onDelete(VisualConnection* connection);
 };

@@ -28,6 +28,7 @@ SOURCES += \
     visualNodes/resourceList/mytreewidgetitem.cpp \
     visualNodes/scene/graphicsview.cpp \
     visualNodes/scene/nodescene.cpp \
+    visualNodes/selectionmanager.cpp \
     visualNodes/source_nodes/visualserialnode.cpp \
     visualNodes/visualnodebase.cpp \
     windows/dialogwindow.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     visualNodes/resourceList/mytreewidgetitem.h \
     visualNodes/scene/graphicsview.h \
     visualNodes/scene/nodescene.h \
+    visualNodes/selectionmanager.h \
     visualNodes/source_nodes/sourcestyle.h \
     visualNodes/source_nodes/visualserialnode.h \
     visualNodes/visualnodebase.h \
@@ -91,9 +93,3 @@ INCLUDEPATH += \
     utils
 target.path = C:/debug-flow/builds
 INSTALLS += target
-QMAKE_CXXFLAGS_RELEASE -= -O
-QMAKE_CXXFLAGS_RELEASE -= -O1
-QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE -= -O3
-QMAKE_CXXFLAGS_RELEASE -= -Os
-QMAKE_CXXFLAGS_RELEASE += -Og

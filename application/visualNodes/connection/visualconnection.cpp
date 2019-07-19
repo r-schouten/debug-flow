@@ -4,6 +4,7 @@ VisualConnection::VisualConnection(Connector *connector1)
     :connector1(connector1)
 {
     setConnector1(connector1);
+    selectionManager = selectionManager->getInstance();
 }
 
 VisualConnection::VisualConnection(Connector *connector1, Connector *connector2)
@@ -11,6 +12,7 @@ VisualConnection::VisualConnection(Connector *connector1, Connector *connector2)
 {
     setConnector1(connector1);
     setConnector2(connector2);
+    selectionManager = selectionManager->getInstance();
 }
 
 VisualConnection::~VisualConnection()
@@ -29,11 +31,6 @@ VisualConnection::~VisualConnection()
 
 void VisualConnection::draw(QPainter* painter)
 {
-    painter->setBrush(QColor::fromRgbF(1,1,1,0.7));
-    QPen pen(QColor::fromRgbF(1,1,1,0.7));
-    pen.setWidth(8);
-    painter->setPen(pen);
-
     QPoint point1,point2;
     if(connection1Set)
     {
@@ -49,6 +46,19 @@ void VisualConnection::draw(QPainter* painter)
     else {
         point2 = mousePos;
     }
+
+    painter->setBrush(QColor::fromRgbF(1,1,1,0.7));
+    QPen pen;
+    if(selectionManager->isSelected(this))
+    {
+        pen.setColor(QColor::fromRgbF(0.2,0.7,1,0.6));
+    }
+    else {
+        pen.setColor(QColor::fromRgbF(1,1,1,0.7));
+    }
+    pen.setWidth(8);
+    painter->setPen(pen);
+
     painter->drawLine(point1,point2);
 }
 
@@ -84,6 +94,7 @@ void VisualConnection::setMousePos(QPoint _mousePos)
     mousePos = _mousePos;
 }
 
+
 void VisualConnection::disconnect1()
 {
     connector1 = nullptr;
@@ -115,4 +126,25 @@ void VisualConnection::setConnector2(Connector *value)
     connector2 = value;
     connector2->connect(this);
     connection2Set = true;
+}
+void VisualConnection::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(intersect(event->scenePos()))
+    {
+        if (event->modifiers() == Qt::ControlModifier && event->button() == Qt::LeftButton)
+        {
+            selectionManager->setSelected(this,false);
+        }
+        else {
+            if(selectionManager->isSelected(this))
+            {
+                selectionManager->setSelected(this,true);
+            }
+            else {
+                selectionManager->setSelected(this,true);
+
+            }
+
+        }
+    }
 }

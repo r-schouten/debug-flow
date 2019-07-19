@@ -23,7 +23,7 @@ public:
     void append(char* inputData, int size);
     int getSize();
     void print();
-    int reset();
+    void reset();
     CircularBufferReader *requestNewReader();
 
     friend CircularBufferReader;

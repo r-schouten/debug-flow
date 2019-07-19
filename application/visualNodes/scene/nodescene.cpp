@@ -3,8 +3,11 @@
 
 NodeScene::NodeScene()
 {
+    selectionManager = SelectionManager::getInstance();
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
+
+
 }
 //this methode takes the ownership over
 void NodeScene::insertItem(VisualNodeBase *node)
@@ -49,6 +52,8 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
+    qDebug("[debug][NodeScene] connectorReleased");
+
     if(currentTrackingConnection == nullptr)
     {
         return;
@@ -145,45 +150,68 @@ void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
         currentTrackingConnection->setMousePos(event->scenePos().toPoint());
     }
+    if(moveSelected)
+    {
+        QPointF mouseMovement = event->scenePos() - lastMousePosition;
+        QListIterator<VisualNodeBase*>iterator(selectionManager->selectedNodes);
+        while(iterator.hasNext())
+        {
+            VisualNodeBase* node = iterator.next();
+            node->moveBy(mouseMovement);
+        }
+        lastMousePosition = event->scenePos();
+    }
     QGraphicsScene::mouseMoveEvent(event);
 }
 
 void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug("[debug][NodeScene] mousepress");
+    //qDebug("[debug][NodeScene] mousepress");
 
+    //for placement of a new object
     if(nodePlacementState == NodePlacementState::PLACE_AFTER_CLICK)
     {
         nodePlacementState = NodePlacementState::NOT_PLACING;
         nodeToPlace = nullptr;
     }
+    //for connecting a connector to a node
     if(currentTrackingConnection == nullptr)
     {
         QListIterator<VisualConnection*>iterator(connections);
         while(iterator.hasNext())
         {
             VisualConnection* currentConnection = iterator.next();
-            if(currentConnection->intersect(event->scenePos()))
-            {
-                delete currentConnection;
-            }
+            currentConnection->mousePressEvent(event);
         }
     }
 
     QGraphicsScene::mousePressEvent(event);
     //after the super call all the childeren are checked
-    qDebug("[debug][NodeScene] mousepress done");
 
+    //qDebug("[debug][NodeScene] mousepress done");
+
+    //if no node is clicked
     if(!anyConnectorPressed)
     {
         delete currentTrackingConnection;
         currentTrackingConnection = nullptr;
+        if(selectionManager->isUpdated())
+        {
+            moveSelected = true;
+            lastMousePosition = event->scenePos();
+        }
+        else
+        {
+            selectionManager->clearSelected();
+        }
     }
+    selectionManager->clearUpdateFlag();
     anyConnectorPressed = false;
 
 }
 void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    moveSelected = false;
     if(currentTrackingConnection)
     {
         QListIterator<VisualNodeBase*>iterator(nodes);

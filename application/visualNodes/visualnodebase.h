@@ -7,14 +7,13 @@
 #include "nodestylebase.h"
 #include "connector.h"
 #include "visualconnection.h"
+#include "selectionmanager.h"
+
+class SelectionManager;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem
 {
     Q_OBJECT
-protected:
-
-
-    QList<Connector*> connectors;
 public:
     VisualNodeBase();
     QString name = "";
@@ -33,18 +32,18 @@ public:
     void addInputConnector();
     void addOutputConnector();
     bool requestConnection(Connector *connector);
+    void moveBy(QPointF &by);
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
-
-
-    static QList<VisualNodeBase*> selectedItems;
-    bool isSelected();
 
     void drawConnectors(QPainter *painter);
+    void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
+    bool isSelected();
+
+    QList<Connector*> connectors;
+    SelectionManager* selectionManager;
 signals:
     void connectorPressed(VisualNodeBase* node,Connector* connector);
     void connectorReleased(VisualNodeBase* node,Connector* connector);

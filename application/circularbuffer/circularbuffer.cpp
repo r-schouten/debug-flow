@@ -21,7 +21,7 @@ CircularBuffer::~CircularBuffer()
 {
     free(data);
 }
-int CircularBuffer::reset()
+void CircularBuffer::reset()
 {
     head = 0;
 }

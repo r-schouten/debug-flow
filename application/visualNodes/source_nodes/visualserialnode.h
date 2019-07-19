@@ -3,6 +3,7 @@
 #include "serialnode.h"
 #include "sourcestyle.h"
 #include "visualnodebase.h"
+#include "selectionmanager.h"
 
 class VisualSerialNode : public VisualNodeBase, public SourceStyle
 {

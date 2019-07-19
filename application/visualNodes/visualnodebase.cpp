@@ -1,9 +1,9 @@
 #include "visualnodebase.h"
 
-QList<VisualNodeBase*> VisualNodeBase::selectedItems;
 VisualNodeBase::VisualNodeBase()
 {
-    setFlag(QGraphicsItem::ItemIsMovable, true);
+    selectionManager = SelectionManager::getInstance();
+    setFlag(QGraphicsItem::ItemIsMovable, false);
 }
 
 QRectF VisualNodeBase::boundingRect() const
@@ -71,15 +71,17 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     QRect titleRect(0,0,width,20);
     painter->drawRoundRect(titleRect, 10,10);
 
+    QPen pen;
     if(isSelected())
     {
-        painter->setPen(QColor::fromRgbF(0.2, 0.6, 0.7, 0.7));
+        pen = QPen(QColor::fromRgbF(0.2, 0.6, 0.7, 0.7));
     }
     else {
-        painter->setPen(QColor::fromRgbF(0.3, 0.3, 0.3, 0.7));
+        pen = QPen(QColor::fromRgbF(0.3, 0.3, 0.3, 0.7));
     }
+    pen.setWidth(3);
+    painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
-
     painter->drawRoundRect(rect,10,10);
 
     QFont font;
@@ -93,7 +95,7 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
 bool pressedOnConnection = false;
 bool VisualNodeBase::isSelected()
 {
-    return selectedItems.contains(this);
+    return selectionManager->isSelected(this);
 }
 
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -112,23 +114,26 @@ void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     if(!pressedOnConnection)
     {
-        if(!isSelected())
+        if (event->modifiers() == Qt::ControlModifier && event->button() == Qt::LeftButton)
         {
-            selectedItems.clear();
-            selectedItems.append(this);
+            selectionManager->setSelected(this,false);
+        }
+        else {
+            if(isSelected())
+            {
+                selectionManager->setSelected(this,false);
+            }
+            else {
+                selectionManager->setSelected(this,true);
+            }
         }
     }
-    QGraphicsItem::mousePressEvent(event);
 
 }
-void VisualNodeBase::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void VisualNodeBase::moveBy(QPointF& by)
 {
-    if(!pressedOnConnection)
-    {
-        QPointF p = event->scenePos();
-        centerX = p.x();
-        centerY = p.y();
-    }
+    centerX += by.x();
+    centerY += by.y();
 }
 void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -144,7 +149,6 @@ void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
     }
     pressedOnConnection = false;
-    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 void VisualNodeBase::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

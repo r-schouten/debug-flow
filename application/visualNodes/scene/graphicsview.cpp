@@ -5,6 +5,9 @@ GraphicsView::GraphicsView(QWidget *parent)
 {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setMouseTracking(true);
+
+    setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 }
 
 int _numScheduledScalings = 0;
