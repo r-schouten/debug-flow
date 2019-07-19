@@ -24,6 +24,7 @@ public:
 
     Connector *getConnector1() const;
     Connector *getConnector2() const;
+    Connector *getUnsedConnector();
 
     void setConnector1(Connector *value);
     void setConnector2(Connector *value);

@@ -2,6 +2,7 @@
 #include "visualnodebase.h"
 #include "visualconnection.h"
 
+class Connector;
 class VisualNodeBase;
 class VisualConnection;
 
@@ -28,4 +29,6 @@ public:
 
     QList<VisualNodeBase*> selectedNodes;
     QList<VisualConnection*> selectedConnections;
+    Connector* hoveredConnector = nullptr;
+    VisualConnection** currentTrackingConnection = nullptr;
 };

@@ -41,7 +41,8 @@ public:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     void drawConnectors(QPainter *painter, NodeStyleBase *nodeStyle);
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
@@ -55,5 +56,6 @@ signals:
     void connectorPressed(VisualNodeBase* node,Connector* connector);
     void connectorReleased(VisualNodeBase* node,Connector* connector);
     void onDelete(VisualNodeBase* node);
+
 };
 

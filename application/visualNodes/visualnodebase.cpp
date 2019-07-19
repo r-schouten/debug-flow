@@ -4,6 +4,7 @@ VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
     setFlag(QGraphicsItem::ItemIsMovable, false);
+    setAcceptHoverEvents(true);
 }
 VisualNodeBase::~VisualNodeBase()
 {
@@ -56,10 +57,13 @@ bool VisualNodeBase::requestConnection(Connector *connector)
 }
 bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* connection)
 {
-    qDebug("[debug][VisualNodeBase] request connection");
+    if(connection->getUnsedConnector() == connector)
+    {
+        return false;
+    }
     if(connector->type == ConnectorType::OUTPUT)
     {
-        if(connection->getConnector1()->type == ConnectorType::OUTPUT)//can't connect output to output
+        if(connection->getUnsedConnector()->type == ConnectorType::OUTPUT)//can't connect output to output
         {
             return false;
         }
@@ -68,7 +72,7 @@ bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* c
     }
     else if(connector->type == ConnectorType::INPUT)
     {
-        if(connection->getConnector1()->type == ConnectorType::INPUT)//can't connect output to output
+        if(connection->getUnsedConnector()->type == ConnectorType::INPUT)//can't connect output to output
         {
             return false;
         }
@@ -90,9 +94,36 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
     while(iterator.hasNext())
     {
         Connector* connector = iterator.next();
-        painter->setPen(nodeStyle->connectorPen);
-        painter->setBrush(nodeStyle->connectorBrush);
-        painter->drawEllipse(connector->getRect(0));
+        if(selectionManager->hoveredConnector == connector)
+        {
+            painter->setPen(Qt::NoPen);
+            if(*selectionManager->currentTrackingConnection == nullptr)//not drawing a connection
+            {
+                painter->setBrush(QColor::fromRgbF(1,1,0,0.3));
+            }
+            else {
+                if(requestConnection(connector,*selectionManager->currentTrackingConnection))//valid connection
+                {
+                    painter->setBrush(QColor::fromRgbF(0,1,0,0.3));
+                }
+                else {//invalid connection
+                    painter->setBrush(QColor::fromRgbF(1,0,0,0.3));
+                }
+            }
+            painter->drawEllipse(connector->getRect(10));
+
+
+            painter->setPen(nodeStyle->connectorPen);
+            painter->setBrush(QColor::fromRgbF(1,1,0,0.7));
+            painter->drawEllipse(connector->getRect(0));
+        }
+        else {
+            painter->setPen(nodeStyle->connectorPen);
+            painter->setBrush(nodeStyle->connectorBrush);
+            painter->drawEllipse(connector->getRect(0));
+        }
+
+
     }
 }
 
@@ -183,13 +214,42 @@ void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if(connector->getRect(5).contains(event->pos()))
         {
             emit connectorReleased(this,connector);
-            pressedOnConnection = true;
         }
     }
     pressedOnConnection = false;
 }
 
-void VisualNodeBase::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        if(connector->getRect(5).contains(event->pos()))
+        {
+            selectionManager->hoveredConnector = connector;
+        }
+        else {
+            if(selectionManager->hoveredConnector == connector)
+            {
+                selectionManager->hoveredConnector = nullptr;
+            }
+        }
+    }
 }
+
+void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        if(selectionManager->hoveredConnector == connector)
+        {
+            selectionManager->hoveredConnector = nullptr;
+        }
+    }
+}
+
+
+

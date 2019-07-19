@@ -22,6 +22,7 @@ public:
     bool connect(VisualConnection *connection);
     void disconnect(VisualConnection* connection);
 
+    bool requestConnector(VisualConnection* connection);
     int x;
     int y;
     double angle;

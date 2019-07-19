@@ -48,3 +48,8 @@ void Connector::disconnect(VisualConnection *connection)
         qDebug("[error,Connector] disconnect failed connection not in connections");
     }
 }
+
+bool Connector::requestConnector(VisualConnection *connection)
+{
+    parent->requestConnection(this,connection);
+}

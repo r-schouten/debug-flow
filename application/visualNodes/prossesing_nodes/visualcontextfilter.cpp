@@ -21,5 +21,5 @@ VisualNodeBase *VisualContextFilter::clone()
 void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     paintBase(painter,this,"context filter");
-    drawConnectors(painter);
+    drawConnectors(painter,this);
 }

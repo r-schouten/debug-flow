@@ -8,7 +8,7 @@ NodeScene::NodeScene()
     selectionManager = SelectionManager::getInstance();
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
-
+    selectionManager->currentTrackingConnection = &currentTrackingConnection;
 
 }
 //this methode takes the ownership over
@@ -172,7 +172,16 @@ void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     if(currentTrackingConnection)
     {
-        currentTrackingConnection->setMousePos(event->scenePos().toPoint());
+        //note the use of side effects here
+        if((selectionManager->hoveredConnector == nullptr)||(!selectionManager->hoveredConnector->requestConnector(currentTrackingConnection)))
+        {
+            currentTrackingConnection->setMousePos(event->scenePos().toPoint());
+        }
+        else
+        {
+            //snapping to the connector
+            currentTrackingConnection->setMousePos(selectionManager->hoveredConnector->getScenePos());
+        }
     }
     if(moveSelected)
     {

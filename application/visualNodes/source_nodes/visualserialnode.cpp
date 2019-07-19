@@ -23,6 +23,6 @@ void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
 
     paintBase(painter,this,"Serial");
-    drawConnectors(painter);
+    drawConnectors(painter, this);
 
 }

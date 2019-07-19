@@ -249,6 +249,19 @@ void VisualConnection::setConnector2(Connector *value)
     connector2->connect(this);
     connection2Set = true;
 }
+Connector* VisualConnection::getUnsedConnector()
+{
+    if(connection1Set)
+    {
+        return connector1;
+    }
+    if(connection2Set)
+    {
+        return connector2;
+    }
+    qDebug("[error][VisualConnection]  getUnsedConnector called while both are connected");
+    return nullptr;
+}
 void VisualConnection::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(intersect(event->scenePos()))
