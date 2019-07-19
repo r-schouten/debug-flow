@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 
+#include "visualnodeconfig.h"
 #include "nodebase.h"
 #include "nodestylebase.h"
 #include "connector.h"
@@ -34,18 +35,22 @@ public:
     void addInputConnector();
     void addOutputConnector();
     bool requestConnection(Connector *connector);
+    bool requestConnection(Connector *connector, VisualConnection *connection);
+
     void moveBy(QPointF &by);
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-    void drawConnectors(QPainter *painter);
+    void drawConnectors(QPainter *painter, NodeStyleBase *nodeStyle);
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
 
     QList<Connector*> connectors;
     SelectionManager* selectionManager;
+private:
+    bool pressedOnConnection = false;
 signals:
     void connectorPressed(VisualNodeBase* node,Connector* connector);
     void connectorReleased(VisualNodeBase* node,Connector* connector);

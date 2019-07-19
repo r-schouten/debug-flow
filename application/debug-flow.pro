@@ -65,6 +65,7 @@ HEADERS += \
     visualNodes/source_nodes/sourcestyle.h \
     visualNodes/source_nodes/visualserialnode.h \
     visualNodes/visualnodebase.h \
+    visualNodes/visualnodeconfig.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h \

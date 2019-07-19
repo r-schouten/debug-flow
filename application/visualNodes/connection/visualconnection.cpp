@@ -57,17 +57,33 @@ void VisualConnection::draw(QPainter* painter)
     }
 
     painter->setBrush(style->brush);
-    QPen pen(style->lineColor);
-
+    painter->setPen(style->linePen);
     if(selectionManager->isSelected(this))
     {
-        pen.setColor(style->selectedColor);
+        painter->setPen(style->selectedPen);
     }
-    pen.setWidth(style->lineWidth);
-    painter->setPen(pen);
 
     makePainterPath(style->pathStyle);
     painter->drawPath(painterPath);
+
+    if(connection1Set)
+    {
+        painter->setPen(style->endsPen);
+    }
+    else {
+        painter->setPen(style->endsPenNotConnected);
+
+    }
+    painter->drawEllipse(point1,5,5);
+    if(connection2Set)
+    {
+        painter->setPen(style->endsPen);
+    }
+    else {
+        painter->setPen(style->endsPenNotConnected);
+    }
+    painter->drawEllipse(point2,5,5);
+
 
 }
 QPointF calculateBezierPoint(QPointF &startPoint, double angle, int distance)

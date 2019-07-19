@@ -43,22 +43,55 @@ bool VisualNodeBase::requestConnection(Connector *connector)
     }
     else if(connector->type == ConnectorType::INPUT)
     {
-        int count = 0;
+#ifdef ALLOW_MULTIPLE_INPUT
+        return true;
+#else
         if(connector->connections.size() == 0)
         {
             return true;
         }
+#endif
     }
     return false;
 }
-void VisualNodeBase::drawConnectors(QPainter* painter)
+bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* connection)
+{
+    qDebug("[debug][VisualNodeBase] request connection");
+    if(connector->type == ConnectorType::OUTPUT)
+    {
+        if(connection->getConnector1()->type == ConnectorType::OUTPUT)//can't connect output to output
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else if(connector->type == ConnectorType::INPUT)
+    {
+        if(connection->getConnector1()->type == ConnectorType::INPUT)//can't connect output to output
+        {
+            return false;
+        }
+#ifdef ALLOW_MULTIPLE_INPUT
+        return true;
+#else
+        if(connector->connections.size() == 0)
+        {
+            return true;
+        }
+#endif
+    }
+    return false;
+}
+
+void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 {
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {
         Connector* connector = iterator.next();
-        painter->setPen(QColor::fromRgbF(0.6, 0.6, 0.6, 0.7));
-        painter->setBrush(QColor::fromRgbF(1, 1, 1, 0.7));
+        painter->setPen(nodeStyle->connectorPen);
+        painter->setBrush(nodeStyle->connectorBrush);
         painter->drawEllipse(connector->getRect(0));
     }
 }
@@ -82,25 +115,22 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     QPen pen;
     if(isSelected())
     {
-        pen = QPen(QColor::fromRgbF(0.2, 0.6, 0.7, 0.7));
+        pen = QPen(nodeStyle->selectedBorderPen);
     }
     else {
-        pen = QPen(QColor::fromRgbF(0.3, 0.3, 0.3, 0.7));
+        pen = QPen(nodeStyle->borderPen);
     }
     pen.setWidth(3);
     painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
     painter->drawRoundRect(rect,10,10);
 
-    QFont font;
-    font.setPointSize(10);
-    font.setBold(true);
-    painter->setFont(font);
-    painter->setPen(QColor::fromRgbF(1, 1, 1, 1));
+
+    painter->setFont(nodeStyle->titleFont);
+    painter->setPen(nodeStyle->titlePen);
     painter->drawText(titleRect,Qt::AlignCenter, name);
 }
 
-bool pressedOnConnection = false;
 bool VisualNodeBase::isSelected()
 {
     return selectionManager->isSelected(this);

@@ -62,6 +62,10 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
     {
         return;
     }
+    if(!node->requestConnection(connector,currentTrackingConnection))
+    {
+        return;
+    }
     if(currentTrackingConnection->getConnector1() == connector)
     {
         qDebug("[debug][NodeScene] connector1 == connector");
