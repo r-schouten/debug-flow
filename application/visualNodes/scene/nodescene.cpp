@@ -1,5 +1,7 @@
 #include "nodescene.h"
 
+#include <qevent.h>
+
 
 NodeScene::NodeScene()
 {
@@ -16,12 +18,14 @@ void NodeScene::insertItem(VisualNodeBase *node)
     node->setVisible(false);
     nodeToPlace = node;
     nodePlacementState = NodePlacementState::PLACE_AFTER_CLICK;
+    selectionManager->setSelected(nodeToPlace, true);
 }
 
 void NodeScene::addItem(VisualNodeBase *item)
 {
     connect(item,SIGNAL(connectorPressed(VisualNodeBase*,Connector*)),this,SLOT(connectorPressed(VisualNodeBase*,Connector*)));
     connect(item,SIGNAL(connectorReleased(VisualNodeBase*,Connector*)),this,SLOT(connectorReleased(VisualNodeBase*,Connector*)));
+    connect(item,SIGNAL(onDelete(VisualNodeBase*)),this,SLOT(onNodeDelete(VisualNodeBase*)));
 
     nodes.append(item);
     QGraphicsScene::addItem(item);
@@ -80,6 +84,22 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 
     }
 
+}
+void NodeScene::onNodeDelete(VisualNodeBase* node)
+{
+    removeItem(node);
+    if(nodes.removeOne(node))
+    {
+
+    }
+    else {
+        qDebug("[error,NodeScene] failed to remove node");
+    }
+    if(nodeToPlace == node)
+    {
+        nodeToPlace = nullptr;
+        nodePlacementState = NodePlacementState::NOT_PLACING;
+    }
 }
 void NodeScene::onConnectionDelete(VisualConnection* connection)
 {
@@ -174,27 +194,31 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         nodePlacementState = NodePlacementState::NOT_PLACING;
         nodeToPlace = nullptr;
     }
-    //for connecting a connector to a node
-    if(currentTrackingConnection == nullptr)
-    {
-        QListIterator<VisualConnection*>iterator(connections);
-        while(iterator.hasNext())
-        {
-            VisualConnection* currentConnection = iterator.next();
-            currentConnection->mousePressEvent(event);
-        }
-    }
 
     QGraphicsScene::mousePressEvent(event);
     //after the super call all the childeren are checked
 
     //qDebug("[debug][NodeScene] mousepress done");
 
+    //for connecting a connector to a node
+
     //if no node is clicked
     if(!anyConnectorPressed)
     {
-        delete currentTrackingConnection;
-        currentTrackingConnection = nullptr;
+        if(currentTrackingConnection!=nullptr)
+        {
+            delete currentTrackingConnection;
+            currentTrackingConnection = nullptr;
+        }
+        if(currentTrackingConnection == nullptr)
+        {
+            QListIterator<VisualConnection*>iterator(connections);
+            while(iterator.hasNext())
+            {
+                VisualConnection* currentConnection = iterator.next();
+                currentConnection->mousePressEvent(event);
+            }
+        }
         if(selectionManager->isUpdated())
         {
             moveSelected = true;
@@ -222,4 +246,27 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
     }
     QGraphicsScene::mouseReleaseEvent(event);
+}
+
+void NodeScene::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete)
+    {
+        QListIterator<VisualConnection*>iterator(selectionManager->selectedConnections);
+        while(iterator.hasNext())
+        {
+            VisualConnection* connection = iterator.next();
+            //connection will delete notify its dependend objects
+            delete connection;
+        }
+        QListIterator<VisualNodeBase*>iterator2(selectionManager->selectedNodes);
+        while(iterator2.hasNext())
+        {
+            VisualNodeBase* node = iterator2.next();
+            //node will notify depended objects(include nodeScene)
+            delete node;
+        }
+        selectionManager->clearSelected();
+    }
+
 }

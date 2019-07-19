@@ -4,6 +4,8 @@
 #include "connector.h"
 #include "utils.h"
 #include "selectionmanager.h"
+#include "connectionstyle.h"
+#include "utils.h"
 
 class SelectionManager;
 class Connector;
@@ -34,11 +36,19 @@ public:
     //custom method, this class is not inherited from qgraphicsitem
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 private:
+    //begin point and end point
+    QPointF point1,point2;
+
     Connector* connector1 = nullptr;
     Connector* connector2 = nullptr;
     QPoint mousePos;
-    SelectionManager* selectionManager;
+    SelectionManager* selectionManager = nullptr;
+    ConnectionStyle* style = nullptr;
+    void makePainterPath(PathStyle &pathStyle);
 
+    bool settingsChanged = true;
+    QPainterPath painterPath;
+    PathStyle oldPathStyle;
 signals:
     void onDelete(VisualConnection* connection);
 };

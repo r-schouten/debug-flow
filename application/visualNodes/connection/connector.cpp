@@ -1,10 +1,18 @@
 #include "connector.h"
 
 
-Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter)
-    :parent(parent),x(x),y(y),type(type),connectionDiameter(diameter)
+Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter, double angle)
+    :parent(parent),x(x),y(y),type(type),connectionDiameter(diameter),angle(angle)
 {
 
+}
+Connector::~Connector()
+{
+    QListIterator<VisualConnection*> iterator(connections);
+    while(iterator.hasNext())
+    {
+        delete iterator.next();
+    }
 }
 QRectF Connector::getRect(int margins)
 {

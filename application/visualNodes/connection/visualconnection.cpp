@@ -5,14 +5,14 @@ VisualConnection::VisualConnection(Connector *connector1)
 {
     setConnector1(connector1);
     selectionManager = selectionManager->getInstance();
+    style = new ConnectionStyle();
 }
 
-VisualConnection::VisualConnection(Connector *connector1, Connector *connector2)
-    :connector1(connector1),connector2(connector2)
+VisualConnection::VisualConnection(Connector *connector1, Connector *_connector2)
+    :VisualConnection(connector1)
 {
-    setConnector1(connector1);
+    connector2 = _connector2;
     setConnector2(connector2);
-    selectionManager = selectionManager->getInstance();
 }
 
 VisualConnection::~VisualConnection()
@@ -31,58 +31,164 @@ VisualConnection::~VisualConnection()
 
 void VisualConnection::draw(QPainter* painter)
 {
-    QPoint point1,point2;
     if(connection1Set)
     {
-        point1 = connector1->getScenePos();
+        if(point1 != connector1->getScenePos())
+        {
+            point1 = connector1->getScenePos();
+            settingsChanged = true;
+        }
     }
     else {
         point1 = mousePos;
+        settingsChanged = true;
     }
     if(connection2Set)
     {
-        point2 = connector2->getScenePos();
+        if(point2 != connector2->getScenePos())
+        {
+            point2 = connector2->getScenePos();
+            settingsChanged = true;
+        }
     }
     else {
         point2 = mousePos;
+        settingsChanged = true;
     }
 
-    painter->setBrush(QColor::fromRgbF(1,1,1,0.7));
-    QPen pen;
+    painter->setBrush(style->brush);
+    QPen pen(style->lineColor);
+
     if(selectionManager->isSelected(this))
     {
-        pen.setColor(QColor::fromRgbF(0.2,0.7,1,0.6));
+        pen.setColor(style->selectedColor);
     }
-    else {
-        pen.setColor(QColor::fromRgbF(1,1,1,0.7));
-    }
-    pen.setWidth(8);
+    pen.setWidth(style->lineWidth);
     painter->setPen(pen);
 
-    painter->drawLine(point1,point2);
+    makePainterPath(style->pathStyle);
+    painter->drawPath(painterPath);
+
+}
+QPointF calculateBezierPoint(QPointF &startPoint, double angle, int distance)
+{
+    QPointF bezierPoint;
+    bezierPoint.rx() = startPoint.x() + cos(angle) * distance;
+    bezierPoint.ry() = startPoint.y() + sin(angle) * distance;
+    return bezierPoint;
+}
+int minAbs(int a, int b)
+{
+    if(abs(a) < abs(b))
+        return a;
+    return b;
+}
+int vectorDistanceBetweenPoints(QPointF &point1, double angle1,QPointF &point2)
+{
+    int deltaX = point2.x() - point1.x();
+    int deltaY = point2.y() - point1.y();
+    int potentialDistance1,potentialDistance2;
+    if(abs(cos(angle1)) < 0.1)
+    {
+        potentialDistance1 = Utils::distanceBetweenPoints(point1,point2);
+    }
+    else {
+        potentialDistance1 = deltaX/cos(angle1);
+    }
+    if(abs(sin(angle1)) < 0.1)
+    {
+        potentialDistance2 = Utils::distanceBetweenPoints(point1,point2);
+    }
+    else {
+        potentialDistance2 = deltaY/sin(angle1);
+    }
+    int distance = minAbs(potentialDistance1,potentialDistance2);
+    if(distance >=0)
+    {
+        return distance;
+    }
+    else {
+        return abs(distance)*2;
+    }
+}
+double angleDifference(double angle1, double angle2)
+{
+    double angleDelta = angle1 - angle2;
+    if(angleDelta > M_PI)
+    {
+        angleDelta = angleDelta - 2 * M_PI;
+    }
+    if(angleDelta < -M_PI)
+    {
+        angleDelta = angleDelta + 2 * M_PI;
+    }
+    return angleDelta;
+}
+double calculateAngleBetweenPoints(QPointF& point1, QPointF& point2)
+{
+    double deltaX = point2.x() - point1.x();
+    double deltaY = point2.y() - point1.y();
+    return atan2(deltaY,deltaX);
+}
+void VisualConnection::makePainterPath(PathStyle& pathStyle)
+{
+    if(style->pathStyle != oldPathStyle)
+    {
+        settingsChanged = true;
+        oldPathStyle = style->pathStyle;
+    }
+    if(settingsChanged)
+    {
+        settingsChanged = false;
+        if(style->pathStyle == PathStyle::LINE)
+        {
+            painterPath = QPainterPath(point1);
+            painterPath.lineTo(point2);
+        }
+        else if((style->pathStyle == PathStyle::BEZIER_STRAIGT)||(style->pathStyle == PathStyle::BEZIER))
+        {
+            double angle1 = 0;
+            double angle2 = 0;
+            if(connection1Set){
+              angle1 = connector1->angle;
+            }
+            else if(connection2Set){
+              angle1 = connector2->angle + M_PI;
+            }
+            if(connection2Set){
+              angle2 = connector2->angle;
+            }
+            else if(connection1Set){
+              angle2 = connector1->angle + M_PI;
+            }
+            if(style->pathStyle == PathStyle::BEZIER)
+            {
+                double angleBetweenPoints = calculateAngleBetweenPoints(point1,point2);
+                angle1 += angleDifference(angleBetweenPoints,angle1)/6.0;
+                angleBetweenPoints = calculateAngleBetweenPoints(point2,point1);
+                angle2 += angleDifference(angleBetweenPoints,angle2)/6.0;
+            }
+
+            int distance1 = vectorDistanceBetweenPoints(point1,angle1,point2);
+            int distance2 = vectorDistanceBetweenPoints(point2,angle2,point1);
+            QPointF c1 = calculateBezierPoint(point1,angle1,distance1 / 2);
+            QPointF c2 = calculateBezierPoint(point2,angle2,distance2 / 2);
+            //begin line add point1
+            painterPath = QPainterPath(point1);
+            //cubic to point2
+            painterPath.cubicTo(c1, c2, point2);
+        }
+    }
+    else {
+
+    }
 }
 
 bool VisualConnection::intersect(QPointF position)
 {
-    QPoint point1,point2;
-    if(connection1Set)
-    {
-        point1 = connector1->getScenePos();
-    }
-    else {
-        point1 = mousePos;
-    }
-    if(connection2Set)
-    {
-        point2 = connector2->getScenePos();
-    }
-    else {
-        point2 = mousePos;
-    }
-
-    QLineF line(point1,point2);
-    qreal distance =  Utils::dist(position,line);
-    if(distance < 5)
+    int margin = style->intersectMargin;
+    QRectF rect = QRectF(position.x() - margin/2, position.y() - margin/2, margin,margin);
+    if(painterPath.intersects(rect))
     {
         return true;
     }

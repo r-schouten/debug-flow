@@ -51,6 +51,7 @@ HEADERS += \
     tagfilter.h \
     test/circularbuffertest.h \
     utils/utils.h \
+    visualNodes/connection/connectionstyle.h \
     visualNodes/connection/connector.h \
     visualNodes/connection/visualconnection.h \
     visualNodes/nodestylebase.h \

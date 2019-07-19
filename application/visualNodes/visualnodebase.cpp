@@ -5,7 +5,15 @@ VisualNodeBase::VisualNodeBase()
     selectionManager = SelectionManager::getInstance();
     setFlag(QGraphicsItem::ItemIsMovable, false);
 }
-
+VisualNodeBase::~VisualNodeBase()
+{
+    emit onDelete(this);
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        delete iterator.next();
+    }
+};
 QRectF VisualNodeBase::boundingRect() const
 {
     return QRectF(-5,0,width+10,height);
@@ -17,13 +25,13 @@ QRectF VisualNodeBase::innerRect() const
 
 void VisualNodeBase::addInputConnector()
 {
-    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT,10);
+    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT,10,M_PI);
     connectors.append(connector);
 }
 
 void VisualNodeBase::addOutputConnector()
 {
-    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10);
+    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10,0);
     connectors.append(connector);
 }
 bool VisualNodeBase::requestConnection(Connector *connector)
@@ -101,7 +109,7 @@ bool VisualNodeBase::isSelected()
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    qDebug("[info,VisualNodeBase] press");
+    //qDebug("[info,VisualNodeBase] press");
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {
@@ -137,7 +145,7 @@ void VisualNodeBase::moveBy(QPointF& by)
 }
 void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    qDebug("[info,VisualNodeBase] release");
+    //qDebug("[info,VisualNodeBase] release");
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {

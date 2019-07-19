@@ -16,6 +16,8 @@ class VisualNodeBase : public QObject, public QGraphicsItem
     Q_OBJECT
 public:
     VisualNodeBase();
+    ~VisualNodeBase();
+
     QString name = "";
     int centerX = 100;
     int centerY = 100;
@@ -47,6 +49,6 @@ protected:
 signals:
     void connectorPressed(VisualNodeBase* node,Connector* connector);
     void connectorReleased(VisualNodeBase* node,Connector* connector);
-
+    void onDelete(VisualNodeBase* node);
 };
 

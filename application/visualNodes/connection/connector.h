@@ -13,7 +13,9 @@ enum class ConnectorType
 class Connector
 {
 public:
-    Connector(VisualNodeBase* parent, int x,int y, ConnectorType type, int diameter);
+    Connector(VisualNodeBase* parent, int x,int y, ConnectorType type, int diameter, double angle);
+    ~Connector();
+
     QRectF getRect(int margins);
     QPoint getPoint();
     QPoint getScenePos();
@@ -22,6 +24,7 @@ public:
 
     int x;
     int y;
+    double angle;
     ConnectorType type;
     QList<VisualConnection*> connections;
 private:

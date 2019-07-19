@@ -18,8 +18,10 @@ public slots:
     //slots for visualnode communication
     void connectorPressed(VisualNodeBase *node, Connector *connector);
     void connectorReleased(VisualNodeBase *node, Connector *connector);
+
     //slot for visualConnector communication
     void onConnectionDelete(VisualConnection *connection);
+    void onNodeDelete(VisualNodeBase *node);
 private:
     //background
     void drawGrid(QPainter *painter, const QRectF &rect, int gridSize, QPen *pen);
@@ -40,6 +42,7 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
     //draw all connections
     void drawForeground(QPainter *painter, const QRectF &rect);
@@ -58,5 +61,6 @@ private:
     //if true selected nodes will move with the mouse
     bool moveSelected = false;
     QPointF lastMousePosition;
+
 };
 
