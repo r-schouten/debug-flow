@@ -1,15 +1,42 @@
 #include "graphicsview.h"
 
+#include <visualnodebase.h>
+
 GraphicsView::GraphicsView(QWidget *parent)
     :QGraphicsView(parent)
 {
+    selectionManager = SelectionManager::getInstance();
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setMouseTracking(true);
 
     setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-}
+    setDragMode(QGraphicsView::RubberBandDrag);
 
+    connect(this,SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)),this,SLOT(selectionUpdate(QRect, QPointF, QPointF)));
+}
+void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
+{
+    QList<QGraphicsItem*> selectedItems = items(rubberBandRect,Qt::ItemSelectionMode::IntersectsItemBoundingRect);
+    QListIterator<QGraphicsItem*> iterator(selectedItems);
+    if(iterator.hasNext())
+    {
+        selectionManager->clearSelected();
+    }
+    while(iterator.hasNext())
+    {
+        VisualNodeBase* node = dynamic_cast<VisualNodeBase*>(iterator.next());
+        if(node)
+        {
+            qDebug("selectionUpdate");
+
+            selectionManager->setSelected(node, false);
+        }
+    }
+    //the update flag is used in nodescene.cpp to move to prevent deselection of items when clicked on a node, it's also used to move selected nodes
+    //clear to flag to prevent the nodescene to move nodes after the selection
+    selectionManager->clearUpdateFlag();
+}
 int _numScheduledScalings = 0;
 void GraphicsView::wheelEvent(QWheelEvent *event)
 {

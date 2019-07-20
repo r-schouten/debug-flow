@@ -4,6 +4,7 @@ VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
     setFlag(QGraphicsItem::ItemIsMovable, false);
+    setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
 }
 VisualNodeBase::~VisualNodeBase()
