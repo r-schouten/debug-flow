@@ -249,7 +249,21 @@ void VisualConnection::setConnector2(Connector *value)
     connector2->connect(this);
     connection2Set = true;
 }
-Connector* VisualConnection::getUnsedConnector()
+Connector* VisualConnection::getUnsetConnector()
+{
+    if(connection1Set)
+    {
+        return connector1;
+    }
+    if(connection2Set)
+    {
+        return connector2;
+    }
+    qDebug("[error][VisualConnection]  getUnsedConnector called while both are connected");
+    return nullptr;
+}
+
+Connector *VisualConnection::getSetConnector()
 {
     if(connection1Set)
     {

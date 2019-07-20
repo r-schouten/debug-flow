@@ -21,6 +21,7 @@ public:
     QPoint getScenePos();
     bool connect(VisualConnection *connection);
     void disconnect(VisualConnection* connection);
+    VisualNodeBase *getParent();
 
     bool requestConnector(VisualConnection* connection);
     int x;

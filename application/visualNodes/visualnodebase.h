@@ -38,6 +38,7 @@ public:
     bool requestConnection(Connector *connector, VisualConnection *connection);
 
     void moveBy(QPointF &by);
+    bool recursiveCircularDependencyCheck(VisualNodeBase *node);
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

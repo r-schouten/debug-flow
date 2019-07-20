@@ -49,6 +49,18 @@ void Connector::disconnect(VisualConnection *connection)
     }
 }
 
+VisualNodeBase *Connector::getParent()
+{
+#ifdef QT_DEBUG
+    if(parent == nullptr)
+    {
+        qFatal("[fatal][VisualNodeBase] parent is nullptr");
+    }
+#endif
+    return parent;
+#
+}
+
 bool Connector::requestConnector(VisualConnection *connection)
 {
     parent->requestConnection(this,connection);

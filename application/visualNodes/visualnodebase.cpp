@@ -35,9 +35,9 @@ void VisualNodeBase::addOutputConnector()
     Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10,0);
     connectors.append(connector);
 }
+
 bool VisualNodeBase::requestConnection(Connector *connector)
 {
-    qDebug("[debug][VisualNodeBase] request connection");
     if(connector->type == ConnectorType::OUTPUT)
     {
         return true;
@@ -55,24 +55,80 @@ bool VisualNodeBase::requestConnection(Connector *connector)
     }
     return false;
 }
+bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode)
+{
+    bool circularDepencencyDetected = false;
+    QListIterator<Connector*> iterator(this->connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        if(connector->type == ConnectorType::OUTPUT)
+        {
+            QListIterator<VisualConnection*> iterator2(connector->connections);
+            while(iterator2.hasNext())
+            {
+                VisualConnection* currentConnection = iterator2.next();
+                Connector* inputConnector = nullptr;
+                if((currentConnection->getConnector1()!=nullptr)&&(currentConnection->getConnector1()->type == ConnectorType::INPUT))
+                {
+                    inputConnector = currentConnection->getConnector1();
+                }
+                else if((currentConnection->getConnector2()!=nullptr)&&(currentConnection->getConnector2()->type == ConnectorType::INPUT))
+                {
+                    inputConnector = currentConnection->getConnector2();
+                }
+                else {
+                    qDebug("[error][recursiveCircularDependencyCheck] no input connector");
+                    break;
+                }
+                if(inputConnector->getParent() == originNode)
+                {
+                    circularDepencencyDetected = true;
+                    return circularDepencencyDetected;
+                }
+                circularDepencencyDetected = inputConnector->getParent()->recursiveCircularDependencyCheck(originNode);
+                if(circularDepencencyDetected)
+                {
+                    return circularDepencencyDetected;
+                }
+            }
+        }
+    }
+    return circularDepencencyDetected;
+
+}
 bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* connection)
 {
-    if(connection->getUnsedConnector() == connector)
+    if(connection->getSetConnector() == connector)
     {
         return false;
     }
+
     if(connector->type == ConnectorType::OUTPUT)
     {
-        if(connection->getUnsedConnector()->type == ConnectorType::OUTPUT)//can't connect output to output
+
+        if(connection->getSetConnector()->getParent()->recursiveCircularDependencyCheck(this))
+        {
+            qDebug("[info][requestConnection] circular dependency detected on output");
+            return false;
+        }
+        if(connection->getSetConnector()->type == ConnectorType::OUTPUT)//can't connect output to output
         {
             return false;
         }
+
 
         return true;
     }
     else if(connector->type == ConnectorType::INPUT)
     {
-        if(connection->getUnsedConnector()->type == ConnectorType::INPUT)//can't connect output to output
+        if(recursiveCircularDependencyCheck(connection->getSetConnector()->getParent()))
+        {
+            qDebug("[info][requestConnection] circular dependency detected on output");
+            return false;
+        }
+
+        if(connection->getSetConnector()->type == ConnectorType::INPUT)//can't connect output to output
         {
             return false;
         }
