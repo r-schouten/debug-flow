@@ -1,7 +1,7 @@
 #include "graphicsview.h"
 
 #include <visualnodebase.h>
-
+#include <QScrollBar>
 GraphicsView::GraphicsView(QWidget *parent)
     :QGraphicsView(parent)
 {
@@ -13,6 +13,7 @@ GraphicsView::GraphicsView(QWidget *parent)
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     setDragMode(QGraphicsView::RubberBandDrag);
 
+    centerOn(graphicsViewOriginX,graphicsViewOriginY);
     connect(this,SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)),this,SLOT(selectionUpdate(QRect, QPointF, QPointF)));
 }
 void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
@@ -72,4 +73,36 @@ void GraphicsView::animFinished()
     else
     _numScheduledScalings++;
     sender()->~QObject();
+}
+void GraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    QGraphicsView::mousePressEvent(event);
+    if(event->button() == Qt::MidButton)
+    {
+        scrollButtonHold = true;
+        lastMousePosition = event->pos();
+    }
+}
+void GraphicsView::mouseReleaseEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseReleaseEvent(event);
+
+    if(event->button() == Qt::MidButton)
+    {
+        scrollButtonHold = false;
+    }
+}
+
+void GraphicsView::mouseMoveEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseMoveEvent(event);
+    if(scrollButtonHold)
+    {
+        QPointF movement = lastMousePosition - event->pos();
+        lastMousePosition = event->pos();
+        int newX = horizontalScrollBar()->value() + movement.x();
+        int newY = verticalScrollBar()->value() + movement.y();
+        horizontalScrollBar()->setValue(newX);
+        verticalScrollBar()->setValue(newY);
+    }
 }

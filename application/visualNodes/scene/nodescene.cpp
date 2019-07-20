@@ -9,6 +9,9 @@ NodeScene::NodeScene()
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
+    setItemIndexMethod(NoIndex);
+
+    setSceneRect(graphicsViewOriginX,graphicsViewOriginY,graphicsViewWidth,graphicsViewHeight);
 
 }
 //this methode takes the ownership over

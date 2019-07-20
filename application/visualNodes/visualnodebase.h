@@ -20,8 +20,8 @@ public:
     ~VisualNodeBase();
 
     QString name = "";
-    int centerX = 100;
-    int centerY = 100;
+    int centerX = graphicsViewOriginX;
+    int centerY = graphicsViewOriginY;
     const int width = 100;
     const int height = 50;
     QRectF boundingRect() const;

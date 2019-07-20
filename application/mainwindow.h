@@ -19,6 +19,8 @@
 
 #include "visualnodebase.h"
 #include "itemlist.h"
+
+#include "visualnodeconfig.h"
 QT_BEGIN_NAMESPACE
 
 class QLabel;

@@ -14,11 +14,17 @@ public:
     // QWidget interface
 protected:
     void wheelEvent(QWheelEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     SelectionManager* selectionManager = nullptr;
+    bool scrollButtonHold = false;
+    QPointF lastMousePosition;
 public slots:
     void scalingTime(qreal x);
     void animFinished();
     void selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint);
+
 };
 
 

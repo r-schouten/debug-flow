@@ -37,6 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
     UiUpdatetimer->start(30);
+    m_ui->nodesScene->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
+
 }
 
 MainWindow::~MainWindow()
@@ -46,8 +48,6 @@ MainWindow::~MainWindow()
 }
 void MainWindow::updateUI()
 {
-    //m_ui->nodesScene->fitInView(0, 0, 1000, 300, Qt::KeepAspectRatio);
-    m_ui->nodesScene->setSceneRect(0, 0, 1000, 300);
     nodeScene->update();
 }
 void MainWindow::initActionsConnections()
