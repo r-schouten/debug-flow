@@ -5,7 +5,7 @@
 #include <QMessageBox>
 #include "settingsdialog.h"
 
-class SerialNode : public OutputNode,public NodeBase, public QObject
+class SerialNode : public OutputNode, public QObject
 {
 public:
     SerialNode();

@@ -13,14 +13,15 @@
 #include "tagfilter.h"
 
 
-class FilteredConsole  : public QWidget,public NodeBase, public InputNode
+class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
 public:
-    explicit FilteredConsole(QWidget *parent = nullptr);
     void clear();
     void NotifyBufferUpdate(Subscription *source)override;
 
+    FilteredConsole();
+    ~FilteredConsole();
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
@@ -28,7 +29,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:
-    QWidget *parent = nullptr;
     QVBoxLayout *layout = nullptr;
     QHBoxLayout *verticalLayout = nullptr;
 

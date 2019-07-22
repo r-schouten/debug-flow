@@ -17,8 +17,9 @@
 
 #include "visualnodebase.h"
 #include "itemlist.h"
-
 #include "visualnodeconfig.h"
+
+#include "windowmanager.h"
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -51,4 +52,5 @@ private:
     NodeScene *nodeScene = nullptr;
     ItemList* itemsList = nullptr;
     QTimer *UiUpdatetimer = nullptr;
+    WindowManager* windowManager = nullptr;
 };

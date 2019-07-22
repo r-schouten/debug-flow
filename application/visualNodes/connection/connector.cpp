@@ -60,6 +60,10 @@ VisualNodeBase *Connector::getParent()
     return parent;
 #
 }
+bool Connector::requestConnector()
+{
+    parent->requestConnection(this);
+}
 
 bool Connector::requestConnector(VisualConnection *connection)
 {

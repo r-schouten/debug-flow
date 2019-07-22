@@ -15,6 +15,8 @@ public:
     ~CircularBufferReader();
     int availableSize();
     char &operator [](int i);
+    char &at(int i);
+
     void release(int index);
 
     friend CircularBuffer;

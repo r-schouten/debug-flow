@@ -21,7 +21,10 @@ SerialNode::SerialNode()
 }
 void SerialNode::openSerialPort()
 {
+    qDebug("%s",m_settings->settings().name.toStdString().c_str());
     const SettingsDialog::Settings p = m_settings->settings();
+    qDebug("%s",p.name.toStdString().c_str());
+
     m_serial->setPortName(p.name);
     m_serial->setBaudRate(p.baudRate);
     m_serial->setDataBits(p.dataBits);
@@ -36,8 +39,8 @@ void SerialNode::openSerialPort()
         //                  .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
         //                  .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
     } else {
-        //QMessageBox::critical(this, tr("Error"), m_serial->errorString());
-
+       qDebug("[Error][SerialNode] %s", m_serial->errorString().toStdString().c_str());
+        qDebug("[Error][SerialNode] %d", m_serial->error());
         //showStatusMessage(tr("Open error"));
     }
 }
@@ -50,7 +53,7 @@ void SerialNode::closeSerialPort()
     //m_ui->actionConnect->setEnabled(true);
     //m_ui->actionDisconnect->setEnabled(false);
     //m_ui->actionConfigure->setEnabled(true);
-    //showStatusMessage(tr("Disconnected"));
+    qDebug("Disconnected");
 }
 void SerialNode::writeData(const QByteArray &data)
 {
@@ -60,7 +63,6 @@ void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
     circularBuffer->append(&data);
-
     NotifyAllSubscriptions();
 }
 
@@ -72,7 +74,7 @@ void SerialNode::openSettings()
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
-        //QMessageBox::critical(this, tr("Critical Error"), m_serial->errorString());
+        qDebug("[Error][SerialNode] %s", m_serial->errorString().toStdString().c_str());
         closeSerialPort();
     }
 }

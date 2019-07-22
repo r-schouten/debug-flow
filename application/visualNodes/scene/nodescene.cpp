@@ -1,9 +1,11 @@
 #include "nodescene.h"
 
 #include <qevent.h>
+#include <visualoutputnodebase.h>
 
 
-NodeScene::NodeScene()
+NodeScene::NodeScene(WindowManager* windowManager)
+    :windowManager(windowManager)
 {
     selectionManager = SelectionManager::getInstance();
     QBrush brush(QColor::fromRgb(100, 100, 100));
@@ -29,6 +31,11 @@ void NodeScene::addItem(VisualNodeBase *item)
     connect(item,SIGNAL(connectorReleased(VisualNodeBase*,Connector*)),this,SLOT(connectorReleased(VisualNodeBase*,Connector*)));
     connect(item,SIGNAL(onDelete(VisualNodeBase*)),this,SLOT(onNodeDelete(VisualNodeBase*)));
 
+    if(dynamic_cast<VisualOutputNodeBase*>(item))
+    {
+        dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(windowManager);
+    }
+    item->activate();
     nodes.append(item);
     QGraphicsScene::addItem(item);
 }
@@ -44,7 +51,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
     qDebug("[debug][NodeScene] connector clicked");
     if(connector->type == ConnectorType::INPUT)
     {
-        if(!node->requestConnection(connector))
+        if(!connector->requestConnector())
         {
             qDebug("[debug][NodeScene] type = input, request not accepted");
             return;
@@ -64,7 +71,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
     {
         return;
     }
-    if(!node->requestConnection(connector,currentTrackingConnection))
+    if(!connector->requestConnector(currentTrackingConnection))
     {
         return;
     }
@@ -80,14 +87,15 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
         if(!currentTrackingConnection->connection1Set)
         {
             currentTrackingConnection->setConnector1(connector);
+            node->makeConnection(currentTrackingConnection);
             currentTrackingConnection = nullptr;
         }
         else if(!currentTrackingConnection->connection2Set)
         {
             currentTrackingConnection->setConnector2(connector);
+            node->makeConnection(currentTrackingConnection);
             currentTrackingConnection = nullptr;
         }
-
     }
 
 }

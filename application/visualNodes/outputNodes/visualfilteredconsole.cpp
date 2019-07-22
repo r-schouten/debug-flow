@@ -2,8 +2,21 @@
 
 VisualFilteredConsole::VisualFilteredConsole()
 {
-    node = new FilteredConsole();
+
     name = "filtered console";
+}
+
+void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
+{
+    qDebug("[debug][VisualFiteredConsole] setWindowManager");
+    if(_windowManager == nullptr)
+    {
+        qFatal("[fatal][VisualFiteredConsole] windowManager == nullptr");
+    }
+    windowManager = _windowManager;
+
+    node = new FilteredConsole();
+
     if(node->hasInput)
     {
         addInputConnector();
@@ -13,11 +26,22 @@ VisualFilteredConsole::VisualFilteredConsole()
         addOutputConnector();
     }
 }
+
+void VisualFilteredConsole::activate()
+{
+    window = windowManager->getMdiWindow(node);
+}
+
+NodeBase *VisualFilteredConsole::getNode()
+{
+    return node;
+}
+
 VisualFilteredConsole::~VisualFilteredConsole()
 {
-    if(node)
+    if(window)
     {
-        delete node;
+        windowManager->deleteMdiWindow(window);
     }
 }
 void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

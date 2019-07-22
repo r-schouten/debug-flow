@@ -20,6 +20,15 @@ VisualSerialNode::~VisualSerialNode()
         delete node;
     }
 }
+void VisualSerialNode::activate()
+{
+    node->openSerialPort();
+
+}
+NodeBase *VisualSerialNode::getNode()
+{
+    return node;
+}
 VisualNodeBase* VisualSerialNode::clone()
 {
     return new VisualSerialNode();
@@ -32,3 +41,4 @@ void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     drawConnectors(painter, this);
 
 }
+

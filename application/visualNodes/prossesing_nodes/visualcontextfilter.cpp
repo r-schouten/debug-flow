@@ -20,10 +20,19 @@ VisualContextFilter::~VisualContextFilter()
         delete node;
     }
 }
+NodeBase* VisualContextFilter::getNode()
+{
+    return node;
+}
+void VisualContextFilter::activate()
+{
+
+}
 VisualNodeBase *VisualContextFilter::clone()
 {
     return new VisualContextFilter;
 }
+
 void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     paintBase(painter,this,name);

@@ -15,6 +15,11 @@ int CircularBufferReader::availableSize()
 }
 char &CircularBufferReader::operator [] (int i)
 {
+    return at(i);
+}
+
+char &CircularBufferReader::at(int i)
+{
     if(i + tail < buffer->capacity)
     {
         return buffer->data[i+tail];

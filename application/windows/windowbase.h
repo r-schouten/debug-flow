@@ -2,7 +2,7 @@
 #include <QWidget>
 
 
-class WindowBase: public QWidget
+class WindowBase
 {
     protected:
     WindowBase();

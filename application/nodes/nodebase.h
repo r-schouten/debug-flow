@@ -1,10 +1,9 @@
 #pragma once
-#include "inputnode.h"
-#include "outputnode.h"
 class NodeBase
 {
 public:
     NodeBase();
+    virtual void activate(){};
     bool hasInput = false;
     bool hasOutput = false;
 };

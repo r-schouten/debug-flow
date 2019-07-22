@@ -1,15 +1,18 @@
 #pragma once
 #include <QGraphicsScene>
+#include <windowmanager.h>
 
 #include <QPainter>
 #include "visualnodebase.h"
 #include "utils.h"
 #include "selectionmanager.h"
+#include "outputstyle.h"
+
 class NodeScene:public QGraphicsScene
 {
     Q_OBJECT
 public:
-    NodeScene();
+    NodeScene(WindowManager *windowManager);
 
     //function to insert items from the resource list
     void insertItem(VisualNodeBase* node);
@@ -47,6 +50,7 @@ protected:
     //draw all connections
     void drawForeground(QPainter *painter, const QRectF &rect);
 private:
+    WindowManager* windowManager = nullptr;
     //hold all connections, they are not graphics items
     QList<VisualConnection*> connections;
     //connection that is tracked by the mouse, set back to nullptr

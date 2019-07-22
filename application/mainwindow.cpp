@@ -7,18 +7,22 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui(new Ui::MainWindow)
 {
     m_ui->setupUi(this);
-    initActionsConnections();
+
+    windowManager = new WindowManager(m_ui->mdiArea);
+
 
     serialNode = new SerialNode();
-    m_ui->mdiArea->setViewMode(QMdiArea::TabbedView);
+    FilteredConsole* console = new FilteredConsole();
+    QWidget* window = windowManager->getMdiWindow(console);
 
-    WindowBase* window = new MdiWindow(m_ui->mdiArea);
-    FilteredConsole* console = new FilteredConsole(window);
     console->addSubscription(serialNode);
+
 
     m_ui->actionConnect->setEnabled(true);
 
-    nodeScene = new NodeScene();
+    initActionsConnections();
+
+    nodeScene = new NodeScene(windowManager);
     m_ui->nodesScene->setScene(nodeScene);
 
     itemsList = new ItemList(m_ui->resourceList,nodeScene);

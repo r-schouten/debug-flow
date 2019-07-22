@@ -2,20 +2,24 @@
 #include "circularbuffer.h"
 #include "outputnode.h"
 #include "subscription.h"
+#include "nodebase.h"
+
 class OutputNode;
 class Subscription;
-class InputNode
+class NodeBase;
+
+class InputNode:public virtual NodeBase
 {
 
 public:
     InputNode();
+    ~InputNode();
     virtual void NotifyBufferUpdate(Subscription* source) = 0;
     void notifyUnsubscribe(Subscription* subscription);
-    //todo make private
+
     void addSubscription(OutputNode* outputNode);
 
 protected:
     QList<Subscription*> subScriptions;
-    CircularBufferReader* bufferReader = nullptr;
 };
 

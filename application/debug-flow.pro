@@ -24,6 +24,7 @@ SOURCES += \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
     visualNodes/outputNodes/visualfilteredconsole.cpp \
+    visualNodes/outputNodes/visualoutputnodebase.cpp \
     visualNodes/prossesing_nodes/visualcontextfilter.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
@@ -34,7 +35,8 @@ SOURCES += \
     visualNodes/visualnodebase.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
-    windows/windowbase.cpp
+    windows/windowbase.cpp \
+    windows/windowmanager.cpp
 
 HEADERS += \
     circularbuffer/circularbuffer.h \
@@ -58,6 +60,7 @@ HEADERS += \
     visualNodes/nodestylebase.h \
     visualNodes/outputNodes/outputstyle.h \
     visualNodes/outputNodes/visualfilteredconsole.h \
+    visualNodes/outputNodes/visualoutputnodebase.h \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visualcontextfilter.h \
     visualNodes/resourceList/itemlist.h \
@@ -72,7 +75,8 @@ HEADERS += \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h \
-    ui_mainwindow.h
+    ui_mainwindow.h \
+    windows/windowmanager.h
 
 FORMS += \
     mainwindow_old.ui \

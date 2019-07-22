@@ -6,13 +6,13 @@
 #include <qmdiarea.h>
 
 
-class MdiWindow : public WindowBase
+class MdiWindow : public WindowBase, public QMdiSubWindow
 {
 public:
     MdiWindow(QMdiArea* mdiArea)
     {
-        mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);
-        mdiArea->addSubWindow(this);
+        //mdiArea->setOption(QMdiArea::DontMaximizeSubWindowOnActivation);
+        //mdiArea->addSubWindow(this);
     }
 };
 

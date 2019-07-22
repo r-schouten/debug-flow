@@ -1,7 +1,6 @@
 #include "filteredconsole.h"
 
-FilteredConsole::FilteredConsole(QWidget *parent)
-    :parent(parent)
+FilteredConsole::FilteredConsole()
 {
     if(dynamic_cast<InputNode*>(this))
     {
@@ -12,13 +11,13 @@ FilteredConsole::FilteredConsole(QWidget *parent)
         hasOutput = true;
     }
 
-    console = new QPlainTextEdit(parent);
+    console = new QPlainTextEdit(this);
     console->setReadOnly(true);
     console->document()->setMaximumBlockCount(1000);
 
 
-    layout = new QVBoxLayout(parent);
-    verticalLayout = new QHBoxLayout(parent);
+    layout = new QVBoxLayout(this);
+    verticalLayout = new QHBoxLayout(this);
 
     layout->addLayout(verticalLayout);
     layout->addWidget(console);
@@ -32,9 +31,21 @@ FilteredConsole::FilteredConsole(QWidget *parent)
     connect(tagFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
 
 }
+
+FilteredConsole::~FilteredConsole()
+{
+    while(items.size() > 0)
+    {
+        delete items.takeAt(0);
+    }
+    while(properyBoxes.size() > 0)
+    {
+        delete properyBoxes.takeAt(0);
+    }
+    delete tagFilter;
+}
 void FilteredConsole::propertyChanged(Property* property)
 {
-    qDebug() << "propery changed";
 
     if(property->itemModel == nullptr)
     {
@@ -73,7 +84,6 @@ void FilteredConsole::slot_changed(QObject* propertyOption)
 {
     PropertyOption* option = dynamic_cast<PropertyOption*>(propertyOption);
     if(!option)return;
-    qDebug("slot changed");
 
     option->setEnabled(option->standardItem->checkState());
 }

@@ -1,5 +1,7 @@
 #include "visualnodebase.h"
 
+#include <outputnode.h>
+
 VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
@@ -35,26 +37,6 @@ void VisualNodeBase::addOutputConnector()
 {
     Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10,0);
     connectors.append(connector);
-}
-
-bool VisualNodeBase::requestConnection(Connector *connector)
-{
-    if(connector->type == ConnectorType::OUTPUT)
-    {
-        return true;
-    }
-    else if(connector->type == ConnectorType::INPUT)
-    {
-#ifdef ALLOW_MULTIPLE_INPUT
-        return true;
-#else
-        if(connector->connections.size() == 0)
-        {
-            return true;
-        }
-#endif
-    }
-    return false;
 }
 bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode)
 {
@@ -98,13 +80,64 @@ bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode
     return circularDepencencyDetected;
 
 }
+
+void VisualNodeBase::makeConnection(VisualConnection* connection)
+{
+#ifdef QT_DEBUG
+    if(!requestConnection(connection->getConnector1(),connection))
+    {
+        qDebug("[debug][VisualNodeBase] makeConnection connection not permitted");
+    }
+#endif
+    Connector* inputConnector = nullptr;
+    Connector* outputConnector = nullptr;
+    if(connection->getConnector1()->type == ConnectorType::INPUT)
+    {
+        inputConnector = connection->getConnector1();
+        outputConnector = connection->getConnector2();
+    }
+    else {
+        inputConnector = connection->getConnector2();
+        outputConnector = connection->getConnector1();
+    }
+    OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
+    if(outputNode == nullptr)
+    {
+        qFatal("[fatal][VisualNodeBase] given output is no outputnode");
+    }
+    InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
+    if(outputNode == nullptr)
+    {
+        qFatal("[fatal][VisualNodeBase] given input is no inputNode");
+    }
+    inputNode->addSubscription(outputNode);
+}
+bool VisualNodeBase::requestConnection(Connector *connector)
+{
+    if(connector->type == ConnectorType::OUTPUT)
+    {
+        return true;
+    }
+    else if(connector->type == ConnectorType::INPUT)
+    {
+#ifdef ALLOW_MULTIPLE_INPUT
+        return true;
+#else
+        if(connector->connections.size() == 0)
+        {
+            return true;
+        }
+#endif
+    }
+    return false;
+}
 bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* connection)
 {
+
     if(connection->getSetConnector() == connector)
     {
         return false;
     }
-
     if(connector->type == ConnectorType::OUTPUT)
     {
 
@@ -117,15 +150,12 @@ bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* c
         {
             return false;
         }
-
-
-        return true;
     }
     else if(connector->type == ConnectorType::INPUT)
     {
         if(recursiveCircularDependencyCheck(connection->getSetConnector()->getParent()))
         {
-            qDebug("[info][requestConnection] circular dependency detected on output");
+            qDebug("[info][requestConnection] circular dependency detected on input");
             return false;
         }
 
@@ -134,15 +164,33 @@ bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* c
             return false;
         }
 #ifdef ALLOW_MULTIPLE_INPUT
-        return true;
+
 #else
         if(connector->connections.size() == 0)
         {
-            return true;
         }
 #endif
     }
-    return false;
+    else
+    {
+        return false;
+    }
+
+    //check for double links
+    QListIterator<VisualConnection*> iterator(connector->connections);
+    while(iterator.hasNext())
+    {
+        VisualConnection* currentConnection = iterator.next();
+        if(currentConnection->getConnector1() == connector)
+        {
+            return false;
+        }
+        if(currentConnection->getConnector2() == connector)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)

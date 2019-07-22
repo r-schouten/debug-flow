@@ -34,11 +34,17 @@ public:
     //easy acces methods for adding the basic connectors, of more needed the can be added to the QList connectors
     void addInputConnector();
     void addOutputConnector();
+
+    void makeConnection(VisualConnection *connection);
+
     bool requestConnection(Connector *connector);
     bool requestConnection(Connector *connector, VisualConnection *connection);
 
     void moveBy(QPointF &by);
     bool recursiveCircularDependencyCheck(VisualNodeBase *node);
+    virtual void activate() = 0;
+    virtual NodeBase* getNode() = 0;
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -49,8 +55,10 @@ protected:
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
 
+
     QList<Connector*> connectors;
     SelectionManager* selectionManager;
+
 private:
     bool pressedOnConnection = false;
 signals:

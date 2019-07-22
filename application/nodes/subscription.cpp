@@ -7,8 +7,12 @@ Subscription::~Subscription()
     outputNode->notifyUnsubscribe(this);
     delete bufferReader;
 }
-
+void Subscription::remove()//use a function instead of a deconstructor so the caller don't have to delete the object
+{
+    delete this;
+}
 void Subscription::notifyBufferUpdate()
 {
+    qDebug("notifyBufferUpdate");
     inputNode->NotifyBufferUpdate(this);
 }
