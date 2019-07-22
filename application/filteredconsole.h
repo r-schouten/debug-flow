@@ -13,7 +13,7 @@
 #include "tagfilter.h"
 
 
-class FilteredConsole  : public QWidget, public InputNode
+class FilteredConsole  : public QWidget,public NodeBase, public InputNode
 {
     Q_OBJECT
 public:

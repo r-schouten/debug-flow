@@ -9,8 +9,6 @@
 #include <mdiwindow.cpp>
 
 #include "nodescene.h"
-#include "visualserialnode.h"
-#include "inputnode.h"
 #include "ui_mainwindow.h"
 
 #include "filteredconsole.h"

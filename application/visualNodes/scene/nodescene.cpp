@@ -11,7 +11,6 @@ NodeScene::NodeScene()
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
     setItemIndexMethod(NoIndex);
 
-    setSceneRect(graphicsViewOriginX,graphicsViewOriginY,graphicsViewWidth,graphicsViewHeight);
 
 }
 //this methode takes the ownership over

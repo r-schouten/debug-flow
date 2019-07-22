@@ -12,6 +12,7 @@ public:
     VisualSerialNode();
     VisualNodeBase *clone();
 
+    ~VisualSerialNode();
 protected:
      SerialNode *node = nullptr;
 

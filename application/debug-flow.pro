@@ -23,6 +23,7 @@ SOURCES += \
     utils/utils.cpp \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
+    visualNodes/outputNodes/visualfilteredconsole.cpp \
     visualNodes/prossesing_nodes/visualcontextfilter.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
@@ -55,6 +56,8 @@ HEADERS += \
     visualNodes/connection/connector.h \
     visualNodes/connection/visualconnection.h \
     visualNodes/nodestylebase.h \
+    visualNodes/outputNodes/outputstyle.h \
+    visualNodes/outputNodes/visualfilteredconsole.h \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visualcontextfilter.h \
     visualNodes/resourceList/itemlist.h \
@@ -90,6 +93,7 @@ INCLUDEPATH += \
     visualNodes/prossesing_nodes \
     visualNodes/resourceList \
     visualNodes/connection \
+    visualNodes/outputNodes \
     nodes/processing_nodes \
     nodes/source_nodes \
     utils

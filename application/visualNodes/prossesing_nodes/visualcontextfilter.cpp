@@ -13,13 +13,19 @@ VisualContextFilter::VisualContextFilter()
         addOutputConnector();
     }
 }
-
+VisualContextFilter::~VisualContextFilter()
+{
+    if(node)
+    {
+        delete node;
+    }
+}
 VisualNodeBase *VisualContextFilter::clone()
 {
     return new VisualContextFilter;
 }
 void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    paintBase(painter,this,"context filter");
+    paintBase(painter,this,name);
     drawConnectors(painter,this);
 }

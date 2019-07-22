@@ -13,7 +13,13 @@ VisualSerialNode::VisualSerialNode()
         addOutputConnector();
     }
 }
-
+VisualSerialNode::~VisualSerialNode()
+{
+    if(node != nullptr)
+    {
+        delete node;
+    }
+}
 VisualNodeBase* VisualSerialNode::clone()
 {
     return new VisualSerialNode();

@@ -11,6 +11,10 @@
 #include "nodescene.h"
 
 #include "visualnodebase.h"
+
+#include "visualcontextfilter.h"
+#include "visualfilteredconsole.h"
+#include "visualserialnode.h"
 class ItemList :public QObject
 {
     Q_OBJECT

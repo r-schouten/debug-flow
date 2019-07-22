@@ -16,21 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     FilteredConsole* console = new FilteredConsole(window);
     console->addSubscription(serialNode);
 
-    WindowBase* window2 = new MdiWindow(m_ui->mdiArea);
-    FilteredConsole* console2 = new FilteredConsole(window2);
-    console2->addSubscription(serialNode);
-
     m_ui->actionConnect->setEnabled(true);
 
-    m_ui->nodesScene->setAcceptDrops(true);
     nodeScene = new NodeScene();
     m_ui->nodesScene->setScene(nodeScene);
-
-    VisualSerialNode *node = new VisualSerialNode();
-    nodeScene->addItem(node);
-
-    VisualContextFilter *node2 = new VisualContextFilter();
-    nodeScene->addItem(node2);
 
     itemsList = new ItemList(m_ui->resourceList,nodeScene);
 

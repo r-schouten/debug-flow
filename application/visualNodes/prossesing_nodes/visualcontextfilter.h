@@ -7,6 +7,7 @@ class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
     Q_OBJECT
 public:
     VisualContextFilter();
+    ~VisualContextFilter();
 protected:
     ContextFilter* node = nullptr;
     VisualNodeBase *clone();
