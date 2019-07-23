@@ -2,6 +2,7 @@
 #include "visualnodebase.h"
 #include "contextfilter.h"
 #include "processingstyle.h"
+#include "tagfilter.h"
 class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 {
     Q_OBJECT
@@ -13,6 +14,6 @@ protected:
     void activate();
     VisualNodeBase *clone();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
+    TagFilter* tagFilter = nullptr;
 };
 

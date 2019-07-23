@@ -16,8 +16,9 @@ public slots:
     void readData();
     void openSettings();
     void handleError(QSerialPort::SerialPortError error);
+    SettingsDialog* m_settings;
+
 private:
     QSerialPort *m_serial = nullptr;
-    SettingsDialog* m_settings;
 };
 

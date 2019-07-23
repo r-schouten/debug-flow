@@ -22,8 +22,8 @@ public:
     QString name = "";
     int centerX = graphicsViewOriginX;
     int centerY = graphicsViewOriginY;
-    const int width = 100;
-    const int height = 50;
+    int width = 100;
+    int height = 50;
     QRectF boundingRect() const;
     QRectF innerRect() const;
 
@@ -38,7 +38,7 @@ public:
     void makeConnection(VisualConnection *connection);
 
     bool requestConnection(Connector *connector);
-    bool requestConnection(Connector *connector, VisualConnection *connection);
+    bool requestConnection(Connector *connector1, Connector *connector2, bool exist = false);
 
     void moveBy(QPointF &by);
     bool recursiveCircularDependencyCheck(VisualNodeBase *node);
@@ -47,7 +47,7 @@ public:
     NodeBase* getNode();
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);

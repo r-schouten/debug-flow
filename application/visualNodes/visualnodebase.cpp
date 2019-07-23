@@ -90,9 +90,9 @@ NodeBase *VisualNodeBase::getNode()
 void VisualNodeBase::makeConnection(VisualConnection* connection)
 {
 #ifdef QT_DEBUG
-    if(!requestConnection(connection->getConnector1(),connection))
+    if(!requestConnection(connection->getConnector1(),connection->getConnector2(), true))
     {
-        qDebug("[debug][VisualNodeBase] makeConnection connection not permitted");
+        qFatal("[fatal][VisualNodeBase] makeConnection connection not permitted");
     }
 #endif
     Connector* inputConnector = nullptr;
@@ -137,43 +137,62 @@ bool VisualNodeBase::requestConnection(Connector *connector)
     }
     return false;
 }
-bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* connection)
-{
 
-    if(connection->getSetConnector() == connector)
+bool VisualNodeBase::requestConnection(Connector *connector1, Connector* connector2, bool exist)
+{
+    if(connector1 == connector2)
     {
         return false;
     }
-    if(connector->type == ConnectorType::OUTPUT)
+    if(connector1->getParent() != this)
     {
+        if(connector2->getParent() != this)
+        {
+            qFatal("[fatal][VisualNodeBase] request of a connector that is not from this class");
+        }
+        //connector1 must be connected to this class
+        Connector* temp = connector1;
+        connector1 = connector2;
+        connector2 = temp;
+    }
+    else {
+        if(connector2->getParent() == this)
+        {
+            //both connectors are connected to this node
+            return false;
+        }
+    }
 
-        if(connection->getSetConnector()->getParent()->recursiveCircularDependencyCheck(this))
+    if(connector1->type == ConnectorType::OUTPUT)
+    {
+        if(connector2->type == ConnectorType::OUTPUT)//can't connect output to output
+        {
+            return false;
+        }
+        if(connector2->getParent()->recursiveCircularDependencyCheck(this))
         {
             qDebug("[info][requestConnection] circular dependency detected on output");
             return false;
         }
-        if(connection->getSetConnector()->type == ConnectorType::OUTPUT)//can't connect output to output
-        {
-            return false;
-        }
     }
-    else if(connector->type == ConnectorType::INPUT)
+    else if(connector1->type == ConnectorType::INPUT)
     {
-        if(recursiveCircularDependencyCheck(connection->getSetConnector()->getParent()))
+        if(recursiveCircularDependencyCheck(connector2->getParent()))
         {
             qDebug("[info][requestConnection] circular dependency detected on input");
             return false;
         }
 
-        if(connection->getSetConnector()->type == ConnectorType::INPUT)//can't connect output to output
+        if(connector2->type == ConnectorType::INPUT)//can't connect output to output
         {
             return false;
         }
 #ifdef ALLOW_MULTIPLE_INPUT
 
 #else
-        if(connector->connections.size() == 0)
+        if(connector->connections.size() != 0)
         {
+            return false;
         }
 #endif
     }
@@ -181,19 +200,21 @@ bool VisualNodeBase::requestConnection(Connector *connector, VisualConnection* c
     {
         return false;
     }
-
-    //check for double links
-    QListIterator<VisualConnection*> iterator(connector->connections);
-    while(iterator.hasNext())
+    if(!exist)
     {
-        VisualConnection* currentConnection = iterator.next();
-        if(currentConnection->getConnector1() == connector)
+        //check for double links
+        QListIterator<VisualConnection*> iterator(connector1->connections);
+        while(iterator.hasNext())
         {
-            return false;
-        }
-        if(currentConnection->getConnector2() == connector)
-        {
-            return false;
+            VisualConnection* currentConnection = iterator.next();
+            if(currentConnection->getConnector1() == connector2)
+            {
+                return false;
+            }
+            if(currentConnection->getConnector2() == connector2)
+            {
+                return false;
+            }
         }
     }
     return true;
@@ -213,7 +234,7 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
                 painter->setBrush(QColor::fromRgbF(1,1,0,0.3));
             }
             else {
-                if(requestConnection(connector,*selectionManager->currentTrackingConnection))//valid connection
+                if(requestConnection(connector,(*selectionManager->currentTrackingConnection)->getSetConnector()))//valid connection
                 {
                     painter->setBrush(QColor::fromRgbF(0,1,0,0.3));
                 }
@@ -240,7 +261,7 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 
 void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QString name)
 {
-    setPos(centerX-width/2,centerY-height/2);
+    setPos(centerX,centerY);
     QRectF rect = innerRect();
 
     painter->setPen(nodeStyle->nodeBackgroundColor);

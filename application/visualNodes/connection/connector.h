@@ -24,6 +24,7 @@ public:
     VisualNodeBase *getParent();
 
     bool requestConnector(VisualConnection* connection);
+    bool requestConnector(Connector *connector);
     bool requestConnector();
 
     int x;

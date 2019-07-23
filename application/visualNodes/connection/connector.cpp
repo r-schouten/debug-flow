@@ -89,5 +89,9 @@ bool Connector::requestConnector()
 
 bool Connector::requestConnector(VisualConnection *connection)
 {
-    parent->requestConnection(this,connection);
+    parent->requestConnection(this,connection->getSetConnector());
+}
+bool Connector::requestConnector(Connector* connector)
+{
+    parent->requestConnection(this, connector);
 }

@@ -18,6 +18,10 @@ NodeScene::NodeScene(WindowManager* windowManager)
 //this methode takes the ownership over
 void NodeScene::insertItem(VisualNodeBase *node)
 {
+    if(nodeToPlace)//already placing a node
+    {
+        delete nodeToPlace;
+    }
     addItem(node);
     node->setVisible(false);
     nodeToPlace = node;
@@ -57,7 +61,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
             return;
         }
     }
-
+    selectionManager->clearSelected();
     VisualConnection* newConnection = new VisualConnection(connector);
     connections.append(newConnection);
     currentTrackingConnection = newConnection;
@@ -102,6 +106,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 void NodeScene::onNodeDelete(VisualNodeBase* node)
 {
     removeItem(node);
+    selectionManager->selectedNodes.removeOne(node);
     if(nodes.removeOne(node))
     {
 
@@ -265,7 +270,6 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         while(iterator.hasNext())
         {
             VisualNodeBase* node = iterator.next();
-
         }
     }
     QGraphicsScene::mouseReleaseEvent(event);
@@ -291,5 +295,13 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
         }
         selectionManager->clearSelected();
     }
-
+    if ((event->key() == Qt::Key_Escape)||(event->key() == Qt::Key_Delete))
+    {
+        selectionManager->clearSelected();
+        if(currentTrackingConnection)
+        {
+            delete currentTrackingConnection;
+            currentTrackingConnection = nullptr;
+        }
+    }
 }

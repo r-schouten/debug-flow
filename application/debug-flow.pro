@@ -32,6 +32,7 @@ SOURCES += \
     visualNodes/scene/nodescene.cpp \
     visualNodes/selectionmanager.cpp \
     visualNodes/source_nodes/visualserialnode.cpp \
+    visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/visualnodebase.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     visualNodes/selectionmanager.h \
     visualNodes/source_nodes/sourcestyle.h \
     visualNodes/source_nodes/visualserialnode.h \
+    visualNodes/source_nodes/visualsourcenodebase.h \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
     windows/dialogwindow.h \
