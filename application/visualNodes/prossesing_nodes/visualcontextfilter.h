@@ -11,7 +11,6 @@ public:
 protected:
     ContextFilter* node = nullptr;
     void activate();
-    NodeBase *getNode();
     VisualNodeBase *clone();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

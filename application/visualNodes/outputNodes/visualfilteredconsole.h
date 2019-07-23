@@ -16,7 +16,6 @@ public:
     ~VisualFilteredConsole();
 private:
     FilteredConsole* node = nullptr;
-    NodeBase* getNode();
     MdiWindow* window = nullptr;
 };
 

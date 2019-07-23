@@ -19,7 +19,8 @@ public:
 
     void addSubscription(OutputNode* outputNode);
 
-protected:
+    void deleteSubscription(OutputNode* outputNode);
+protected:;
     QList<Subscription*> subScriptions;
 };
 

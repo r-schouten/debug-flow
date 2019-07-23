@@ -24,3 +24,17 @@ void InputNode::addSubscription(OutputNode *outputNode)
 {
     subScriptions.append(outputNode->subscribe(this));
 }
+
+void InputNode::deleteSubscription(OutputNode *outputNode)
+{
+    QListIterator<Subscription*> iterator(subScriptions);
+    while(iterator.hasNext())
+    {
+
+        Subscription* subscription = iterator.next();
+        if(subscription->getOutputNode() == outputNode)
+        {
+            subscription->remove();
+        }
+    }
+}

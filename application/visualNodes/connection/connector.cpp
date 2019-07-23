@@ -1,5 +1,7 @@
 #include "connector.h"
 
+#include <inputnode.h>
+
 
 Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter, double angle)
     :parent(parent),x(x),y(y),type(type),connectionDiameter(diameter),angle(angle)
@@ -36,6 +38,26 @@ void Connector::disconnect(VisualConnection *connection)
 {
     if(connections.contains(connection))
     {
+        if(connection->connection1Set && connection->connection2Set)
+        {
+            Connector* inputConnector = nullptr;
+            Connector* outputConnector = nullptr;
+            if(connection->getConnector1()->type == ConnectorType::INPUT)
+            {
+                inputConnector = connection->getConnector1();
+                outputConnector = connection->getConnector2();
+            }
+            else {
+                inputConnector = connection->getConnector2();
+                outputConnector = connection->getConnector1();
+            }
+            InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
+            OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
+            if((inputNode) && (outputNode))
+            {
+                inputNode->deleteSubscription(outputNode);
+            }
+        }
         if(connections.removeOne(connection))
         {
 

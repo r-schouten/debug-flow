@@ -18,9 +18,11 @@ public:
     {
 
     }
+    OutputNode* getOutputNode();
     void notifyBufferUpdate();
     CircularBufferReader* bufferReader;
 
     void remove();
+
 };
 

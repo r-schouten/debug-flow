@@ -11,6 +11,7 @@ VisualNodeBase::VisualNodeBase()
 }
 VisualNodeBase::~VisualNodeBase()
 {
+    baseNode = nullptr;//the node is already deleted in de inherited class
     emit onDelete(this);
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
@@ -79,6 +80,11 @@ bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode
     }
     return circularDepencencyDetected;
 
+}
+
+NodeBase *VisualNodeBase::getNode()
+{
+    return baseNode;
 }
 
 void VisualNodeBase::makeConnection(VisualConnection* connection)

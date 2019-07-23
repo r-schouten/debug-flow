@@ -10,18 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     windowManager = new WindowManager(m_ui->mdiArea);
 
-
-    serialNode = new SerialNode();
-    FilteredConsole* console = new FilteredConsole();
-    QWidget* window = windowManager->getMdiWindow(console);
-
-    console->addSubscription(serialNode);
-
-
-    m_ui->actionConnect->setEnabled(true);
-
-    initActionsConnections();
-
     nodeScene = new NodeScene(windowManager);
     m_ui->nodesScene->setScene(nodeScene);
 
@@ -42,9 +30,5 @@ MainWindow::~MainWindow()
 void MainWindow::updateUI()
 {
     nodeScene->update();
-}
-void MainWindow::initActionsConnections()
-{
-    connect(m_ui->actionConnect, &QAction::triggered, serialNode, &SerialNode::openSerialPort);
 }
 

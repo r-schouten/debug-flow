@@ -16,7 +16,7 @@ void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
     windowManager = _windowManager;
 
     node = new FilteredConsole();
-
+    baseNode = node;
     if(node->hasInput)
     {
         addInputConnector();
@@ -32,16 +32,12 @@ void VisualFilteredConsole::activate()
     window = windowManager->getMdiWindow(node);
 }
 
-NodeBase *VisualFilteredConsole::getNode()
-{
-    return node;
-}
-
 VisualFilteredConsole::~VisualFilteredConsole()
 {
     if(window)
     {
         windowManager->deleteMdiWindow(window);
+        baseNode = nullptr;
     }
 }
 void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

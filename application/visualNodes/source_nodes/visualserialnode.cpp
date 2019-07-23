@@ -3,6 +3,7 @@
 VisualSerialNode::VisualSerialNode()
 {
     node = new SerialNode();
+    baseNode = node;
     name = "Serial node";
     if(node->hasInput)
     {
@@ -18,6 +19,7 @@ VisualSerialNode::~VisualSerialNode()
     if(node != nullptr)
     {
         delete node;
+        baseNode = nullptr;
     }
 }
 void VisualSerialNode::activate()
@@ -25,10 +27,7 @@ void VisualSerialNode::activate()
     node->openSerialPort();
 
 }
-NodeBase *VisualSerialNode::getNode()
-{
-    return node;
-}
+
 VisualNodeBase* VisualSerialNode::clone()
 {
     return new VisualSerialNode();

@@ -43,7 +43,8 @@ public:
     void moveBy(QPointF &by);
     bool recursiveCircularDependencyCheck(VisualNodeBase *node);
     virtual void activate() = 0;
-    virtual NodeBase* getNode() = 0;
+
+    NodeBase* getNode();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -55,6 +56,7 @@ protected:
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
 
+    NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer
 
     QList<Connector*> connectors;
     SelectionManager* selectionManager;

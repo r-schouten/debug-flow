@@ -7,6 +7,11 @@ Subscription::~Subscription()
     outputNode->notifyUnsubscribe(this);
     delete bufferReader;
 }
+
+OutputNode *Subscription::getOutputNode()
+{
+    return outputNode;
+}
 void Subscription::remove()//use a function instead of a deconstructor so the caller don't have to delete the object
 {
     delete this;

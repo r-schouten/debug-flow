@@ -21,10 +21,12 @@ VisualConnection::~VisualConnection()
     if(connection1Set)
     {
         connector1->disconnect(this);
+        connection1Set = false;
     }
     if(connection2Set)
     {
         connector2->disconnect(this);
+        connection2Set = false;
     }
     emit onDelete(this);
 }

@@ -3,6 +3,8 @@
 VisualContextFilter::VisualContextFilter()
 {
     node = new ContextFilter();
+    baseNode = node;
+
     name = "Context filter";
     if(node->hasInput)
     {
@@ -18,12 +20,10 @@ VisualContextFilter::~VisualContextFilter()
     if(node)
     {
         delete node;
+        baseNode = nullptr;
     }
 }
-NodeBase* VisualContextFilter::getNode()
-{
-    return node;
-}
+
 void VisualContextFilter::activate()
 {
 
