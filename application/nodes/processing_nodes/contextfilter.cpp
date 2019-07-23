@@ -15,7 +15,7 @@ ContextFilter::ContextFilter()
 
 void ContextFilter::NotifyBufferUpdate(Subscription *source)
 {
-    qDebug("[verbose,ContextFilter] NotifyBufferUpdate");
+    //qDebug("[verbose,ContextFilter] NotifyBufferUpdate");
 
     int availableSize = source->bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)

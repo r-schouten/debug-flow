@@ -3,8 +3,7 @@
 
 #include <QSerialPort>
 #include <QMessageBox>
-#include "settingsdialog.h"
-
+#include "serialsettingsbase.h"
 class SerialNode : public OutputNode, public QObject
 {
 public:
@@ -14,9 +13,8 @@ public slots:
     void closeSerialPort();
     void writeData(const QByteArray &data);
     void readData();
-    void openSettings();
     void handleError(QSerialPort::SerialPortError error);
-    SettingsDialog* m_settings;
+    SerialSettingsBase* settings = nullptr;
 
 private:
     QSerialPort *m_serial = nullptr;

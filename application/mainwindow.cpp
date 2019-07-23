@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
     UiUpdatetimer->start(30);
     m_ui->nodesScene->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
-
 }
 
 MainWindow::~MainWindow()

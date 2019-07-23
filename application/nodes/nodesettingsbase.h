@@ -1,6 +1,5 @@
-#ifndef NODESETTINGSBASE_H
-#define NODESETTINGSBASE_H
-
+#pragma once
+#include "nodebase.h"
 
 class NodeSettingsBase
 {
@@ -8,4 +7,3 @@ public:
     NodeSettingsBase();
 };
 
-#endif // NODESETTINGSBASE_H

@@ -45,14 +45,14 @@ void NodeScene::addItem(VisualNodeBase *item)
 }
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 {
-    qDebug("[debug][NodeScene] connectorPressed");
+    //qDebug("[debug][NodeScene] connectorPressed");
     anyConnectorPressed = true;
 
     if(currentTrackingConnection)
     {
         return;
     }
-    qDebug("[debug][NodeScene] connector clicked");
+    //qDebug("[debug][NodeScene] connector clicked");
     if(connector->type == ConnectorType::INPUT)
     {
         if(!connector->requestConnector())
@@ -69,7 +69,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
-    qDebug("[debug][NodeScene] connectorReleased");
+    //qDebug("[debug][NodeScene] connectorReleased");
 
     if(currentTrackingConnection == nullptr)
     {

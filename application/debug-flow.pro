@@ -13,9 +13,11 @@ SOURCES += \
     mainwindow.cpp \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
+    nodes/nodesettingsbase.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilter.cpp \
     nodes/source_nodes/serialnode.cpp \
+    nodes/source_nodes/serialsettingsbase.cpp \
     nodes/subscription.cpp \
     settingsdialog.cpp \
     tagfilter.cpp \
@@ -34,6 +36,7 @@ SOURCES += \
     visualNodes/source_nodes/visualserialnode.cpp \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/visualnodebase.cpp \
+    widgets/combobox.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
     windows/windowbase.cpp \
@@ -47,9 +50,11 @@ HEADERS += \
     mainwindow.h \
     nodes/inputnode.h \
     nodes/nodebase.h \
+    nodes/nodesettingsbase.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilter.h \
     nodes/source_nodes/serialnode.h \
+    nodes/source_nodes/serialsettingsbase.h \
     nodes/subscription.h \
     settingsdialog.h \
     tagfilter.h \
@@ -74,6 +79,7 @@ HEADERS += \
     visualNodes/source_nodes/visualsourcenodebase.h \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
+    widgets/combobox.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h \
@@ -102,6 +108,7 @@ INCLUDEPATH += \
     visualNodes/outputNodes \
     nodes/processing_nodes \
     nodes/source_nodes \
-    utils
+    utils \
+    widgets
 target.path = C:/debug-flow/builds
 INSTALLS += target

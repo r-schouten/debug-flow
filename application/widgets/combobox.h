@@ -1,11 +1,13 @@
-#ifndef COMBOBOX_H
-#define COMBOBOX_H
-
+#pragma once
+#include <QComboBox>
 
 class ComboBox : public QComboBox
 {
+    Q_OBJECT
 public:
     ComboBox();
+    void showPopup();
+signals:
+    void onShowPopup(ComboBox* combobox);
 };
 
-#endif // COMBOBOX_H
