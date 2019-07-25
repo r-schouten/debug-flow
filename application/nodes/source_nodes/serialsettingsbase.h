@@ -8,6 +8,9 @@ public:
     SerialSettingsBase();
     struct Settings
     {
+        bool running = false;
+        bool errorOccured = false;
+        QString errorString;
         QString name;
         qint32 baudRate;
         QSerialPort::DataBits dataBits;

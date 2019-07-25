@@ -5,6 +5,7 @@
 #include <QDebug>
 SerialSettingsBase::SerialSettingsBase()
 {
+    nodeSettings.running = false;
     nodeSettings.baudRate = 9600;
 
     nodeSettings.dataBits = QSerialPort::Data8;

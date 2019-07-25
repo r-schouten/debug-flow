@@ -1,22 +1,26 @@
 #pragma once
-#include "outputnode.h"
-
 #include <QSerialPort>
 #include <QMessageBox>
+
+#include "outputnode.h"
 #include "serialsettingsbase.h"
-class SerialNode : public OutputNode, public QObject
+
+class SerialNode : public QObject, public OutputNode
 {
+    Q_OBJECT
 public:
     SerialNode();
+    SerialSettingsBase* settings = nullptr;
+
+private:
+    QSerialPort *m_serial = nullptr;
 public slots:
     void openSerialPort();
     void closeSerialPort();
     void writeData(const QByteArray &data);
     void readData();
     void handleError(QSerialPort::SerialPortError error);
-    SerialSettingsBase* settings = nullptr;
-
-private:
-    QSerialPort *m_serial = nullptr;
+signals:
+    void SerialPortError(QSerialPort::SerialPortError error);
 };
 

@@ -20,7 +20,13 @@ SerialNode::SerialNode()
 }
 void SerialNode::openSerialPort()
 {
-    qDebug("%s",settings->settings().name.toStdString().c_str());
+    if (m_serial->isOpen())
+    {
+        m_serial->close();
+        qDebug("[Debug][SerialNode] close before open");
+    }
+    settings->nodeSettings.running = false;
+
     const SerialSettingsBase::Settings p = settings->settings();
     qDebug("%s",p.name.toStdString().c_str());
 
@@ -31,19 +37,25 @@ void SerialNode::openSerialPort()
     m_serial->setStopBits(p.stopBits);
     m_serial->setFlowControl(p.flowControl);
     if (m_serial->open(QIODevice::ReadWrite)) {
-
+        settings->nodeSettings.running = true;
+        settings->nodeSettings.errorOccured = false;
     } else {
-
-       qDebug("[Error][SerialNode] %s", m_serial->errorString().toStdString().c_str());
-       settings->print();
+        settings->nodeSettings.running = false;
+        settings->nodeSettings.errorOccured = true;
+        settings->nodeSettings.errorString = m_serial->errorString();
+        qDebug("[Error][SerialNode] %s", m_serial->errorString().toStdString().c_str());
+        settings->print();
     }
 }
 
 void SerialNode::closeSerialPort()
 {
     if (m_serial->isOpen())
+    {
         m_serial->close();
-    qDebug("Disconnected");
+        qDebug("Disconnected");
+    }
+    settings->nodeSettings.running = false;
 }
 void SerialNode::writeData(const QByteArray &data)
 {
@@ -57,8 +69,11 @@ void SerialNode::readData()
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {
-    if (error == QSerialPort::ResourceError) {
-        qDebug("[Error][SerialNode] %s", m_serial->errorString().toStdString().c_str());
+    if (error != QSerialPort::NoError) {
+        qDebug("[Error][SerialNode]- %s", m_serial->errorString().toStdString().c_str());
+        settings->nodeSettings.errorOccured = true;
+        settings->nodeSettings.errorString = m_serial->errorString();
         closeSerialPort();
+        //emit SerialPortError(error);
     }
 }

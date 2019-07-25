@@ -165,7 +165,7 @@ bool TagFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharF
     index++;
     if(index >= endIndex)return false;
 
-    //-----third char-----
+    //----->third char-----
     int number = 0;
     for(int i = index;i <=endIndex;i++)
     {
@@ -187,6 +187,11 @@ bool TagFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharF
             //error
             return true;
         }
+    }
+    if(endIndex - beginIndex > 20)// todo magic number
+    {
+        qDebug("[Error][tagFilter] ansi escape code to long");
+        return true;
     }
     return false;
 }

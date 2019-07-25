@@ -13,7 +13,7 @@
 
 class VisualSerialNode : public VisualSourceNodeBase
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
     VisualSerialNode();
     VisualNodeBase *clone();
@@ -21,15 +21,24 @@ public:
     ~VisualSerialNode();
     void activate();
 
+    void openPort();
 public slots:
-    void onComboBoxPopup(ComboBox *combobox);
     void onComboBoxChanged();
+    void loadSerialPorts();
+
+    void handleSerialPortError(QSerialPort::SerialPortError);
+    void onBaudRateChanged();
 protected:
      SerialNode *node = nullptr;
     QGraphicsProxyWidget* proxyWidget = nullptr;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void loadSerialPorts();
     ComboBox* portComboBox = nullptr;
+    bool activated = false;
+    bool lockCombobox = false;
+
+    QGraphicsProxyWidget* baudRateProxyWidget = nullptr;
+    QComboBox* baudRateCombobox = nullptr;
+    const int defaultBaudRate = 9600;
 };
 
