@@ -30,6 +30,7 @@ bool AnsiEscapeReader::filterData(const std::function<void(char)>& addChar, cons
     bool readingANSIEscape = false;
     bool styleChanged = false;
     int availableSize = bufferReader->availableSize();
+    int charsSinceNewLine = 0;
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
@@ -45,15 +46,29 @@ bool AnsiEscapeReader::filterData(const std::function<void(char)>& addChar, cons
             }
         }
         else {
-            if(character == '\033')
+//            if(character == '\033')
+//            {
+//                readingANSIEscape = true;
+//                ANSIBeginIndex = i;
+//            }
+//            else {
+            if(((uint8_t)character < 128)&&(character > 0))
             {
-                readingANSIEscape = true;
-                ANSIBeginIndex = i;
-            }
-            else {
                 addChar(character);
-                releaseLength++;
+//                charsSinceNewLine++;
+//                if(character == '\n')
+//                {
+//                    charsSinceNewLine = 0;
+//                }
+//                if(charsSinceNewLine > 10)
+//                {
+//                    addChar('\r');
+//                    addChar('\n');
+//                    charsSinceNewLine = 0;
+//                }
             }
+            releaseLength++;
+           // }
         }
     }
     //never split a \r\n, it will result in a 'random' newline

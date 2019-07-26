@@ -33,6 +33,8 @@ SimpleConsole::~SimpleConsole()
 }
 void SimpleConsole::NotifyBufferUpdate(Subscription *source)
 {
+    console->setUpdatesEnabled(false);
+
     if(source->bufferReader == nullptr){
         qFatal("SimpleConsole::notifyBufferUpdate() : bufferReader == nullptr");
     }
@@ -54,6 +56,8 @@ void SimpleConsole::NotifyBufferUpdate(Subscription *source)
         //when ansi is found the filter stops searching and is perhaps not empty, read it again
         NotifyBufferUpdate(source);
     }
+    console->setUpdatesEnabled(true);
+
 }
 
 void SimpleConsole::keyPressEvent(QKeyEvent *e)
