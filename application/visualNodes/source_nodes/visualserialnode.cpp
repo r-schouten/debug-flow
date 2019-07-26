@@ -7,6 +7,7 @@ VisualSerialNode::VisualSerialNode()
     node = new SerialNode();
     baseNode = node;
     name = "Serial node";
+    shortDiscription = "this node provide acces to serial ports";
     if(node->hasInput)
     {
         addInputConnector();

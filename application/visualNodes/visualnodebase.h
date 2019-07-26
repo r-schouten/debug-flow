@@ -20,6 +20,7 @@ public:
     ~VisualNodeBase();
 
     QString name = "";
+    QString shortDiscription = "";
     int centerX = graphicsViewOriginX;
     int centerY = graphicsViewOriginY;
     int width = 100;

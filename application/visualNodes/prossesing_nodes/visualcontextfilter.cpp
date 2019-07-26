@@ -6,6 +6,7 @@ VisualContextFilter::VisualContextFilter()
     baseNode = node;
 
     name = "Context filter";
+    shortDiscription = "this node provides filtering for debug flow style context";
     if(node->hasInput)
     {
         addInputConnector();

@@ -3,6 +3,7 @@
 VisualSimpleConsole::VisualSimpleConsole()
 {
     name = "simple console";
+    shortDiscription = "this node provides a simple console";
 }
 
 void VisualSimpleConsole::setWindowManager(WindowManager *_windowManager)

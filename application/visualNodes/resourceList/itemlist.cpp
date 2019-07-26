@@ -60,6 +60,7 @@ void ItemList::generateCategory(QList<VisualNodeBase*>& nodes, QString name, QSt
             QPixmap pixmap = QPixmapFromItem(currentNode);
             QIcon icon(pixmap);
             MyTreeWidgetItem* item = new MyTreeWidgetItem();
+            item->setToolTip(0, currentNode->shortDiscription);
             item->setNode(currentNode);
             sources->addChild(item);
             item->setIcon(0,icon);

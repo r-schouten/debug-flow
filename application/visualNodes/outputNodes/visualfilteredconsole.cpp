@@ -4,7 +4,8 @@ VisualFilteredConsole::VisualFilteredConsole()
 {
 
     name = "filtered console";
-}
+    shortDiscription = "this node provides a console with configurable filters for debug flow style context";
+};
 
 void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
 {
