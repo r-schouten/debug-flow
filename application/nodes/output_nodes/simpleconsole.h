@@ -1,11 +1,33 @@
-#ifndef SIMPLECONSOLE_H
-#define SIMPLECONSOLE_H
+#pragma once
 
 
-class SimpleConsole
+#include <QVBoxLayout>
+#include <QPlainTextEdit>
+#include <QScrollBar>
+#include "ansiescapereader.h"
+
+#include "outputnode.h"
+
+
+class SimpleConsole : public QWidget, public InputNode
 {
-public:
-    SimpleConsole();
-};
 
-#endif // SIMPLECONSOLE_H
+public:
+    void clear();
+    void NotifyBufferUpdate(Subscription *source)override;
+
+    SimpleConsole();
+    ~SimpleConsole();
+protected:
+    void keyPressEvent(QKeyEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseDoubleClickEvent(QMouseEvent *e) override;
+    void contextMenuEvent(QContextMenuEvent *e) override;
+
+private:
+    QVBoxLayout *layout = nullptr;
+
+    QTextCharFormat currentCharFormat;
+    QPlainTextEdit* console = nullptr;
+    AnsiEscapeReader *ansiReader = nullptr;
+};

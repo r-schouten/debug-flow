@@ -2,10 +2,10 @@
 #include "inputnode.h"
 #include "outputnode.h"
 
-class ContextFilter : public InputNode, public OutputNode
+class ContextFilterNode : public InputNode, public OutputNode
 {
 public:
-    ContextFilter();
+    ContextFilterNode();
 
 public:
     void NotifyBufferUpdate(Subscription *source);

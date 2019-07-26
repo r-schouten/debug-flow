@@ -2,7 +2,7 @@
 
 VisualContextFilter::VisualContextFilter()
 {
-    node = new ContextFilter();
+    node = new ContextFilterNode();
     baseNode = node;
 
     name = "Context filter";
@@ -14,7 +14,7 @@ VisualContextFilter::VisualContextFilter()
     {
         addOutputConnector();
     }
-    tagFilter = new TagFilter;
+    contextFilter = new ContextFilter();
 }
 VisualContextFilter::~VisualContextFilter()
 {

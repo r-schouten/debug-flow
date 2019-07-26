@@ -1,6 +1,6 @@
-#include "contextfilter.h"
+#include "contextfilternode.h"
 
-ContextFilter::ContextFilter()
+ContextFilterNode::ContextFilterNode()
 {
     circularBuffer = new CircularBuffer(500,1000);
     if(dynamic_cast<InputNode*>(this))
@@ -13,7 +13,7 @@ ContextFilter::ContextFilter()
     }
 }
 
-void ContextFilter::NotifyBufferUpdate(Subscription *source)
+void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
 {
     //qDebug("[verbose,ContextFilter] NotifyBufferUpdate");
 

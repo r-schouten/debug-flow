@@ -27,8 +27,8 @@ FilteredConsole::FilteredConsole()
     p.setColor(QPalette::Text, Qt::black);
     console->setPalette(p);
 
-    tagFilter = new TagFilter();
-    connect(tagFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
+    contextFilter = new ContextFilter();
+    connect(contextFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
 
 }
 
@@ -42,7 +42,7 @@ FilteredConsole::~FilteredConsole()
     {
         delete properyBoxes.takeAt(0);
     }
-    delete tagFilter;
+    delete contextFilter;
 }
 void FilteredConsole::propertyChanged(Property* property)
 {
@@ -97,10 +97,10 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     result.reserve(source->bufferReader->availableSize());
 
     QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = tagFilter->filterData(&result, source->bufferReader, &currentCharFormat);
+    bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
 
     //qDebug("result: %s",destination.toStdString().c_str());
-    //qDebug() << result;
+    //qDebug() << source->bufferReader->availableSize();
     console->moveCursor(QTextCursor::End);
     console->setCurrentCharFormat(oldFormat);
     console->insertPlainText(result);

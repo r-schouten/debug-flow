@@ -4,34 +4,13 @@
 //tags are information hidden in the text
 //also ansi escape codes can be filtered
 #pragma once
-#include <QCombobox>
 #include <QStandardItemModel>
 #include <QTextCharFormat>
 #include <qdebug.h>
 #include <qsignalmapper.h>
 #include "circularbufferreader.h"
+#include "ansi_types.h"
 
-//https://en.wikipedia.org/wiki/ANSI_escape_code
-enum class ANSIType
-{
-    NONE,
-    UNKNOWN,
-    FORMATTING,
-    EREASE,
-    CURSOR,
-    SCREENMODE,
-    ERROR
-};
-struct ANSICode
-{
-    ANSIType type = ANSIType::NONE;
-    int value = 0;
-};
-struct ANSICodes
-{
-    QList<ANSICode> code;
-    bool found = false;
-};
 class PropertyOption: public QObject
 {
 public:
@@ -91,16 +70,17 @@ public:
     }
 };
 
-class TagFilter: public QObject
+class ContextFilter: public QObject
 {
     Q_OBJECT
 
 public:
-    TagFilter();
+    ContextFilter();
     bool filterData(QString *destination, CircularBufferReader *bufferReader, QTextCharFormat* format);
     QList<Property*> context;
 
 private:
+    bool keepContext = true;
     bool showCurrentContext = false;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool filterData(const std::function<void (char)> &addChar, const std::function<bool ()> &deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat* format);

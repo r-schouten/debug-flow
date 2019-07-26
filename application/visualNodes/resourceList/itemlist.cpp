@@ -2,7 +2,6 @@
 
 
 
-
 ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
     :resourceList(resourceList),nodeScene(nodeScene)
 {
@@ -20,7 +19,7 @@ ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
 void ItemList::generateList()
 {
     //ownership of this nodes will be given to myTreeWidgetItem, don't delete!
-    nodes << new VisualContextFilter() << new VisualSerialNode() << new VisualFilteredConsole;
+    nodes << new VisualContextFilter() << new VisualSerialNode() << new VisualFilteredConsole << new VisualSimpleConsole;
     generateCategory<SourceStyle>(nodes, "data source nodes", ":/images/data_source_icon.png");
     generateCategory<ProcessingStyle>(nodes, "processing nodes", ":/images/filtering_icon.png");
     generateCategory<OutputStyle>(nodes, "output nodes", ":/images/output_icon.png");

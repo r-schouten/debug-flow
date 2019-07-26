@@ -1,11 +1,10 @@
-#include "tagfilter.h"
+#include "contextfilter.h"
 
-TagFilter::TagFilter()
+ContextFilter::ContextFilter()
 {
 
 }
-bool keepContext = true;
-bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilter::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     auto lambda = [&](char character) mutable {destination->append(character);};
     auto cargeReturnLambda = [&]() mutable {
@@ -22,7 +21,7 @@ bool TagFilter::filterData(QString* destination, CircularBufferReader *bufferRea
     return filterData(lambda, cargeReturnLambda, bufferReader, format);
 }
 
-bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilter::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -35,6 +34,7 @@ bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
+        qDebug() << character;
         if(readingInContext)
         {
             if(character == ']')
@@ -94,7 +94,7 @@ bool TagFilter::filterData(const std::function<void(char)>& addChar, const std::
     bufferReader->release(releaseLength);
     return styleChanged;
 }
-void TagFilter::processContext(CircularBufferReader *bufferReader, int begin, int end)
+void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin, int end)
 {
     showCurrentContext = true;
     int beginOfProperty = begin+1;
@@ -118,7 +118,7 @@ void TagFilter::processContext(CircularBufferReader *bufferReader, int begin, in
     }
     processproperty(property,propertyIndex);
 }
-void TagFilter::processproperty(QString& properyName, int propertyIndex)
+void ContextFilter::processproperty(QString& properyName, int propertyIndex)
 {
     if(context.size() <= propertyIndex)
     {
@@ -141,7 +141,7 @@ void TagFilter::processproperty(QString& properyName, int propertyIndex)
 
 //only supports SGR parameters
 //https://en.wikipedia.org/wiki/ANSI_escape_code
-bool TagFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat* format,int beginIndex, int endIndex)
+bool ContextFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat* format,int beginIndex, int endIndex)
 {
     //there is no code with less than 3 chars
     if(endIndex - beginIndex + 1 < 3)return false;
@@ -195,7 +195,7 @@ bool TagFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharF
     }
     return false;
 }
-void TagFilter::applyANSICode(QTextCharFormat* format, ANSICode ansiCode)
+void ContextFilter::applyANSICode(QTextCharFormat* format, ANSICode ansiCode)
 {
     if(ansiCode.type == ANSIType::FORMATTING)
     {

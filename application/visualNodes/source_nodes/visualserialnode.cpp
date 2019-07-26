@@ -47,7 +47,6 @@ VisualSerialNode::VisualSerialNode()
 }
 void VisualSerialNode::onBaudRateChanged()
 {
-    node->settings->nodeSettings.baudRate = baudRateCombobox->currentText().toInt();
     openPort();
 }
 void VisualSerialNode::onComboBoxChanged()
@@ -80,6 +79,7 @@ void VisualSerialNode::openPort()
         if(portComboBox->currentText().size() > 0)
         {
             node->settings->nodeSettings.name = portComboBox->currentText();
+            node->settings->nodeSettings.baudRate = baudRateCombobox->currentText().toInt();
             node->openSerialPort();
         }
     }

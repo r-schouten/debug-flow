@@ -1,8 +1,9 @@
 #pragma once
 #include "visualnodebase.h"
-#include "contextfilter.h"
+#include "contextfilternode.h"
 #include "processingstyle.h"
-#include "tagfilter.h"
+#include "contextfilter.h"
+
 class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 {
     Q_OBJECT
@@ -10,10 +11,10 @@ public:
     VisualContextFilter();
     ~VisualContextFilter();
 protected:
-    ContextFilter* node = nullptr;
+    ContextFilterNode* node = nullptr;
     void activate();
     VisualNodeBase *clone();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    TagFilter* tagFilter = nullptr;
+    ContextFilter* contextFilter = nullptr;
 };
 

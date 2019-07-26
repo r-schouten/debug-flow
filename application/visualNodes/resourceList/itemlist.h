@@ -15,6 +15,8 @@
 #include "visualcontextfilter.h"
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
+#include "visualsimpleconsole.h"
+
 class ItemList :public QObject
 {
     Q_OBJECT

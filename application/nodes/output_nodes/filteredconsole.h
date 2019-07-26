@@ -10,8 +10,7 @@
 
 
 #include "outputnode.h"
-#include "tagfilter.h"
-
+#include "contextfilter.h"
 
 class FilteredConsole  : public QWidget, public InputNode
 {
@@ -36,7 +35,7 @@ private:
     QList<QStandardItemModel*> properyBoxes;
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
-    TagFilter *tagFilter = nullptr;
+    ContextFilter *contextFilter = nullptr;
 
 public slots:
     void propertyChanged(Property *property);

@@ -37,6 +37,7 @@ void SerialNode::openSerialPort()
     m_serial->setStopBits(p.stopBits);
     m_serial->setFlowControl(p.flowControl);
     if (m_serial->open(QIODevice::ReadWrite)) {
+        qDebug("[Error][SerialNode] connected");
         settings->nodeSettings.running = true;
         settings->nodeSettings.errorOccured = false;
     } else {
@@ -74,6 +75,6 @@ void SerialNode::handleError(QSerialPort::SerialPortError error)
         settings->nodeSettings.errorOccured = true;
         settings->nodeSettings.errorString = m_serial->errorString();
         closeSerialPort();
-        //emit SerialPortError(error);
+        emit SerialPortError(error);
     }
 }
