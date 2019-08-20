@@ -1,9 +1,5 @@
 #include "nodescene.h"
 
-#include <qevent.h>
-#include <visualoutputnodebase.h>
-
-
 NodeScene::NodeScene(WindowManager* windowManager)
     :windowManager(windowManager)
 {

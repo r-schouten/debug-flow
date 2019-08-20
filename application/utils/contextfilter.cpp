@@ -34,7 +34,6 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
-        qDebug() << character;
         if(readingInContext)
         {
             if(character == ']')

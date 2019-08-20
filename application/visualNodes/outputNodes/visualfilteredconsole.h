@@ -3,12 +3,13 @@
 #include "outputstyle.h"
 #include "visualoutputnodebase.h"
 #include "filteredconsole.h"
+#include "globalconfig.h"
 
 class VisualFilteredConsole : public VisualOutputNodeBase, public OutputStyle
 {
     Q_OBJECT
 public:
-    VisualFilteredConsole();
+    VisualFilteredConsole(SceneComponents *sceneComponents);
     void setWindowManager(WindowManager* _windowManager);
     void activate();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

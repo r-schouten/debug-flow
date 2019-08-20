@@ -3,12 +3,14 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 
+#include "outputnode.h"
 #include "visualnodeconfig.h"
 #include "nodebase.h"
 #include "nodestylebase.h"
 #include "connector.h"
 #include "visualconnection.h"
 #include "selectionmanager.h"
+#include "scenecomponents.h"
 
 class SelectionManager;
 class Connector;
@@ -16,7 +18,7 @@ class VisualNodeBase : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    VisualNodeBase();
+    VisualNodeBase(SceneComponents *sceneComponents);
     ~VisualNodeBase();
 
     QString name = "";
@@ -57,11 +59,13 @@ protected:
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
 
+    void openSettings();
+    //virtual void loadSettings();
     NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer
 
     QList<Connector*> connectors;
-    SelectionManager* selectionManager;
-
+    SelectionManager* selectionManager = nullptr;
+    SceneComponents* sceneComponents = nullptr;
 private:
     bool pressedOnConnection = false;
 signals:

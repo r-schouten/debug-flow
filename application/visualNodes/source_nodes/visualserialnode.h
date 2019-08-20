@@ -15,7 +15,7 @@ class VisualSerialNode : public VisualSourceNodeBase
 {
     Q_OBJECT
 public:
-    VisualSerialNode();
+    VisualSerialNode(SceneComponents* sceneComponents);
     VisualNodeBase *clone();
 
     ~VisualSerialNode();

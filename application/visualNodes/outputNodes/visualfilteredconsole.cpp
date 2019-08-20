@@ -1,10 +1,10 @@
 #include "visualfilteredconsole.h"
-
-VisualFilteredConsole::VisualFilteredConsole()
+VisualFilteredConsole::VisualFilteredConsole(SceneComponents* sceneComponents)
+    :VisualOutputNodeBase (sceneComponents)
 {
 
     name = "filtered console";
-    shortDiscription = "this node provides a console with configurable filters for debug flow style context";
+    shortDiscription = QString("this node provides a console with configurable filters for %1 context").arg(CONTEXT_STYLE_NAME);
 };
 
 void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
@@ -49,5 +49,5 @@ void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsI
 
 VisualNodeBase *VisualFilteredConsole::clone()
 {
-    return new VisualFilteredConsole;
+    return new VisualFilteredConsole(sceneComponents);
 }

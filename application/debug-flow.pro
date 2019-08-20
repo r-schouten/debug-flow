@@ -18,8 +18,9 @@ SOURCES += \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
     nodes/source_nodes/serialnode.cpp \
-    nodes/source_nodes/serialsettingsbase.cpp \
+    nodes/source_nodes/serialsettings.cpp \
     nodes/subscription.cpp \
+    scenecomponents.cpp \
     settingsdialog.cpp \
     test/circularbuffertest.cpp \
     utils/ansiescapereader.cpp \
@@ -48,6 +49,7 @@ SOURCES += \
 HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
+    globalconfig.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \
@@ -58,8 +60,9 @@ HEADERS += \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
     nodes/source_nodes/serialnode.h \
-    nodes/source_nodes/serialsettingsbase.h \
+    nodes/source_nodes/serialsettings.h \
     nodes/subscription.h \
+    scenecomponents.h \
     settingsdialog.h \
     test/circularbuffertest.h \
     utils/ansi_types.h \

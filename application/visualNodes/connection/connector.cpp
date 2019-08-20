@@ -84,14 +84,14 @@ VisualNodeBase *Connector::getParent()
 }
 bool Connector::requestConnector()
 {
-    parent->requestConnection(this);
+    return parent->requestConnection(this);
 }
 
 bool Connector::requestConnector(VisualConnection *connection)
 {
-    parent->requestConnection(this,connection->getSetConnector());
+    return parent->requestConnection(this,connection->getSetConnector());
 }
 bool Connector::requestConnector(Connector* connector)
 {
-    parent->requestConnection(this, connector);
+    return parent->requestConnection(this, connector);
 }

@@ -2,7 +2,8 @@
 
 
 
-VisualSerialNode::VisualSerialNode()
+VisualSerialNode::VisualSerialNode(SceneComponents *sceneComponents)
+    :VisualSourceNodeBase(sceneComponents)
 {
     node = new SerialNode();
     baseNode = node;
@@ -87,7 +88,7 @@ void VisualSerialNode::openPort()
 }
 VisualNodeBase* VisualSerialNode::clone()
 {
-    return new VisualSerialNode();
+    return new VisualSerialNode(sceneComponents);
 }
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

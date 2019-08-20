@@ -3,12 +3,12 @@
 #include "contextfilternode.h"
 #include "processingstyle.h"
 #include "contextfilter.h"
-
+#include "globalconfig.h"
 class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 {
     Q_OBJECT
 public:
-    VisualContextFilter();
+    VisualContextFilter(SceneComponents *sceneComponents);
     ~VisualContextFilter();
 protected:
     ContextFilterNode* node = nullptr;

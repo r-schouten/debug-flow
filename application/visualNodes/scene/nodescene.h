@@ -2,7 +2,10 @@
 #include <QGraphicsScene>
 #include <windowmanager.h>
 
+#include <qevent.h>
 #include <QPainter>
+
+#include "visualoutputnodebase.h"
 #include "visualnodebase.h"
 #include "utils.h"
 #include "selectionmanager.h"

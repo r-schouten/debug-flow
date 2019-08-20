@@ -1,6 +1,7 @@
 #include "visualoutputnodebase.h"
 
-VisualOutputNodeBase::VisualOutputNodeBase()
+VisualOutputNodeBase::VisualOutputNodeBase(SceneComponents* sceneComponents)
+    :VisualNodeBase (sceneComponents)
 {
 
 }

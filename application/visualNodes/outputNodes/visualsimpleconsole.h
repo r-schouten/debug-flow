@@ -7,7 +7,7 @@
 class VisualSimpleConsole : public VisualOutputNodeBase, public OutputStyle
 {
 public:
-    VisualSimpleConsole();
+    VisualSimpleConsole(SceneComponents *sceneComponents);
     ~VisualSimpleConsole();
     void setWindowManager(WindowManager* _windowManager);
     void activate();

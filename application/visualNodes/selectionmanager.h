@@ -7,7 +7,7 @@ class VisualNodeBase;
 class VisualConnection;
 
 //note this class is a singleton!
-class SelectionManager
+class   SelectionManager
 {
 private:
     SelectionManager(){}

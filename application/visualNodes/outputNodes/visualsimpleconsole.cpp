@@ -1,6 +1,7 @@
 #include "visualsimpleconsole.h"
 
-VisualSimpleConsole::VisualSimpleConsole()
+VisualSimpleConsole::VisualSimpleConsole(SceneComponents* sceneComponents)
+    :VisualOutputNodeBase (sceneComponents)
 {
     name = "simple console";
     shortDiscription = "this node provides a simple console";
@@ -48,5 +49,5 @@ void VisualSimpleConsole::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 VisualNodeBase *VisualSimpleConsole::clone()
 {
-    return new VisualSimpleConsole;
+    return new VisualSimpleConsole(sceneComponents);
 }

@@ -2,10 +2,10 @@
 #include <QSerialPort>
 
 #include "nodesettingsbase.h"
-class SerialSettingsBase : public NodeSettingsBase
+class SerialSettings : public NodeSettingsBase
 {
 public:
-    SerialSettingsBase();
+    SerialSettings();
     struct Settings
     {
         bool running = false;

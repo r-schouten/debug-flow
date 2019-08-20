@@ -3,14 +3,14 @@
 #include <QMessageBox>
 
 #include "outputnode.h"
-#include "serialsettingsbase.h"
+#include "serialsettings.h"
 
 class SerialNode : public QObject, public OutputNode
 {
     Q_OBJECT
 public:
     SerialNode();
-    SerialSettingsBase* settings = nullptr;
+    SerialSettings* settings = nullptr;
 
 private:
     QSerialPort *m_serial = nullptr;

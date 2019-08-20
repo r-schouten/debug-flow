@@ -1,10 +1,12 @@
 #include "itemlist.h"
 
 
-
-ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
-    :resourceList(resourceList),nodeScene(nodeScene)
+ItemList::ItemList(SceneComponents *sceneComponents)
+    :sceneComponents(sceneComponents)
 {
+    resourceList = sceneComponents->getResourceList();
+    nodeScene = sceneComponents->getNodeScene();
+
     resourceList->setIconSize(QSize(100,800));
     resourceList->setColumnCount(1);
     resourceList->setHeaderLabel("");
@@ -19,11 +21,13 @@ ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
 void ItemList::generateList()
 {
     //ownership of this nodes will be given to myTreeWidgetItem, don't delete!
-    nodes << new VisualContextFilter() << new VisualSerialNode() << new VisualFilteredConsole << new VisualSimpleConsole;
+    nodes << new VisualContextFilter(sceneComponents) << new VisualSerialNode(sceneComponents) << new VisualFilteredConsole(sceneComponents) << new VisualSimpleConsole(sceneComponents);
     generateCategory<SourceStyle>(nodes, "data source nodes", ":/images/data_source_icon.png");
     generateCategory<ProcessingStyle>(nodes, "processing nodes", ":/images/filtering_icon.png");
     generateCategory<OutputStyle>(nodes, "output nodes", ":/images/output_icon.png");
 }
+
+
 static QPixmap QPixmapFromItem(QGraphicsItem *item){
     QPixmap pixmap(item->boundingRect().size().toSize());
     pixmap.fill(Qt::transparent);

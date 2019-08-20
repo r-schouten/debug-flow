@@ -1,9 +1,9 @@
-#include "serialsettingsbase.h"
+#include "serialsettings.h"
 
 #include <QSerialPortInfo>
 
 #include <QDebug>
-SerialSettingsBase::SerialSettingsBase()
+SerialSettings::SerialSettings()
 {
     nodeSettings.running = false;
     nodeSettings.baudRate = 9600;
@@ -17,7 +17,7 @@ SerialSettingsBase::SerialSettingsBase()
     nodeSettings.flowControl = QSerialPort::NoFlowControl;
 }
 
-void SerialSettingsBase::print()
+void SerialSettings::print()
 {
     qDebug() << "--Serial settings--";
     qDebug() << "port :" << nodeSettings.name;

@@ -10,8 +10,8 @@ SerialNode::SerialNode()
     {
         hasOutput = true;
     }
-    settings = new SerialSettingsBase();
-    circularBuffer = new CircularBuffer(1000,10000);
+    settings = new SerialSettings();
+    circularBuffer = new CircularBuffer(10000,100000);
     m_serial = new QSerialPort(this);
 
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
@@ -27,7 +27,7 @@ void SerialNode::openSerialPort()
     }
     settings->nodeSettings.running = false;
 
-    const SerialSettingsBase::Settings p = settings->settings();
+    const SerialSettings::Settings p = settings->settings();
     qDebug("%s",p.name.toStdString().c_str());
 
     m_serial->setPortName(p.name);

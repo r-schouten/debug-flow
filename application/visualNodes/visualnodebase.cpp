@@ -1,8 +1,9 @@
 #include "visualnodebase.h"
 
-#include <outputnode.h>
+#include <QPushButton>
 
-VisualNodeBase::VisualNodeBase()
+VisualNodeBase::VisualNodeBase(SceneComponents* sceneComponents)
+    :sceneComponents(sceneComponents)
 {
     selectionManager = SelectionManager::getInstance();
     setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -299,6 +300,20 @@ bool VisualNodeBase::isSelected()
     return selectionManager->isSelected(this);
 }
 
+void VisualNodeBase::openSettings()
+{
+    //open the properties tab in the tabwidget
+    sceneComponents->getTabWidget()->setCurrentWidget(sceneComponents->getPropertiesTab());
+
+    QWidget* propertiesWidget = new QWidget;
+    propertiesWidget->setParent(sceneComponents->getPropertiesTab());
+    sceneComponents->getPropertiesTab();
+    propertiesWidget->show();
+    QPushButton *button = new QPushButton(propertiesWidget);
+    button->show();
+
+}
+
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
@@ -328,6 +343,7 @@ void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 selectionManager->setSelected(this,true);
             }
         }
+        openSettings();
     }
 
 }

@@ -1,19 +1,20 @@
 #include "mainwindow.h"
 
-#include <visualcontextfilter.h>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_ui(new Ui::MainWindow)
 {
     m_ui->setupUi(this);
 
+
     windowManager = new WindowManager(m_ui->mdiArea);
 
     nodeScene = new NodeScene(windowManager);
     m_ui->nodesScene->setScene(nodeScene);
 
-    itemsList = new ItemList(m_ui->resourceList,nodeScene);
+    sceneComponents = new SceneComponents(m_ui->resourceList, nodeScene, m_ui->rightTabWidget, m_ui->propertiesWidget);
+
+    itemsList = new ItemList(sceneComponents);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);

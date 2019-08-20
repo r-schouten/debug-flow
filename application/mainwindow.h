@@ -7,12 +7,11 @@
 
 #include "nodescene.h"
 #include "ui_mainwindow.h"
-
-
 #include "itemlist.h"
 #include "visualnodeconfig.h"
-
+#include "scenecomponents.h"
 #include "windowmanager.h"
+
 QT_BEGIN_NAMESPACE
 
 class QLabel;
@@ -42,4 +41,5 @@ private:
     ItemList* itemsList = nullptr;
     QTimer *UiUpdatetimer = nullptr;
     WindowManager* windowManager = nullptr;
+    SceneComponents* sceneComponents = nullptr;
 };
