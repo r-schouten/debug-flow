@@ -31,6 +31,7 @@ SOURCES += \
     visualNodes/outputNodes/visualfilteredconsole.cpp \
     visualNodes/outputNodes/visualoutputnodebase.cpp \
     visualNodes/outputNodes/visualsimpleconsole.cpp \
+    visualNodes/propertieswidgetnoneselected.cpp \
     visualNodes/prossesing_nodes/visualcontextfilter.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
@@ -77,6 +78,7 @@ HEADERS += \
     visualNodes/outputNodes/visualfilteredconsole.h \
     visualNodes/outputNodes/visualoutputnodebase.h \
     visualNodes/outputNodes/visualsimpleconsole.h \
+    visualNodes/propertieswidgetnoneselected.h \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visualcontextfilter.h \
     visualNodes/resourceList/itemlist.h \

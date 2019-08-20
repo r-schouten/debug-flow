@@ -15,6 +15,11 @@ QWidget *SceneComponents::getPropertiesTab() const
     return propertiesTab;
 }
 
+PropertiesWidgetNoneSelected *SceneComponents::getWidgetNoneSelected() const
+{
+    return widgetNoneSelected;
+}
+
 QTreeWidget *SceneComponents::getResourceList()
 {
     return resourceList;

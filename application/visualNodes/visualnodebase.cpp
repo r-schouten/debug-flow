@@ -1,3 +1,4 @@
+#include "propertieswidgetnoneselected.h"
 #include "visualnodebase.h"
 
 #include <QPushButton>
@@ -305,12 +306,7 @@ void VisualNodeBase::openSettings()
     //open the properties tab in the tabwidget
     sceneComponents->getTabWidget()->setCurrentWidget(sceneComponents->getPropertiesTab());
 
-    QWidget* propertiesWidget = new QWidget;
-    propertiesWidget->setParent(sceneComponents->getPropertiesTab());
-    sceneComponents->getPropertiesTab();
-    propertiesWidget->show();
-    QPushButton *button = new QPushButton(propertiesWidget);
-    button->show();
+    sceneComponents->getWidgetNoneSelected()->setParent(nullptr);
 
 }
 
