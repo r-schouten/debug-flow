@@ -6,7 +6,7 @@
 VisualNodeBase::VisualNodeBase(SceneComponents* sceneComponents)
     :sceneComponents(sceneComponents)
 {
-    selectionManager = SelectionManager::getInstance();
+    selectionManager = sceneComponents->getSelectionManager();
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);

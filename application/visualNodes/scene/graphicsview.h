@@ -9,9 +9,7 @@ class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit GraphicsView(QWidget *parent = 0);
-
-    // QWidget interface
+    GraphicsView(QWidget *parent,SceneComponents *sceneComponents);
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);

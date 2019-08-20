@@ -15,7 +15,7 @@ class NodeScene:public QGraphicsScene
 {
     Q_OBJECT
 public:
-    NodeScene(WindowManager *windowManager);
+    NodeScene(SceneComponents *sceneComponents, WindowManager *windowManager);
 
     //function to insert items from the resource list
     void insertItem(VisualNodeBase* node);
@@ -53,6 +53,7 @@ protected:
     //draw all connections
     void drawForeground(QPainter *painter, const QRectF &rect);
 private:
+    SceneComponents* sceneComponents = nullptr;
     WindowManager* windowManager = nullptr;
     //hold all connections, they are not graphics items
     QList<VisualConnection*> connections;

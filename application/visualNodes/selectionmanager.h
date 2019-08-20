@@ -1,21 +1,18 @@
 #pragma once
 #include "visualnodebase.h"
 #include "visualconnection.h"
+#include "scenecomponents.h"
 
+class SceneComponents;
 class Connector;
 class VisualNodeBase;
 class VisualConnection;
-
-//note this class is a singleton!
-class   SelectionManager
+class SelectionManager
 {
 private:
-    SelectionManager(){}
-    static SelectionManager* singletonSelectionManger;
-
     bool hadUpdate = false;
 public:
-    static SelectionManager* getInstance();
+    SelectionManager(SceneComponents *sceneComponents);
     bool isSelected(VisualNodeBase *node);
     bool isSelected(VisualConnection *connection);
 
@@ -26,6 +23,7 @@ public:
 
     bool isUpdated();
     void clearUpdateFlag();
+
 
     QList<VisualNodeBase*> selectedNodes;
     QList<VisualConnection*> selectedConnections;

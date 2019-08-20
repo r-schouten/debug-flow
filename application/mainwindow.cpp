@@ -6,20 +6,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-
-    windowManager = new WindowManager(m_ui->mdiArea);
-
-    nodeScene = new NodeScene(windowManager);
-    m_ui->nodesScene->setScene(nodeScene);
-
-    sceneComponents = new SceneComponents(m_ui->resourceList, nodeScene, m_ui->rightTabWidget, m_ui->propertiesWidget);
+    sceneComponents = m_ui->sceneComponents;
 
     itemsList = new ItemList(sceneComponents);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
     UiUpdatetimer->start(30);
-    m_ui->nodesScene->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
+    m_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
 }
 
 MainWindow::~MainWindow()

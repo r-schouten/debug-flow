@@ -1,15 +1,15 @@
 #include "visualconnection.h"
 
-VisualConnection::VisualConnection(Connector *connector1)
+VisualConnection::VisualConnection(SceneComponents* sceneComponents,Connector *connector1)
     :connector1(connector1)
 {
     setConnector1(connector1);
-    selectionManager = selectionManager->getInstance();
+    selectionManager = sceneComponents->getSelectionManager();
     style = new ConnectionStyle();
 }
 
-VisualConnection::VisualConnection(Connector *connector1, Connector *_connector2)
-    :VisualConnection(connector1)
+VisualConnection::VisualConnection(SceneComponents* sceneComponents,Connector *connector1, Connector *_connector2)
+    :VisualConnection(sceneComponents, connector1)
 {
     connector2 = _connector2;
     setConnector2(connector2);

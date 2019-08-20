@@ -2,10 +2,10 @@
 
 #include <visualnodebase.h>
 #include <QScrollBar>
-GraphicsView::GraphicsView(QWidget *parent)
+GraphicsView::GraphicsView(QWidget *parent, SceneComponents* sceneComponents)
     :QGraphicsView(parent)
 {
-    selectionManager = SelectionManager::getInstance();
+    selectionManager = sceneComponents->getSelectionManager();
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setMouseTracking(true);
 

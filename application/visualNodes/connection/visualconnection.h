@@ -10,12 +10,13 @@
 class SelectionManager;
 class Connector;
 class VisualNodeBase;
+class SceneComponents;
 class VisualConnection: public QObject
 {
     Q_OBJECT
 public:
-    explicit VisualConnection(Connector* connector1);
-    explicit VisualConnection(Connector* connector1, Connector* connector2);
+    VisualConnection(SceneComponents* sceneComponents, Connector* connector1);
+    VisualConnection(SceneComponents* sceneComponents, Connector* connector1, Connector* connector2);
     ~VisualConnection();
     void draw(QPainter *painter);
     bool intersect(QPointF position);

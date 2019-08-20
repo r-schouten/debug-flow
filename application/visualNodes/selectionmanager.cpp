@@ -1,14 +1,8 @@
 #include "selectionmanager.h"
 
-SelectionManager* SelectionManager::singletonSelectionManger = nullptr;
-
-SelectionManager *SelectionManager::getInstance()
+SelectionManager::SelectionManager(SceneComponents* sceneComponents)
 {
-    if(singletonSelectionManger == nullptr)
-    {
-        singletonSelectionManger = new SelectionManager;
-    }
-    return singletonSelectionManger;
+
 }
 
 bool SelectionManager::isSelected(VisualNodeBase* node)

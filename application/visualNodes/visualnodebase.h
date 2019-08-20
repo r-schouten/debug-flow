@@ -14,6 +14,7 @@
 
 class SelectionManager;
 class Connector;
+class SceneComponents;
 class VisualNodeBase : public QObject, public QGraphicsItem
 {
     Q_OBJECT

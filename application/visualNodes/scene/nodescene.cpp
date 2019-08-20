@@ -1,9 +1,9 @@
 #include "nodescene.h"
 
-NodeScene::NodeScene(WindowManager* windowManager)
-    :windowManager(windowManager)
+NodeScene::NodeScene(SceneComponents* sceneComponents, WindowManager* windowManager)
+    :windowManager(windowManager),sceneComponents(sceneComponents)
 {
-    selectionManager = SelectionManager::getInstance();
+    selectionManager = sceneComponents->getSelectionManager();
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
@@ -58,7 +58,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
         }
     }
     selectionManager->clearSelected();
-    VisualConnection* newConnection = new VisualConnection(connector);
+    VisualConnection* newConnection = new VisualConnection(sceneComponents, connector);
     connections.append(newConnection);
     currentTrackingConnection = newConnection;
     connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));

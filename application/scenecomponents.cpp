@@ -1,5 +1,16 @@
 #include "scenecomponents.h"
 
+void SceneComponents::setNodeScene(NodeScene *value)
+{
+    nodeScene = value;
+}
+
+SceneComponents::SceneComponents(QTreeWidget *resourceList,QTabWidget *tabWidget, QWidget *propertiesTab)
+    :resourceList(resourceList),tabWidget(tabWidget),propertiesTab(propertiesTab)
+{
+    widgetNoneSelected = new PropertiesWidgetNoneSelected(propertiesTab);
+    selectionManager = new SelectionManager(this);
+}
 NodeScene *SceneComponents::getNodeScene()
 {
     return nodeScene;
@@ -18,6 +29,11 @@ QWidget *SceneComponents::getPropertiesTab() const
 PropertiesWidgetNoneSelected *SceneComponents::getWidgetNoneSelected() const
 {
     return widgetNoneSelected;
+}
+
+SelectionManager *SceneComponents::getSelectionManager() const
+{
+    return selectionManager;
 }
 
 QTreeWidget *SceneComponents::getResourceList()
