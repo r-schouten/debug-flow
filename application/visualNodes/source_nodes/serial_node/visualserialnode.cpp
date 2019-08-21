@@ -30,16 +30,7 @@ void VisualSerialNode::activate()
 }
 void VisualSerialNode::openPort()
 {
-    node->closeSerialPort();
-    if(portComboBox->count() > 0)
-    {
-        if(portComboBox->currentText().size() > 0)
-        {
-            node->settings->nodeSettings.name = portComboBox->currentText();
-            node->settings->nodeSettings.baudRate = baudRateCombobox->currentText().toInt();
-            node->openSerialPort();
-        }
-    }
+    node->openSerialPort();
 }
 VisualNodeBase* VisualSerialNode::clone()
 {

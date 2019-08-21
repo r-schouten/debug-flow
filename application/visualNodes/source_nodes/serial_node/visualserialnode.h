@@ -28,15 +28,9 @@ protected:
     void releasePropertiesWidget();
 
     SerialNode *node = nullptr;
-    QGraphicsProxyWidget* proxyWidget = nullptr;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    ComboBox* portComboBox = nullptr;
     bool activated = false;
-    bool lockCombobox = false;
 
-    QGraphicsProxyWidget* baudRateProxyWidget = nullptr;
-    QComboBox* baudRateCombobox = nullptr;
-    const int defaultBaudRate = 9600;
 };
 
