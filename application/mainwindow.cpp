@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     itemsList = new ItemList(m_ui->resourceList,nodeScene);
 
-//    UiUpdatetimer = new QTimer(this);
-//    connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
-//    UiUpdatetimer->start(30);
+    UiUpdatetimer = new QTimer(this);
+    connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
+    UiUpdatetimer->start(30);
     m_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
 }
 

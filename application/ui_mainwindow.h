@@ -28,7 +28,6 @@ public:
     QMdiArea *mdiArea = nullptr;
     QToolBar *mainToolBar = nullptr;
     QTreeWidget *resourceList = nullptr;
-    QHBoxLayout *sceneLayout = nullptr;
     QSplitter *sceneSplitter = nullptr;
     QTabWidget* rightTabWidget = nullptr;
     QWidget* propertiesWidget = nullptr;
@@ -74,11 +73,6 @@ public:
         splitter->setOpaqueResize(true);
         splitter->setHandleWidth(5);
 
-        //horizontal layout and splitter
-        sceneLayout = new QHBoxLayout(splitter);
-        sceneLayout->setSpacing(6);
-        sceneLayout->setContentsMargins(11, 11, 11, 11);
-        sceneLayout->setObjectName("sceneLayout");
 
         sceneSplitter = new QSplitter(splitter);
         sceneSplitter->setObjectName("sceneSplitter");
@@ -126,7 +120,6 @@ public:
         sceneSplitter->setCollapsible(2,false);
         sceneSplitter->setSizes(QList<int>({100, 400, 50}));
 
-        sceneLayout->addWidget(sceneSplitter);
         splitter->addWidget(sceneSplitter);
 
         //mdi area
