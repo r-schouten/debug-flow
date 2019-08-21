@@ -187,7 +187,7 @@ void SerialNodePropertiesWidget::loadAvailablePorts()
     }
     if(currentIndex != -1)
     {
-        availablePortsComboBox->setCurrentIndex(currentIndex-1);
+        availablePortsComboBox->setCurrentIndex(currentIndex);
     }
 }
 
@@ -256,6 +256,7 @@ void SerialNodePropertiesWidget::connectClicked()
 
     settingChanged = false;
     updateButtonStates();
+    serialSettings->print();
 }
 void SerialNodePropertiesWidget::disconnectClicked()
 {
