@@ -1,7 +1,6 @@
 #include "visualsourcenodebase.h"
 
-VisualSourceNodeBase::VisualSourceNodeBase(SceneComponents* sceneComponents)
-    :VisualNodeBase (sceneComponents)
+VisualSourceNodeBase::VisualSourceNodeBase()
 {
 
 }

@@ -1,11 +1,12 @@
 #pragma once
 #include "visualnodebase.h"
 #include "visualconnection.h"
+#include "propertywidgetmanager.h"
 
 class Connector;
 class VisualNodeBase;
 class VisualConnection;
-
+class PropertyWidgetManager;
 //note this class is a singleton!
 class   SelectionManager
 {
@@ -14,6 +15,8 @@ private:
     static SelectionManager* singletonSelectionManger;
 
     bool hadUpdate = false;
+
+    PropertyWidgetManager* propertyWidgetManager = nullptr;
 public:
     static SelectionManager* getInstance();
     bool isSelected(VisualNodeBase *node);
@@ -31,4 +34,6 @@ public:
     QList<VisualConnection*> selectedConnections;
     Connector* hoveredConnector = nullptr;
     VisualConnection** currentTrackingConnection = nullptr;
+    void setPropertyWidgetManager(PropertyWidgetManager *value);
+    void removeOne(VisualNodeBase *node);
 };

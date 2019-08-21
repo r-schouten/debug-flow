@@ -1,7 +1,6 @@
 #include "visualcontextfilter.h"
 
-VisualContextFilter::VisualContextFilter(SceneComponents* sceneComponents)
-    :VisualNodeBase(sceneComponents)
+VisualContextFilter::VisualContextFilter()
 {
     node = new ContextFilterNode();
     baseNode = node;
@@ -26,6 +25,15 @@ VisualContextFilter::~VisualContextFilter()
         baseNode = nullptr;
     }
 }
+QWidget *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
+{
+
+}
+
+void VisualContextFilter::releasePropertiesWidget()
+{
+
+}
 
 void VisualContextFilter::activate()
 {
@@ -33,7 +41,7 @@ void VisualContextFilter::activate()
 }
 VisualNodeBase *VisualContextFilter::clone()
 {
-    return new VisualContextFilter(sceneComponents);
+    return new VisualContextFilter();
 }
 
 void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -8,9 +8,12 @@ class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 {
     Q_OBJECT
 public:
-    VisualContextFilter(SceneComponents *sceneComponents);
+    VisualContextFilter();
     ~VisualContextFilter();
 protected:
+    QWidget* loadPropertiesWidget(QWidget* parent);
+    void releasePropertiesWidget();
+
     ContextFilterNode* node = nullptr;
     void activate();
     VisualNodeBase *clone();

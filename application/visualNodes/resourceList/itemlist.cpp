@@ -1,12 +1,9 @@
 #include "itemlist.h"
 
 
-ItemList::ItemList(SceneComponents *sceneComponents)
-    :sceneComponents(sceneComponents)
+ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
+    :resourceList(resourceList),nodeScene(nodeScene)
 {
-    resourceList = sceneComponents->getResourceList();
-    nodeScene = sceneComponents->getNodeScene();
-
     resourceList->setIconSize(QSize(100,800));
     resourceList->setColumnCount(1);
     resourceList->setHeaderLabel("");
@@ -21,7 +18,7 @@ ItemList::ItemList(SceneComponents *sceneComponents)
 void ItemList::generateList()
 {
     //ownership of this nodes will be given to myTreeWidgetItem, don't delete!
-    nodes << new VisualContextFilter(sceneComponents) << new VisualSerialNode(sceneComponents) << new VisualFilteredConsole(sceneComponents) << new VisualSimpleConsole(sceneComponents);
+    nodes << new VisualContextFilter() << new VisualSerialNode() << new VisualFilteredConsole << new VisualSimpleConsole();
     generateCategory<SourceStyle>(nodes, "data source nodes", ":/images/data_source_icon.png");
     generateCategory<ProcessingStyle>(nodes, "processing nodes", ":/images/filtering_icon.png");
     generateCategory<OutputStyle>(nodes, "output nodes", ":/images/output_icon.png");

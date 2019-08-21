@@ -2,6 +2,11 @@
 
 SelectionManager* SelectionManager::singletonSelectionManger = nullptr;
 
+void SelectionManager::setPropertyWidgetManager(PropertyWidgetManager *value)
+{
+    propertyWidgetManager = value;
+}
+
 SelectionManager *SelectionManager::getInstance()
 {
     if(singletonSelectionManger == nullptr)
@@ -28,9 +33,17 @@ void SelectionManager::setSelected(VisualNodeBase *node, bool clear)
     }
     if(!selectedNodes.contains(node))
     {
-        selectedNodes.append(node);
+        selectedNodes.append(node);        
     }
     hadUpdate = true;
+
+    if(selectedNodes.size() == 1)
+    {
+        propertyWidgetManager->notifyNodeSelected(node);
+    }
+    else {
+        propertyWidgetManager->notifyMultipleSelected();
+    }
 }
 
 void SelectionManager::setSelected(VisualConnection *connection, bool clear)
@@ -45,11 +58,22 @@ void SelectionManager::setSelected(VisualConnection *connection, bool clear)
         selectedConnections.append(connection);
     }
     hadUpdate = true;
+
+    if(selectedNodes.size() == 0)
+    {
+        propertyWidgetManager->notifyNoneSelected();
+    }
+}
+void SelectionManager::removeOne(VisualNodeBase* node)
+{
+    selectedNodes.removeOne(node);
+    propertyWidgetManager->removeOne(node);
 }
 void SelectionManager::clearSelected()
 {
     selectedNodes.clear();
     selectedConnections.clear();
+    propertyWidgetManager->notifyNoneSelected();
 }
 
 bool SelectionManager::isUpdated()
