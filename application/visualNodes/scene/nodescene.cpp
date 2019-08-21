@@ -102,7 +102,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 void NodeScene::onNodeDelete(VisualNodeBase* node)
 {
     removeItem(node);
-    selectionManager->selectedNodes.removeOne(node);
+    selectionManager->removeOne(node);
     if(nodes.removeOne(node))
     {
 

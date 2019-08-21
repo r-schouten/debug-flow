@@ -6,20 +6,21 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    //when a node in a scene is clicked its property's will been shown in the right tab bar, to give the nodes acces to the tab bar the selectionmanager have a propertyWidgetManager to open the property's on a node is selected
+    propertyWidgetManager = new PropertyWidgetManager(m_ui->propertiesWidget,m_ui->rightTabWidget);
+    SelectionManager::getInstance()->setPropertyWidgetManager(propertyWidgetManager);
 
     windowManager = new WindowManager(m_ui->mdiArea);
 
     nodeScene = new NodeScene(windowManager);
-    m_ui->nodesScene->setScene(nodeScene);
+    m_ui->graphicsView->setScene(nodeScene);
 
-    sceneComponents = new SceneComponents(m_ui->resourceList, nodeScene, m_ui->rightTabWidget, m_ui->propertiesWidget);
+    itemsList = new ItemList(m_ui->resourceList,nodeScene);
 
-    itemsList = new ItemList(sceneComponents);
-
-    UiUpdatetimer = new QTimer(this);
-    connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
-    UiUpdatetimer->start(30);
-    m_ui->nodesScene->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
+//    UiUpdatetimer = new QTimer(this);
+//    connect(UiUpdatetimer, &QTimer::timeout, this, &MainWindow::updateUI);
+//    UiUpdatetimer->start(30);
+    m_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
 }
 
 MainWindow::~MainWindow()

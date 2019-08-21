@@ -1,35 +1,33 @@
 #pragma once
+#include <QSerialPortInfo>
+#include <QGraphicsProxyWidget>
 
 #include "serialnode.h"
 #include "sourcestyle.h"
 #include "visualnodebase.h"
 #include "selectionmanager.h"
 #include "visualsourcenodebase.h"
+#include "serialnodepropertieswidget.h"
 
 #include "combobox.h"
-
-#include <QSerialPortInfo>
-#include <QGraphicsProxyWidget>
 
 class VisualSerialNode : public VisualSourceNodeBase
 {
     Q_OBJECT
 public:
-    VisualSerialNode(SceneComponents* sceneComponents);
+    VisualSerialNode();
     VisualNodeBase *clone();
 
     ~VisualSerialNode();
     void activate();
 
     void openPort();
-public slots:
-    void onComboBoxChanged();
-    void loadSerialPorts();
 
-    void handleSerialPortError(QSerialPort::SerialPortError);
-    void onBaudRateChanged();
 protected:
-     SerialNode *node = nullptr;
+    QWidget *loadPropertiesWidget(QWidget *parent);
+    void releasePropertiesWidget();
+
+    SerialNode *node = nullptr;
     QGraphicsProxyWidget* proxyWidget = nullptr;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

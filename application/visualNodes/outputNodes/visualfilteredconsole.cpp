@@ -1,6 +1,5 @@
 #include "visualfilteredconsole.h"
-VisualFilteredConsole::VisualFilteredConsole(SceneComponents* sceneComponents)
-    :VisualOutputNodeBase (sceneComponents)
+VisualFilteredConsole::VisualFilteredConsole()
 {
 
     name = "filtered console";
@@ -28,11 +27,6 @@ void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
     }
 }
 
-void VisualFilteredConsole::activate()
-{
-    window = windowManager->getMdiWindow(node);
-}
-
 VisualFilteredConsole::~VisualFilteredConsole()
 {
     if(window)
@@ -41,6 +35,22 @@ VisualFilteredConsole::~VisualFilteredConsole()
         baseNode = nullptr;
     }
 }
+
+void VisualFilteredConsole::activate()
+{
+    window = windowManager->getMdiWindow(node);
+}
+
+QWidget *VisualFilteredConsole::loadPropertiesWidget(QWidget *parent)
+{
+
+}
+
+void VisualFilteredConsole::releasePropertiesWidget()
+{
+
+}
+
 void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     paintBase(painter,this,name);
@@ -49,5 +59,5 @@ void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsI
 
 VisualNodeBase *VisualFilteredConsole::clone()
 {
-    return new VisualFilteredConsole(sceneComponents);
+    return new VisualFilteredConsole();
 }

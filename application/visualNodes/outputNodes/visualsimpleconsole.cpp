@@ -1,10 +1,34 @@
 #include "visualsimpleconsole.h"
 
-VisualSimpleConsole::VisualSimpleConsole(SceneComponents* sceneComponents)
-    :VisualOutputNodeBase (sceneComponents)
+VisualSimpleConsole::VisualSimpleConsole()
 {
     name = "simple console";
     shortDiscription = "this node provides a simple console";
+}
+
+VisualSimpleConsole::~VisualSimpleConsole()
+{
+    if(window)
+    {
+        windowManager->deleteMdiWindow(window);
+        baseNode = nullptr;
+    }
+}
+
+
+void VisualSimpleConsole::activate()
+{
+    window = windowManager->getMdiWindow(node);
+}
+
+QWidget *VisualSimpleConsole::loadPropertiesWidget(QWidget* parent)
+{
+
+}
+
+void VisualSimpleConsole::releasePropertiesWidget()
+{
+
 }
 
 void VisualSimpleConsole::setWindowManager(WindowManager *_windowManager)
@@ -28,19 +52,6 @@ void VisualSimpleConsole::setWindowManager(WindowManager *_windowManager)
     }
 }
 
-void VisualSimpleConsole::activate()
-{
-    window = windowManager->getMdiWindow(node);
-}
-
-VisualSimpleConsole::~VisualSimpleConsole()
-{
-    if(window)
-    {
-        windowManager->deleteMdiWindow(window);
-        baseNode = nullptr;
-    }
-}
 void VisualSimpleConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     paintBase(painter,this,name);
@@ -49,5 +60,6 @@ void VisualSimpleConsole::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 VisualNodeBase *VisualSimpleConsole::clone()
 {
-    return new VisualSimpleConsole(sceneComponents);
+    return new VisualSimpleConsole();
 }
+

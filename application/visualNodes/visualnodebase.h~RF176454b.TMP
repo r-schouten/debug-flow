@@ -48,8 +48,7 @@ public:
     virtual void activate() = 0;
 
     NodeBase* getNode();
-    virtual QWidget* loadPropertiesWidget(QWidget* parent) = 0;
-    virtual void releasePropertiesWidget() = 0;
+
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -60,7 +59,8 @@ protected:
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
 
-
+    virtual QWidget* getPropertiesWidget() = 0;
+    virtual void releasePropertiesWidget() = 0;
     PropertyWidgetBase* propertyWidget = nullptr;
 
     NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer

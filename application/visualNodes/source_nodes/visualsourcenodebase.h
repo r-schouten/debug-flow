@@ -9,7 +9,7 @@ class VisualSourceNodeBase : public VisualNodeBase, public SourceStyle
 {
     Q_OBJECT
 public:
-    VisualSourceNodeBase(SceneComponents *sceneComponents);
+    VisualSourceNodeBase();
 
 protected:
     void drawStartStop(QPainter *painter, bool running);

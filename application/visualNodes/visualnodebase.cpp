@@ -1,9 +1,6 @@
 #include "visualnodebase.h"
 
-#include <QPushButton>
-
-VisualNodeBase::VisualNodeBase(SceneComponents* sceneComponents)
-    :sceneComponents(sceneComponents)
+VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
     setFlag(QGraphicsItem::ItemIsMovable, false);
@@ -18,6 +15,12 @@ VisualNodeBase::~VisualNodeBase()
     while(iterator.hasNext())
     {
         delete iterator.next();
+    }
+
+    if(propertyWidget != nullptr)
+    {
+        delete propertyWidget;
+        propertyWidget = nullptr;
     }
 };
 QRectF VisualNodeBase::boundingRect() const
@@ -300,20 +303,6 @@ bool VisualNodeBase::isSelected()
     return selectionManager->isSelected(this);
 }
 
-void VisualNodeBase::openSettings()
-{
-    //open the properties tab in the tabwidget
-    sceneComponents->getTabWidget()->setCurrentWidget(sceneComponents->getPropertiesTab());
-
-    QWidget* propertiesWidget = new QWidget;
-    propertiesWidget->setParent(sceneComponents->getPropertiesTab());
-    sceneComponents->getPropertiesTab();
-    propertiesWidget->show();
-    QPushButton *button = new QPushButton(propertiesWidget);
-    button->show();
-
-}
-
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 
@@ -343,7 +332,6 @@ void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 selectionManager->setSelected(this,true);
             }
         }
-        openSettings();
     }
 
 }

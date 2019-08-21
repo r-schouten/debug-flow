@@ -20,7 +20,6 @@ SOURCES += \
     nodes/source_nodes/serialnode.cpp \
     nodes/source_nodes/serialsettings.cpp \
     nodes/subscription.cpp \
-    scenecomponents.cpp \
     settingsdialog.cpp \
     test/circularbuffertest.cpp \
     utils/ansiescapereader.cpp \
@@ -31,13 +30,16 @@ SOURCES += \
     visualNodes/outputNodes/visualfilteredconsole.cpp \
     visualNodes/outputNodes/visualoutputnodebase.cpp \
     visualNodes/outputNodes/visualsimpleconsole.cpp \
+    visualNodes/propertywidgetbase.cpp \
+    visualNodes/propertywidgetmanager.cpp \
     visualNodes/prossesing_nodes/visualcontextfilter.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
     visualNodes/scene/graphicsview.cpp \
     visualNodes/scene/nodescene.cpp \
     visualNodes/selectionmanager.cpp \
-    visualNodes/source_nodes/visualserialnode.cpp \
+    visualNodes/source_nodes/serial_node/serialnodepropertieswidget.cpp \
+    visualNodes/source_nodes/serial_node/visualserialnode.cpp \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/visualnodebase.cpp \
     widgets/combobox.cpp \
@@ -62,7 +64,6 @@ HEADERS += \
     nodes/source_nodes/serialnode.h \
     nodes/source_nodes/serialsettings.h \
     nodes/subscription.h \
-    scenecomponents.h \
     settingsdialog.h \
     test/circularbuffertest.h \
     utils/ansi_types.h \
@@ -77,6 +78,8 @@ HEADERS += \
     visualNodes/outputNodes/visualfilteredconsole.h \
     visualNodes/outputNodes/visualoutputnodebase.h \
     visualNodes/outputNodes/visualsimpleconsole.h \
+    visualNodes/propertywidgetbase.h \
+    visualNodes/propertywidgetmanager.h \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visualcontextfilter.h \
     visualNodes/resourceList/itemlist.h \
@@ -84,8 +87,9 @@ HEADERS += \
     visualNodes/scene/graphicsview.h \
     visualNodes/scene/nodescene.h \
     visualNodes/selectionmanager.h \
+    visualNodes/source_nodes/serial_node/serialnodepropertieswidget.h \
+    visualNodes/source_nodes/serial_node/visualserialnode.h \
     visualNodes/source_nodes/sourcestyle.h \
-    visualNodes/source_nodes/visualserialnode.h \
     visualNodes/source_nodes/visualsourcenodebase.h \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
@@ -97,7 +101,6 @@ HEADERS += \
     windows/windowmanager.h
 
 FORMS += \
-    mainwindow_old.ui \
     settingsdialog.ui \
     testwindow.ui
 
@@ -111,6 +114,7 @@ INCLUDEPATH += \
     visualNodes \
     sourceNodes \
     visualNodes/source_nodes \
+    visualNodes/source_nodes/serial_node \
     visualNodes/scene \
     visualNodes/prossesing_nodes \
     visualNodes/resourceList \

@@ -6,7 +6,7 @@ class VisualOutputNodeBase : public VisualNodeBase
 protected:
     WindowManager* windowManager = nullptr;
 public:
-    VisualOutputNodeBase(SceneComponents *sceneComponents);
+    VisualOutputNodeBase();
     virtual void setWindowManager(WindowManager* _windowManager) = 0;
 signals:
     void WindowDeleted(VisualOutputNodeBase* window);
