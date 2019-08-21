@@ -277,7 +277,7 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     painter->setPen(nodeStyle->nodeCategoryColor);
     painter->setBrush(nodeStyle->nodeCategoryColor);
 
-    QRect titleRect(0,0,width,20);
+    QRect titleRect(0,0,width,TITLE_BAR_HEIGHT);
     painter->drawRoundRect(titleRect, 10,10);
 
     QPen pen;
@@ -288,7 +288,6 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     else {
         pen = QPen(nodeStyle->borderPen);
     }
-    pen.setWidth(3);
     painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
     painter->drawRoundRect(rect,10,10);

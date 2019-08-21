@@ -14,6 +14,7 @@ VisualSerialNode::VisualSerialNode()
     {
         addOutputConnector();
     }
+    height = 80;
 }
 
 VisualSerialNode::~VisualSerialNode()
@@ -39,16 +40,53 @@ VisualNodeBase* VisualSerialNode::clone()
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
-    if(node->settings->nodeSettings.running)
-    {
-        height = 80;
-    }
-    else {
-        height = 100;
-    }
+//    if(node->settings->nodeSettings.running)
+//    {
+//        height = 80;
+//    }
+//    else {
+//        height = 100;
+//    }
     paintBase(painter,this,"Serial");
     drawConnectors(painter, this);
     drawStartStop(painter,node->settings->nodeSettings.running);
+
+    painter->setPen(textPen);
+    painter->setFont(textFont);
+
+    if(node->settings->nodeSettings.running)
+    {
+        painter->drawText(QPointF(10,35),"connected");
+    }
+    else
+    {
+        painter->drawText(QPointF(10,35),"not connected");
+    }
+    if(node->settings->nodeSettings.name == "")
+    {
+        painter->drawText(QPointF(10,50),"click to configure");
+    }
+    else
+    {
+        if(node->settings->nodeSettings.errorOccured)
+        {
+            painter->setPen(errorPen);
+            painter->drawText(QPointF(10,50),"error reading");
+            painter->drawText(QPointF(10,65),node->settings->nodeSettings.errorString);
+        }
+        else
+        {
+            if(node->settings->nodeSettings.running)
+            {
+                painter->drawText(QPointF(10,50),node->settings->nodeSettings.name);
+                painter->drawText(QPointF(10,65),QString::number(node->settings->nodeSettings.baudRate));
+            }
+            else {
+                painter->drawText(QPointF(10,50),"click to configure");
+            }
+        }
+    }
+
 }
 void VisualSerialNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -62,9 +100,7 @@ void VisualSerialNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
             openPort();
         }
     }
-    else {
-        VisualSourceNodeBase::mousePressEvent(event);
-    }
+    VisualSourceNodeBase::mousePressEvent(event);
 }
 
 QWidget *VisualSerialNode::loadPropertiesWidget(QWidget* parent)
