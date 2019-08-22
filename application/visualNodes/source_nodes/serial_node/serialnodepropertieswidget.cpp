@@ -1,11 +1,24 @@
 #include "serialnodepropertieswidget.h"
 
+#include <QGroupBox>
+#include <QLabel>
+
 SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNode *serialNode)
     :PropertyWidgetBase (parent),serialSettings(serialNode->settings),serialNode(serialNode)
 {
     availablePortsComboBox = new ComboBox();
     layout->addRow("port",availablePortsComboBox);
     loadAvailablePorts();
+
+    //port labels
+    manufacturerLabel = new QLabel();
+    manufacturerLabel->setStyleSheet("QLabel { color : grey; }");
+    layout->addRow(manufacturerLabel);
+
+    descriptionLabel = new QLabel();
+    descriptionLabel->setStyleSheet("QLabel { color : grey; }");
+    layout->addRow(descriptionLabel);
+
     //load baud rates
     baudRatesComboBox = new QComboBox();
     bool baudrateFound = false;
@@ -124,6 +137,8 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     this->setLayout(layout);
     show();
 
+    hideDeviceInfo();
+
     connect(availablePortsComboBox,SIGNAL(onShowPopup(ComboBox*)),this,SLOT(loadAvailablePorts()));
     connect(serialNode,SIGNAL(SerialPortError(QSerialPort::SerialPortError)),this,SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
     connect(connectButton,SIGNAL(clicked()),this,SLOT(connectClicked()));
@@ -153,7 +168,43 @@ SerialNodePropertiesWidget::~SerialNodePropertiesWidget()
     delete disconnectButton;
     delete validator;
 }
+void SerialNodePropertiesWidget::hideDeviceInfo()
+{
+    manufacturerLabel->hide();
+    descriptionLabel->hide();
+}
 
+void SerialNodePropertiesWidget::updateDeviceInfo()
+{
+    if(availablePortsComboBox->currentData().toString() == "")
+    {
+        hideDeviceInfo();
+    }
+    const auto infos = QSerialPortInfo::availablePorts();
+    for (const QSerialPortInfo &info : infos) {
+        if(info.portName() == availablePortsComboBox->currentData().toString())
+        {
+            if(info.manufacturer() != "")
+            {
+                manufacturerLabel->show();
+                manufacturerLabel->setText(info.manufacturer());
+            }
+            else {
+                manufacturerLabel->hide();
+            }
+            if(info.description() != "")
+            {
+                descriptionLabel->show();
+                descriptionLabel->setText(info.description());
+            }
+            else {
+                descriptionLabel->hide();
+            }
+
+        }
+
+    }
+}
 void SerialNodePropertiesWidget::loadAvailablePorts()
 {
     availablePortsComboBox->clear();
@@ -297,5 +348,6 @@ void SerialNodePropertiesWidget::updateButtonStates()
     else {
         connectButton->setEnabled(false);
     }
+    updateDeviceInfo();
 }
 
