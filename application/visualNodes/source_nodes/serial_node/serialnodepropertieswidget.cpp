@@ -167,6 +167,8 @@ SerialNodePropertiesWidget::~SerialNodePropertiesWidget()
     delete connectButton;
     delete disconnectButton;
     delete validator;
+    delete manufacturerLabel;
+    delete descriptionLabel;
 }
 void SerialNodePropertiesWidget::hideDeviceInfo()
 {

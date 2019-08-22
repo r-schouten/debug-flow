@@ -361,15 +361,18 @@ void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     while(iterator.hasNext())
     {
         Connector* connector = iterator.next();
-        if(connector->getRect(5).contains(event->pos()))
+        if(connector->getRect(CONNECTOR_MARGINS).contains(event->pos()))
         {
             selectionManager->hoveredConnector = connector;
+            setToolTip(("test tooljdsfkl;aaaaaaaaaaajfkl;asjflkadsjflkasjioeja;kdjaklejraskldjklfjeioaj;dksljfiaejalkdjifjeriajdklfhikerhfikfjdkshfkerhfueshladsjfheuilahjdkhfueihaskjldkfheuitip"));
+
         }
         else {
             if(selectionManager->hoveredConnector == connector)
             {
                 selectionManager->hoveredConnector = nullptr;
             }
+            setToolTip(("no tooltip"));
         }
     }
 }

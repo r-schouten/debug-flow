@@ -38,8 +38,6 @@ private:
     QIntValidator* validator = nullptr;
     QLabel* manufacturerLabel = nullptr;
     QLabel* descriptionLabel = nullptr;
-    QLabel* productIdentifierLabel = nullptr;
-    QLabel* vendorLabel = nullptr;
 
     bool settingChanged = false;
     bool IsPortAvailable();
