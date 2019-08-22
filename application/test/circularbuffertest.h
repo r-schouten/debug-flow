@@ -13,7 +13,7 @@
 class CircularBufferTest: public QObject
 {
     Q_OBJECT
-    bool testContinousAppendRead(CircularBuffer *buffer, int iterations, bool qbytearray);
+    bool testContinousAppendRead(CircularBuffer *buffer, int iterations, bool printableChars);
 public:
     CircularBufferTest();
 private slots:
