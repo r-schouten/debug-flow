@@ -4,7 +4,7 @@ This project is currently in development.
 Debug flow is a debug manager that will make debugging with console logs easier and more flexible.
 The most development environments have a simple console with almost no options, even changing the log level on the go is usually not possible. Debug flow goes far beyond that.
 
-![debug flow](https://github.com/r-schouten/debug-flow/blob/master/images/debug_flow_capture.JPG)
+![debug flow](https://github.com/r-schouten/debug-flow/blob/master/images/debug_flow_capture2.JPG)
 
 Debug flow is seperate fromdevelopment environments, it support all kinds of input sources, much different filters can be applied and there are different ways to show the output. The goal is the let developers build a convenient debugging environment within a few minutes that saves  hours of debugging.
 
