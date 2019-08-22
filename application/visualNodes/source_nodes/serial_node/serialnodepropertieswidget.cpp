@@ -236,6 +236,7 @@ void SerialNodePropertiesWidget::loadAvailablePorts()
             }
         }
         availablePortsComboBox->addItem(text,info.portName());
+        availablePortsComboBox->setItemData(availablePortsComboBox->count()-1,info.description(), Qt::ToolTipRole);
         i++;
     }
     if(currentIndex != -1)
