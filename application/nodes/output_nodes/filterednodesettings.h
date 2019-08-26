@@ -4,6 +4,13 @@
 #include "nodesettingsbase.h"
 
 #define DEFAULT_CONSOLE_BLOCK_COUNT 10000
+
+
+enum class HorizontalScrollOptions:int{
+    scrollbar=0,
+    ignore=1,
+    newline=2
+};
 struct TagOption
 {
     TagOption(QString name,bool enabled)
@@ -39,19 +46,24 @@ class FilteredNodeSettings : public NodeSettingsBase
     Q_OBJECT
 public:
     FilteredNodeSettings();
-
     void addOption(Tag* tag,TagOption* option);
-    struct Settings
-    {
-        QList<Tag*> tags;
-        bool filterOnWindow = true;
-        bool LineNumbersEnabled = false;
-        bool ANSIEnabled = true;
-        bool autoScrollEnabled = true;
-        //        horizontalScrollComboBox = nullptr;
-        int maxLinesComboBox = DEFAULT_CONSOLE_BLOCK_COUNT;
 
-    }nodeSettings;
+    void setHorizontalScroll(const HorizontalScrollOptions &value);
+    HorizontalScrollOptions getHorizontalScroll() const;
+
+    int getMaxLinesComboBox() const;
+    void setMaxLinesComboBox(int value);
+
+    QList<Tag*> tags;
+    bool filterOnWindow = true;
+    bool LineNumbersEnabled = false;
+    bool ANSIEnabled = true;
+    bool autoScrollEnabled = true;
+
+
+private:
+    int maxLinesComboBox = DEFAULT_CONSOLE_BLOCK_COUNT;
+    HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;
 
 signals:
     void optionAdded(Tag* tag);

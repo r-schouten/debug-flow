@@ -81,7 +81,6 @@ public:
 
 private:
     FilteredNodeSettings* settings = nullptr;
-    QList<Tag*>* tags = nullptr;
     bool keepContext = true;
     bool showCurrentContext = false;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given

@@ -11,10 +11,11 @@
 
 class TagGroupbox :public QGroupBox
 {
+    Q_OBJECT
 public:
     TagGroupbox(Tag* tag)
         :tag(tag){
-        //this->setTitle(tag->tagName);
+        this->setTitle(tag->tagName);
 
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy.setVerticalStretch(1);
@@ -28,10 +29,10 @@ public:
         layout->addWidget(comboBox);
 
         showTagCheckBox = new QCheckBox;
-        showTagCheckBox->setChecked(false);
+        showTagCheckBox->setChecked(!tag->visible);
         showTagCheckBox->setText("hide");
         layout->addWidget(showTagCheckBox);
-
+        connect(showTagCheckBox,SIGNAL(stateChanged(int)),this,SLOT(showTagStateChanged()));
 
         layout->addStretch(0);
         this->setLayout(layout);
@@ -41,14 +42,17 @@ public:
     ~TagGroupbox()
     {
         while(options.size()>0) options.removeAt(0);
-        if(itemModel) delete itemModel;
-        if(comboBox) delete comboBox;
-        if(layout) delete layout;
-        if(showTagCheckBox)delete showTagCheckBox;
     }
     Tag* tag = nullptr;
     QList<QStandardItem*> options;
     QStandardItemModel* itemModel = nullptr;
+
+public slots:
+    void showTagStateChanged()
+    {
+        tag->visible = !showTagCheckBox->checkState();
+    }
+private:
     QComboBox* comboBox = nullptr;
     QCheckBox* showTagCheckBox = nullptr;
     QVBoxLayout* layout = new QVBoxLayout;
@@ -63,6 +67,12 @@ public:
     QList<TagGroupbox*> tagGroupboxes;
 public slots:
     void optionAdded(Tag *tag);
+    void horizontalScrollIndexChanged(int index);
+    void maxLinesIndexChanged(int index);
+    void filterOnWindowStateChanged();
+    void lineNumbersStateChanged();
+    void ANSIStateChanged();
+    void autoScrollStateChanged();
 private:
     FilteredNodeSettings* settings = nullptr;
     void loadTag(TagGroupbox *tagGroupbox);
@@ -72,7 +82,7 @@ private:
     QFormLayout* containerLayout = nullptr;
 
     QCheckBox* filterOnWindowCheckbox = nullptr;
-    QCheckBox* LineNumbersCheckbox = nullptr;
+    QCheckBox* lineNumbersCheckbox = nullptr;
     QCheckBox*ANSICheckbox = nullptr;
     QCheckBox* autoScrollCheckbox = nullptr;
     QComboBox* horizontalScrollComboBox = nullptr;

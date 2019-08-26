@@ -30,7 +30,7 @@ public:
     QTreeWidget *resourceList = nullptr;
     QSplitter *sceneSplitter = nullptr;
     QTabWidget* rightTabWidget = nullptr;
-    QWidget* propertiesWidget = nullptr;
+    QScrollArea* propertiesWidget = nullptr;
     QWidget* secondTab = nullptr;
 
     void setupUi(QMainWindow *MainWindow)
@@ -87,7 +87,7 @@ public:
         //resourcelist
         resourceList = new QTreeWidget(sceneSplitter);
         resourceList->setObjectName("treeWidget");
-        resourceList->setGeometry(QRect(60, 120, 256, 192));
+        resourceList->setMinimumSize(QSize(125,100));
 
         //nodescene
         graphicsView = new GraphicsView(sceneSplitter);
@@ -101,10 +101,11 @@ public:
         rightTabWidget = new QTabWidget(sceneSplitter);
         rightTabWidget->setSizePolicy(sizePolicy1);
         rightTabWidget->setObjectName("rightTabWidget");
-        rightTabWidget->setMinimumSize(QSize(100,100));
+        rightTabWidget->setMinimumSize(QSize(125,100));
 
         //properties tab in right tab widget
-        propertiesWidget = new QWidget(rightTabWidget);
+        propertiesWidget = new QScrollArea(rightTabWidget);
+        propertiesWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         propertiesWidget->setObjectName("propertiesWidget");
         propertiesWidget->setSizePolicy(sizePolicy1);
         rightTabWidget->addTab(propertiesWidget,"node properties");

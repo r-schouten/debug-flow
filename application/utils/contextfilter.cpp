@@ -1,7 +1,7 @@
 #include "contextfilter.h"
 
 ContextFilter::ContextFilter(FilteredNodeSettings *settings)
-    :settings(settings),tags(&settings->nodeSettings.tags)
+    :settings(settings)
 {
 
 }
@@ -121,11 +121,11 @@ void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin
 void ContextFilter::processOption(QString& optionName, int tagIndex)
 {
 
-    if(tags->size() <= tagIndex)
+    if(settings->tags.size() <= tagIndex)
     {
-        tags->append(new Tag(QString("tag %1").arg(tagIndex)));
+        settings->tags.append(new Tag(QString("tag %1").arg(tagIndex)));
     }
-    Tag* tag = tags->at(tagIndex);
+    Tag* tag = settings->tags.at(tagIndex);
     TagOption* option = tag->getOption(optionName);
     if(option == nullptr)
     {

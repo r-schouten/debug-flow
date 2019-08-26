@@ -1,13 +1,9 @@
 #include "propertywidgetmanager.h"
 
-PropertyWidgetManager::PropertyWidgetManager(QWidget* propertyWidget,QTabWidget* tabWidget)
+
+PropertyWidgetManager::PropertyWidgetManager(QScrollArea* propertyWidget,QTabWidget* tabWidget)
     :propertyWidget(propertyWidget),tabWidget(tabWidget)
 {
-    widgetLayout = new QVBoxLayout;
-    widgetLayout->setAlignment(Qt::AlignTop);
-
-    propertyWidget->setLayout(widgetLayout);
-    widgetLayout->setContentsMargins(0,0,0,0);
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -29,8 +25,7 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
     currentShownNode = node;
 
     tabWidget->setCurrentWidget(propertyWidget);
-
-    widgetLayout->addWidget(node->loadPropertiesWidget(nullptr));
+    propertyWidget->setWidget(node->loadPropertiesWidget(nullptr));
 }
 
 void PropertyWidgetManager::notifyMultipleSelected()

@@ -170,20 +170,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
 
 SerialNodePropertiesWidget::~SerialNodePropertiesWidget()
 {
-    delete layout;
-    delete availablePortsComboBox;
-    delete baudRatesComboBox;
-    delete customBaudRateEdit;
-    delete parityCombobox;
-    delete dataBitsBox;
-    delete stopBitsBox;
-    delete flowControlBox;
-    delete connectButton;
-    delete disconnectButton;
     delete validator;
-    delete errorLabel;
-    delete manufacturerLabel;
-    delete descriptionLabel;
 }
 void SerialNodePropertiesWidget::hideDeviceInfo()
 {
