@@ -2,15 +2,6 @@
 
 SimpleConsole::SimpleConsole()
 {
-    if(dynamic_cast<InputNode*>(this))
-    {
-        hasInput = true;
-    }
-    if(dynamic_cast<OutputNode*>(this))
-    {
-        hasOutput = true;
-    }
-
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
     console->document()->setMaximumBlockCount(1000);

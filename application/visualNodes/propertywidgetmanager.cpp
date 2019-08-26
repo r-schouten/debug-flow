@@ -3,7 +3,15 @@
 PropertyWidgetManager::PropertyWidgetManager(QWidget* propertyWidget,QTabWidget* tabWidget)
     :propertyWidget(propertyWidget),tabWidget(tabWidget)
 {
+    widgetLayout = new QVBoxLayout;
+    widgetLayout->setAlignment(Qt::AlignTop);
 
+    propertyWidget->setLayout(widgetLayout);
+    widgetLayout->setContentsMargins(0,0,0,0);
+
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    propertyWidget->setSizePolicy(sizePolicy);
 }
 
 void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
@@ -22,7 +30,7 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
 
     tabWidget->setCurrentWidget(propertyWidget);
 
-    node->loadPropertiesWidget(propertyWidget);
+    widgetLayout->addWidget(node->loadPropertiesWidget(nullptr));
 }
 
 void PropertyWidgetManager::notifyMultipleSelected()

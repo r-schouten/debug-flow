@@ -4,6 +4,7 @@
 #include "visualoutputnodebase.h"
 #include "filteredconsole.h"
 #include "globalconfig.h"
+#include "filteredconsolepropertieswidget.h"
 
 class VisualFilteredConsole : public VisualOutputNodeBase, public OutputStyle
 {

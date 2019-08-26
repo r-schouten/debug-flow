@@ -15,7 +15,6 @@ VisualContextFilter::VisualContextFilter()
     {
         addOutputConnector();
     }
-    contextFilter = new ContextFilter();
 }
 VisualContextFilter::~VisualContextFilter()
 {

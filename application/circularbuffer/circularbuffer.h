@@ -19,8 +19,8 @@ public:
     int usedSize(CircularBufferReader *reader);
     int unUsedSize(CircularBufferReader *reader);
 
+    void append(char *inputData, int size);
     void append(const QByteArray *data);
-    void append(char* inputData, int size);
     int getSize();
     void print();
     void reset();

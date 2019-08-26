@@ -2,7 +2,7 @@
 
 OutputNode::OutputNode()
 {
-
+    hasOutput = true;
 }
 
 OutputNode::~OutputNode()

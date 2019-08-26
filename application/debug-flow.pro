@@ -14,6 +14,7 @@ SOURCES += \
     nodes/nodebase.cpp \
     nodes/nodesettingsbase.cpp \
     nodes/output_nodes/filteredconsole.cpp \
+    nodes/output_nodes/filterednodesettings.cpp \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
@@ -27,7 +28,8 @@ SOURCES += \
     utils/utils.cpp \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
-    visualNodes/outputNodes/visualfilteredconsole.cpp \
+    visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.cpp \
+    visualNodes/outputNodes/filtered_console/visualfilteredconsole.cpp \
     visualNodes/outputNodes/visualoutputnodebase.cpp \
     visualNodes/outputNodes/visualsimpleconsole.cpp \
     visualNodes/propertywidgetbase.cpp \
@@ -58,6 +60,7 @@ HEADERS += \
     nodes/nodebase.h \
     nodes/nodesettingsbase.h \
     nodes/output_nodes/filteredconsole.h \
+    nodes/output_nodes/filterednodesettings.h \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
@@ -74,8 +77,9 @@ HEADERS += \
     visualNodes/connection/connector.h \
     visualNodes/connection/visualconnection.h \
     visualNodes/nodestylebase.h \
+    visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.h \
+    visualNodes/outputNodes/filtered_console/visualfilteredconsole.h \
     visualNodes/outputNodes/outputstyle.h \
-    visualNodes/outputNodes/visualfilteredconsole.h \
     visualNodes/outputNodes/visualoutputnodebase.h \
     visualNodes/outputNodes/visualsimpleconsole.h \
     visualNodes/propertywidgetbase.h \
@@ -120,6 +124,7 @@ INCLUDEPATH += \
     visualNodes/resourceList \
     visualNodes/connection \
     visualNodes/outputNodes \
+    visualNodes/outputNodes/filtered_console \
     nodes/processing_nodes \
     nodes/source_nodes \
     nodes/output_nodes \

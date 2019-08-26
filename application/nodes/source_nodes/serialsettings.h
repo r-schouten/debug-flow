@@ -4,6 +4,7 @@
 #include "nodesettingsbase.h"
 class SerialSettings : public NodeSettingsBase
 {
+    Q_OBJECT
 public:
     SerialSettings();
     struct Settings

@@ -11,7 +11,7 @@
 
 #include "outputnode.h"
 #include "contextfilter.h"
-
+#include "filterednodesettings.h"
 class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
@@ -21,6 +21,10 @@ public:
 
     FilteredConsole();
     ~FilteredConsole();
+
+
+    FilteredNodeSettings* nodeSettings = nullptr;
+
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;
@@ -28,6 +32,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:
+
     QVBoxLayout *layout = nullptr;
     QHBoxLayout *verticalLayout = nullptr;
 
@@ -38,7 +43,7 @@ private:
     ContextFilter *contextFilter = nullptr;
 
 public slots:
-    void propertyChanged(Property *property);
-    void slot_changed(QObject *property);
+    //void propertyChanged(Property *property);
+    //void slot_changed(QObject *property);
 };
 

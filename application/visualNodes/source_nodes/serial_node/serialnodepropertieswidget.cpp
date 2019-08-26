@@ -5,12 +5,27 @@
 
 SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNode *serialNode)
     :PropertyWidgetBase (parent),serialSettings(serialNode->settings),serialNode(serialNode)
-{
+{    
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    sizePolicy.setVerticalStretch(1);
+    this->setSizePolicy(sizePolicy);
+
+    layout = new QFormLayout;
+    layout->setSizeConstraint(QLayout::SetFixedSize);
+    layout->setMargin(10);
+    layout->setAlignment(Qt::AlignTop);
+    this->setLayout(layout);
+
     availablePortsComboBox = new ComboBox();
     layout->addRow("port",availablePortsComboBox);
     loadAvailablePorts();
 
     //port labels
+
+    errorLabel = new QLabel();
+    errorLabel->setStyleSheet("QLabel { color : red; }");
+    layout->addRow(errorLabel);
+
     manufacturerLabel = new QLabel();
     manufacturerLabel->setStyleSheet("QLabel { color : grey; }");
     layout->addRow(manufacturerLabel);
@@ -134,8 +149,6 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     disconnectButton  = new QPushButton("disconnect");
     layout->addRow(disconnectButton,connectButton);
     updateButtonStates();
-    this->setLayout(layout);
-    show();
 
     hideDeviceInfo();
 
@@ -157,6 +170,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
 
 SerialNodePropertiesWidget::~SerialNodePropertiesWidget()
 {
+    delete layout;
     delete availablePortsComboBox;
     delete baudRatesComboBox;
     delete customBaudRateEdit;
@@ -167,11 +181,13 @@ SerialNodePropertiesWidget::~SerialNodePropertiesWidget()
     delete connectButton;
     delete disconnectButton;
     delete validator;
+    delete errorLabel;
     delete manufacturerLabel;
     delete descriptionLabel;
 }
 void SerialNodePropertiesWidget::hideDeviceInfo()
 {
+    errorLabel->hide();
     manufacturerLabel->hide();
     descriptionLabel->hide();
 }
@@ -181,6 +197,7 @@ void SerialNodePropertiesWidget::updateDeviceInfo()
     if(availablePortsComboBox->currentData().toString() == "")
     {
         hideDeviceInfo();
+        return;
     }
     const auto infos = QSerialPortInfo::availablePorts();
     for (const QSerialPortInfo &info : infos) {
@@ -205,6 +222,14 @@ void SerialNodePropertiesWidget::updateDeviceInfo()
 
         }
 
+    }
+    if(serialSettings->nodeSettings.errorOccured)
+    {
+        errorLabel->show();
+        errorLabel->setText("ERROR: " + serialSettings->nodeSettings.errorString);
+    }
+    else {
+        errorLabel->hide();
     }
 }
 void SerialNodePropertiesWidget::loadAvailablePorts()

@@ -26,6 +26,9 @@ private:
     SerialSettings* serialSettings = nullptr;
     QList<qint32> baudratesOptions = {110,300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 38400, 57600,74880, 115200, 128000,230400 ,250000, 256000,460800,500000,921600,1000000,2000000};
 
+    QFormLayout *layout = nullptr;
+
+
     ComboBox* availablePortsComboBox = nullptr;
     QComboBox* baudRatesComboBox = nullptr;
     QLineEdit* customBaudRateEdit  = nullptr;
@@ -36,6 +39,7 @@ private:
     QPushButton* connectButton = nullptr;
     QPushButton* disconnectButton = nullptr;
     QIntValidator* validator = nullptr;
+    QLabel* errorLabel = nullptr;
     QLabel* manufacturerLabel = nullptr;
     QLabel* descriptionLabel = nullptr;
 

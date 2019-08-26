@@ -3,14 +3,6 @@
 ContextFilterNode::ContextFilterNode()
 {
     circularBuffer = new CircularBuffer(500,1000);
-    if(dynamic_cast<InputNode*>(this))
-    {
-        hasInput = true;
-    }
-    if(dynamic_cast<OutputNode*>(this))
-    {
-        hasOutput = true;
-    }
 }
 
 void ContextFilterNode::NotifyBufferUpdate(Subscription *source)

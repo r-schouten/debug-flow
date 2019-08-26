@@ -2,7 +2,7 @@
 
 InputNode::InputNode()
 {
-
+    hasInput = true;
 }
 
 InputNode::~InputNode()

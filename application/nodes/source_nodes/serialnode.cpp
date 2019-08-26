@@ -2,16 +2,8 @@
 
 SerialNode::SerialNode()
 {
-    if(dynamic_cast<InputNode*>(this))
-    {
-        hasInput = true;
-    }
-    if(dynamic_cast<OutputNode*>(this))
-    {
-        hasOutput = true;
-    }
     settings = new SerialSettings();
-    circularBuffer = new CircularBuffer(10000,100000);
+    circularBuffer = new CircularBuffer(100000,1000000);
     m_serial = new QSerialPort(this);
 
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);

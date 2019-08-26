@@ -2,15 +2,7 @@
 
 FilteredConsole::FilteredConsole()
 {
-    if(dynamic_cast<InputNode*>(this))
-    {
-        hasInput = true;
-    }
-    if(dynamic_cast<OutputNode*>(this))
-    {
-        hasOutput = true;
-    }
-
+    nodeSettings = new FilteredNodeSettings();
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
     console->document()->setMaximumBlockCount(1000);
@@ -27,8 +19,8 @@ FilteredConsole::FilteredConsole()
     p.setColor(QPalette::Text, Qt::black);
     console->setPalette(p);
 
-    contextFilter = new ContextFilter();
-    connect(contextFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
+    contextFilter = new ContextFilter(nodeSettings);
+    //connect(contextFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
 
 }
 
@@ -44,25 +36,25 @@ FilteredConsole::~FilteredConsole()
     }
     delete contextFilter;
 }
-void FilteredConsole::propertyChanged(Property* property)
-{
+//void FilteredConsole::propertyChanged(Property* property)
+//{
 
-    if(property->itemModel == nullptr)
-    {
-        QComboBox* newBox = new QComboBox;
-        property->itemModel = new QStandardItemModel();
-        newBox->setModel(property->itemModel);
-        verticalLayout->addWidget(newBox);
-        properyBoxes.append(property->itemModel);
-    }
+//    if(property->itemModel == nullptr)
+//    {
+//        QComboBox* newBox = new QComboBox;
+//        property->itemModel = new QStandardItemModel();
+//        newBox->setModel(property->itemModel);
+//        verticalLayout->addWidget(newBox);
+//        properyBoxes.append(property->itemModel);
+//    }
 
-    QListIterator<PropertyOption*> iterator(property->options);
-    while(iterator.hasNext())
-    {
-        PropertyOption* option = iterator.next();
-        if(option->standardItem == nullptr)
-        {
-            option->standardItem = new QStandardItem();
+//    QListIterator<PropertyOption*> iterator(property->options);
+//    while(iterator.hasNext())
+//    {
+//        PropertyOption* option = iterator.next();
+//        if(option->standardItem == nullptr)
+//        {
+//            option->standardItem = new QStandardItem();
 
 //            connect(property->itemModel, SIGNAL(itemChanged(QStandardItem*)),
 //                    &option->mapper, SLOT(map()));
@@ -71,22 +63,22 @@ void FilteredConsole::propertyChanged(Property* property)
 //            connect(&option->mapper, SIGNAL(mapped(QObject*)),
 //                    this, SLOT(slot_changed(QObject*)));
 
-            option->standardItem->setText(option->name);
-            option->standardItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-            option->standardItem->setData(Qt::Checked, Qt::CheckStateRole);
+//            option->standardItem->setText(option->name);
+//            option->standardItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+//            option->standardItem->setData(Qt::Checked, Qt::CheckStateRole);
 
-            property->itemModel->appendRow(option->standardItem);
-        }
-    }
+//            property->itemModel->appendRow(option->standardItem);
+//        }
+//    }
 
-}
-void FilteredConsole::slot_changed(QObject* propertyOption)
-{
-    PropertyOption* option = dynamic_cast<PropertyOption*>(propertyOption);
-    if(!option)return;
+//}
+//void FilteredConsole::slot_changed(QObject* propertyOption)
+//{
+//    PropertyOption* option = dynamic_cast<PropertyOption*>(propertyOption);
+//    if(!option)return;
 
-    option->setEnabled(option->standardItem->checkState());
-}
+//    option->setEnabled(option->standardItem->checkState());
+//}
 
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {

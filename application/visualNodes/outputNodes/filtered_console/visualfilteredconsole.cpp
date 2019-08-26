@@ -43,12 +43,24 @@ void VisualFilteredConsole::activate()
 
 QWidget *VisualFilteredConsole::loadPropertiesWidget(QWidget *parent)
 {
-
+    if(propertyWidget == nullptr)
+    {
+        propertyWidget = new FilteredConsolePropertiesWidget(parent,node->nodeSettings);
+    }
+    else {
+        qDebug("[warn][VisualFilteredConsole::loadPropertiesWidget] propertywidget already exist");
+    }
+    return propertyWidget;
 }
 
 void VisualFilteredConsole::releasePropertiesWidget()
 {
-
+    if(propertyWidget)
+    {
+        qDebug("[debug][VisualFilteredConsole::releasePropertiesWidget]");
+        delete propertyWidget;
+        propertyWidget = nullptr;
+    }
 }
 
 void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

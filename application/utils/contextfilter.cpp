@@ -1,6 +1,7 @@
 #include "contextfilter.h"
 
-ContextFilter::ContextFilter()
+ContextFilter::ContextFilter(FilteredNodeSettings *settings)
+    :settings(settings),tags(&settings->nodeSettings.tags)
 {
 
 }
@@ -106,7 +107,7 @@ void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin
 
         if((character == ',')||(character == ' '))
         {
-            processproperty(property,propertyIndex);
+            processOption(property,propertyIndex);
             beginOfProperty = i + 1;
             propertyIndex++;
             property.clear();
@@ -115,23 +116,23 @@ void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin
             property.append(character);
         }
     }
-    processproperty(property,propertyIndex);
+    processOption(property,propertyIndex);
 }
-void ContextFilter::processproperty(QString& properyName, int propertyIndex)
+void ContextFilter::processOption(QString& optionName, int tagIndex)
 {
-    if(context.size() <= propertyIndex)
+
+    if(tags->size() <= tagIndex)
     {
-        context.append(new Property);
+        tags->append(new Tag(QString("tag %1").arg(tagIndex)));
     }
-    Property* property = context.at(propertyIndex);
-    PropertyOption* option = property->getOption(properyName);
+    Tag* tag = tags->at(tagIndex);
+    TagOption* option = tag->getOption(optionName);
     if(option == nullptr)
     {
-        property->options.append(new PropertyOption(properyName,true));
-        emit propertyChanged(property);
+        settings->addOption(tag, new TagOption(optionName,true));
     }
     else {
-        if(option->getEnabled() == false)
+        if(option->enabled == false)
         {
             showCurrentContext = false;
         }

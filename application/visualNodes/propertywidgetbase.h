@@ -8,7 +8,5 @@ class PropertyWidgetBase : public QWidget
 public:
     explicit PropertyWidgetBase(QWidget *parent);
     virtual ~PropertyWidgetBase();
-protected:
-    QFormLayout *layout = nullptr;
 };
 
