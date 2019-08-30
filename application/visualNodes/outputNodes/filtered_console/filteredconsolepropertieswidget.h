@@ -3,11 +3,14 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QGroupBox>
+#include <QListView>
+#include <QListWidget>
+#include <QPushButton>
 #include <QStandardItemModel>
 
 #include "filterednodesettings.h"
 #include "propertywidgetbase.h"
-
+#include "filteredconsolewidgets.h"
 
 class TagGroupbox :public QGroupBox
 {
@@ -17,44 +20,71 @@ public:
         :tag(tag){
         this->setTitle(tag->tagName);
 
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        sizePolicy.setVerticalStretch(1);
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        //sizePolicy.setVerticalStretch(1);
         this->setSizePolicy(sizePolicy);
 
-        comboBox = new QComboBox();
-        comboBox->setSizePolicy(sizePolicy);
-        comboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+        comboBox = new QListView();
+        //comboBox->setSizePolicy(sizePolicy);
+        comboBox->setResizeMode(QListView::Adjust);
+        comboBox->setFixedSize(125,125);
+        comboBox->setSizeAdjustPolicy(QListWidget::AdjustToContents);
         itemModel = new QStandardItemModel();
         comboBox->setModel(itemModel);
         layout->addWidget(comboBox);
 
-        showTagCheckBox = new QCheckBox;
-        showTagCheckBox->setChecked(!tag->visible);
-        showTagCheckBox->setText("hide");
-        layout->addWidget(showTagCheckBox);
-        connect(showTagCheckBox,SIGNAL(stateChanged(int)),this,SLOT(showTagStateChanged()));
+//        showTagCheckBox = new QCheckBox;
+//        showTagCheckBox->setChecked(!tag->visible);
+//        showTagCheckBox->setText("hide");
+//        layout->addWidget(showTagCheckBox);
+//        connect(showTagCheckBox,SIGNAL(stateChanged(int)),this,SLOT(showTagStateChanged()));
 
         layout->addStretch(0);
         this->setLayout(layout);
 
-        comboBox->show();
+        connect(itemModel,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemChanged(QStandardItem*)));
+        connect(tag,SIGNAL(dataChanged(Tag*)),this,SLOT(loadTag()));
+
     }
     ~TagGroupbox()
     {
-        while(options.size()>0) options.removeAt(0);
     }
+
     Tag* tag = nullptr;
-    QList<QStandardItem*> options;
     QStandardItemModel* itemModel = nullptr;
 
 public slots:
-    void showTagStateChanged()
+    void loadTag()
     {
-        tag->visible = !showTagCheckBox->checkState();
+        itemModel->clear();
+        QListIterator<TagOption*> optionIterator(tag->options);
+        while(optionIterator.hasNext())
+        {
+            TagOption* currentOption = optionIterator.next();
+            TagOptionItem* item = new TagOptionItem(currentOption);
+            item->setText(currentOption->name);
+            item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+            item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
+
+            itemModel->appendRow(item);
+        }
     }
+    void itemChanged(QStandardItem *item)
+    {
+        TagOptionItem* option = dynamic_cast<TagOptionItem*>(item);
+        if(option)
+        {
+            option->tagOption->enabled = option->checkState();
+            tag->notifyDataChanged();
+        }
+    }
+//    void showTagStateChanged()
+//    {
+//        tag->visible = !showTagCheckBox->checkState();
+//    }
 private:
-    QComboBox* comboBox = nullptr;
-    QCheckBox* showTagCheckBox = nullptr;
+    QListView* comboBox = nullptr;
+    //QCheckBox* showTagCheckBox = nullptr;
     QVBoxLayout* layout = new QVBoxLayout;
 };
 
@@ -66,7 +96,8 @@ public:
     ~FilteredConsolePropertiesWidget();
     QList<TagGroupbox*> tagGroupboxes;
 public slots:
-    void optionAdded(Tag *tag);
+    void optionAdded(Tag *tag, TagOption *option);
+    void hideContextStateChanged();
     void horizontalScrollIndexChanged(int index);
     void maxLinesIndexChanged(int index);
     void filterOnWindowStateChanged();
@@ -75,7 +106,6 @@ public slots:
     void autoScrollStateChanged();
 private:
     FilteredNodeSettings* settings = nullptr;
-    void loadTag(TagGroupbox *tagGroupbox);
 
     QVBoxLayout* layout = nullptr;
     QWidget* container = nullptr;
@@ -83,6 +113,8 @@ private:
 
     QCheckBox* filterOnWindowCheckbox = nullptr;
     QCheckBox* lineNumbersCheckbox = nullptr;
+    QCheckBox* hideContextCheckbox = nullptr;
+
     QCheckBox*ANSICheckbox = nullptr;
     QCheckBox* autoScrollCheckbox = nullptr;
     QComboBox* horizontalScrollComboBox = nullptr;

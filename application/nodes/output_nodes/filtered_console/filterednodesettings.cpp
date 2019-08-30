@@ -8,7 +8,7 @@ FilteredNodeSettings::FilteredNodeSettings()
 void FilteredNodeSettings::addOption(Tag *tag, TagOption *option)
 {
     tag->options.append(option);
-    emit optionAdded(tag);
+    emit optionAdded(tag, option);
 }
 
 void FilteredNodeSettings::setHorizontalScroll(const HorizontalScrollOptions &value)

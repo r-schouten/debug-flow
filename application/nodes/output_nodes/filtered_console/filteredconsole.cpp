@@ -20,7 +20,18 @@ FilteredConsole::FilteredConsole()
     console->setPalette(p);
 
     contextFilter = new ContextFilter(nodeSettings);
-    //connect(contextFilter, SIGNAL(propertyChanged(Property*)),this,SLOT(propertyChanged(Property*)));
+
+
+    QListIterator<Tag*> tagIterator(nodeSettings->tags);
+    while(tagIterator.hasNext())
+    {
+        Tag* currentTag = tagIterator.next();
+        TagComboBox* newTagComboBox = new TagComboBox(currentTag);
+        tagComboBoxes.append(newTagComboBox);
+        newTagComboBox->loadTag();
+        verticalLayout->addWidget(newTagComboBox);
+    }
+    connect(nodeSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
 
 }
 
@@ -36,49 +47,30 @@ FilteredConsole::~FilteredConsole()
     }
     delete contextFilter;
 }
-//void FilteredConsole::propertyChanged(Property* property)
-//{
 
-//    if(property->itemModel == nullptr)
-//    {
-//        QComboBox* newBox = new QComboBox;
-//        property->itemModel = new QStandardItemModel();
-//        newBox->setModel(property->itemModel);
-//        verticalLayout->addWidget(newBox);
-//        properyBoxes.append(property->itemModel);
-//    }
 
-//    QListIterator<PropertyOption*> iterator(property->options);
-//    while(iterator.hasNext())
-//    {
-//        PropertyOption* option = iterator.next();
-//        if(option->standardItem == nullptr)
-//        {
-//            option->standardItem = new QStandardItem();
+void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
+{
+    qDebug("[debug,FilteredConsolePropertiesWidget::optionAdded]");
 
-//            connect(property->itemModel, SIGNAL(itemChanged(QStandardItem*)),
-//                    &option->mapper, SLOT(map()));
+    TagComboBox* destinationComboBox = nullptr;
+    if(tagComboBoxes.size() <= destinationTag->tagIndex)
+    {
+        destinationComboBox = new TagComboBox(destinationTag);
+        tagComboBoxes.append(destinationComboBox);
+        verticalLayout->addWidget(destinationComboBox);
+    }
+    else {
+        destinationComboBox = tagComboBoxes.at(destinationTag->tagIndex);
+    }
 
-//            option->mapper.setMapping(property->itemModel, option);
-//            connect(&option->mapper, SIGNAL(mapped(QObject*)),
-//                    this, SLOT(slot_changed(QObject*)));
+    TagOptionItem* item = new TagOptionItem(option);
+    item->setText(option->name);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
 
-//            option->standardItem->setText(option->name);
-//            option->standardItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-//            option->standardItem->setData(Qt::Checked, Qt::CheckStateRole);
-
-//            property->itemModel->appendRow(option->standardItem);
-//        }
-//    }
-
-//}
-//void FilteredConsole::slot_changed(QObject* propertyOption)
-//{
-//    PropertyOption* option = dynamic_cast<PropertyOption*>(propertyOption);
-//    if(!option)return;
-
-//    option->setEnabled(option->standardItem->checkState());
-//}
+    destinationComboBox->itemModel->appendRow(item);
+}
 
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {
@@ -91,8 +83,7 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     QTextCharFormat oldFormat = currentCharFormat;
     bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
 
-    //qDebug("result: %s",destination.toStdString().c_str());
-    //qDebug() << source->bufferReader->availableSize();
+
     console->moveCursor(QTextCursor::End);
     console->setCurrentCharFormat(oldFormat);
     console->insertPlainText(result);

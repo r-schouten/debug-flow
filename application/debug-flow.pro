@@ -13,8 +13,9 @@ SOURCES += \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
     nodes/nodesettingsbase.cpp \
-    nodes/output_nodes/filteredconsole.cpp \
-    nodes/output_nodes/filterednodesettings.cpp \
+    nodes/output_nodes/filtered_console/filteredconsole.cpp \
+    nodes/output_nodes/filtered_console/filteredconsolewidgets.cpp \
+    nodes/output_nodes/filtered_console/filterednodesettings.cpp \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
@@ -59,8 +60,9 @@ HEADERS += \
     nodes/inputnode.h \
     nodes/nodebase.h \
     nodes/nodesettingsbase.h \
-    nodes/output_nodes/filteredconsole.h \
-    nodes/output_nodes/filterednodesettings.h \
+    nodes/output_nodes/filtered_console/filteredconsole.h \
+    nodes/output_nodes/filtered_console/filteredconsolewidgets.h \
+    nodes/output_nodes/filtered_console/filterednodesettings.h \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
@@ -126,6 +128,7 @@ INCLUDEPATH += \
     visualNodes/outputNodes \
     visualNodes/outputNodes/filtered_console \
     nodes/processing_nodes \
+    nodes/output_nodes/filtered_console \
     nodes/source_nodes \
     nodes/output_nodes \
     utils \

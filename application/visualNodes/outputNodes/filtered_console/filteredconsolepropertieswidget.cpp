@@ -1,8 +1,6 @@
 #include "filteredconsolepropertieswidget.h"
 
-#include <QPushButton>
 
-#define etype(x) F_##x
 FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent, FilteredNodeSettings* settings)
     :PropertyWidgetBase (parent),settings(settings)
 {
@@ -28,6 +26,10 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
     lineNumbersCheckbox = new QCheckBox(this);
     lineNumbersCheckbox->setChecked(settings->LineNumbersEnabled);
     containerLayout->addRow("show line numbers",lineNumbersCheckbox);
+
+    hideContextCheckbox = new QCheckBox(this);
+    hideContextCheckbox->setChecked(settings->hideContext);
+    containerLayout->addRow("hide context",hideContextCheckbox);
 
     ANSICheckbox = new QCheckBox(this);
     ANSICheckbox->setChecked(settings->ANSIEnabled);
@@ -79,12 +81,15 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
 
     connect(horizontalScrollComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(horizontalScrollIndexChanged(int)));
     connect(maxLinesComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(maxLinesIndexChanged(int)));
+
     connect(filterOnWindowCheckbox,SIGNAL(stateChanged(int)),this,SLOT(filterOnWindowStateChanged()));
+    connect(hideContextCheckbox,SIGNAL(stateChanged(int)),this,SLOT(hideContextStateChanged()));
+
     connect(lineNumbersCheckbox,SIGNAL(stateChanged(int)),this,SLOT(lineNumbersStateChanged()));
     connect(ANSICheckbox,SIGNAL(stateChanged(int)),this,SLOT(ANSIStateChanged()));
     connect(autoScrollCheckbox,SIGNAL(stateChanged(int)),this,SLOT(autoScrollStateChanged()));
 
-    connect(settings, SIGNAL(optionAdded(Tag*)),this,SLOT(optionAdded(Tag*)));
+    connect(settings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
 
     QListIterator<Tag*> tagIterator(settings->tags);
     while(tagIterator.hasNext())
@@ -92,7 +97,7 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
         Tag* currentTag = tagIterator.next();
         TagGroupbox* newGroupBox = new TagGroupbox(currentTag);
         tagGroupboxes.append(newGroupBox);
-        loadTag(newGroupBox);
+        newGroupBox->loadTag();
         layout->addWidget(newGroupBox);
     }
 }
@@ -102,50 +107,34 @@ FilteredConsolePropertiesWidget::~FilteredConsolePropertiesWidget()
     while(tagGroupboxes.size() > 0) tagGroupboxes.removeAt(0);
 
 }
-void FilteredConsolePropertiesWidget::loadTag(TagGroupbox* tagGroupbox)
+
+void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption* option)
 {
-    tagGroupbox->options.clear();
 
-    QListIterator<TagOption*> optionIterator(tagGroupbox->tag->options);
-    while(optionIterator.hasNext())
-    {
-        TagOption* currentOption = optionIterator.next();
-        QStandardItem* item = new QStandardItem;
-        tagGroupbox->options.append(item);
-        item->setText(currentOption->name);
-        item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-        item->setData(Qt::Checked, Qt::CheckStateRole);
-
-        tagGroupbox->itemModel->appendRow(item);
-    }
-}
-void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag)
-{
-    qDebug("[debug,FilteredConsolePropertiesWidget::optionAdded]");
-
-    //find in which groupbox the tag is added
     TagGroupbox* destinationGroupbox = nullptr;
-    QListIterator<TagGroupbox*> tagIterator(tagGroupboxes);
-    while(tagIterator.hasNext())
-    {
-        TagGroupbox* currentGroupBox = tagIterator.next();
-        if(currentGroupBox->tag == destinationTag)
-        {
-            destinationGroupbox = currentGroupBox;
-        }
-    }
-    //the tag groupbox don't exist, add it
-    if(destinationGroupbox == nullptr)
+    if(tagGroupboxes.size() <= destinationTag->tagIndex)
     {
         destinationGroupbox = new TagGroupbox(destinationTag);
         tagGroupboxes.append(destinationGroupbox);
         layout->addWidget(destinationGroupbox);
         destinationGroupbox->show();
     }
+    else {
+        destinationGroupbox = tagGroupboxes.at(destinationTag->tagIndex);
+    }
 
-    loadTag(destinationGroupbox);
+    TagOptionItem* item = new TagOptionItem(option);
+    item->setText(option->name);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
+
+    destinationGroupbox->itemModel->appendRow(item);
 }
 //---public slots
+void FilteredConsolePropertiesWidget::hideContextStateChanged()
+{
+    settings->hideContext = hideContextCheckbox->checkState();
+}
 void FilteredConsolePropertiesWidget::horizontalScrollIndexChanged(int index)
 {
     settings->setHorizontalScroll((HorizontalScrollOptions)horizontalScrollComboBox->currentData().toInt());

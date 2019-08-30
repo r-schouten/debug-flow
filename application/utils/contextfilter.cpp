@@ -40,7 +40,7 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
             if(character == ']')
             {
                 processContext(bufferReader,contextBeginIndex,i);
-                if((keepContext)&&(showCurrentContext))
+                if((!settings->hideContext)&&(showCurrentContext))
                 {
                     for(int j=contextBeginIndex;j<=i;j++)
                     {
@@ -123,7 +123,7 @@ void ContextFilter::processOption(QString& optionName, int tagIndex)
 
     if(settings->tags.size() <= tagIndex)
     {
-        settings->tags.append(new Tag(QString("tag %1").arg(tagIndex)));
+        settings->tags.append(new Tag(QString("tag %1").arg(tagIndex),tagIndex));
     }
     Tag* tag = settings->tags.at(tagIndex);
     TagOption* option = tag->getOption(optionName);
