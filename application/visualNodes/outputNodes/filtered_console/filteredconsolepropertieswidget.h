@@ -33,12 +33,6 @@ public:
         comboBox->setModel(itemModel);
         layout->addWidget(comboBox);
 
-//        showTagCheckBox = new QCheckBox;
-//        showTagCheckBox->setChecked(!tag->visible);
-//        showTagCheckBox->setText("hide");
-//        layout->addWidget(showTagCheckBox);
-//        connect(showTagCheckBox,SIGNAL(stateChanged(int)),this,SLOT(showTagStateChanged()));
-
         layout->addStretch(0);
         this->setLayout(layout);
 
@@ -48,6 +42,9 @@ public:
     }
     ~TagGroupbox()
     {
+        delete layout;
+        delete comboBox;
+        delete itemModel;
     }
 
     Tag* tag = nullptr;
@@ -78,13 +75,9 @@ public slots:
             tag->notifyDataChanged();
         }
     }
-//    void showTagStateChanged()
-//    {
-//        tag->visible = !showTagCheckBox->checkState();
-//    }
+
 private:
     QListView* comboBox = nullptr;
-    //QCheckBox* showTagCheckBox = nullptr;
     QVBoxLayout* layout = new QVBoxLayout;
 };
 
@@ -104,7 +97,10 @@ public slots:
     void lineNumbersStateChanged();
     void ANSIStateChanged();
     void autoScrollStateChanged();
+private slots:
+    void loadTags();
 private:
+
     FilteredNodeSettings* settings = nullptr;
 
     QVBoxLayout* layout = nullptr;

@@ -75,5 +75,10 @@ private:
 
 signals:
     void optionAdded(Tag* tag,TagOption* option);
+    void clearConsole();
+    void tagsChanged();
+public slots:
+    void clearConsoleClicked();
+    void clearContextClicked();
 };
 

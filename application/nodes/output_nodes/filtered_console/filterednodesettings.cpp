@@ -30,3 +30,17 @@ void FilteredNodeSettings::setMaxLinesComboBox(int value)
 {
     maxLinesComboBox = value;
 }
+
+void FilteredNodeSettings::clearConsoleClicked()
+{
+    emit clearConsole();
+}
+
+void FilteredNodeSettings::clearContextClicked()
+{
+    while(tags.size() > 0)
+    {
+        delete tags.takeAt(0);
+    }
+    emit tagsChanged();
+}

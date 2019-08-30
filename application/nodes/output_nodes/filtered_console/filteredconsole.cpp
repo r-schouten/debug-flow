@@ -21,6 +21,21 @@ FilteredConsole::FilteredConsole()
 
     contextFilter = new ContextFilter(nodeSettings);
 
+    loadTags();
+    connect(nodeSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
+    connect(nodeSettings, SIGNAL(clearConsole()),this,SLOT(clearConsole()));
+
+    connect(nodeSettings, SIGNAL(tagsChanged()),this,SLOT(loadTags()));
+
+}
+
+FilteredConsole::~FilteredConsole()
+{
+    delete contextFilter;
+}
+void FilteredConsole::loadTags()
+{
+    while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
 
     QListIterator<Tag*> tagIterator(nodeSettings->tags);
     while(tagIterator.hasNext())
@@ -31,28 +46,10 @@ FilteredConsole::FilteredConsole()
         newTagComboBox->loadTag();
         verticalLayout->addWidget(newTagComboBox);
     }
-    connect(nodeSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
-
 }
-
-FilteredConsole::~FilteredConsole()
-{
-    while(items.size() > 0)
-    {
-        delete items.takeAt(0);
-    }
-    while(properyBoxes.size() > 0)
-    {
-        delete properyBoxes.takeAt(0);
-    }
-    delete contextFilter;
-}
-
 
 void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
 {
-    qDebug("[debug,FilteredConsolePropertiesWidget::optionAdded]");
-
     TagComboBox* destinationComboBox = nullptr;
     if(tagComboBoxes.size() <= destinationTag->tagIndex)
     {
@@ -70,6 +67,11 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
     item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
 
     destinationComboBox->itemModel->appendRow(item);
+}
+
+void FilteredConsole::clearConsole()
+{
+    console->clear();
 }
 
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)

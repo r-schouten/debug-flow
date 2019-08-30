@@ -26,8 +26,6 @@ public:
         setModel(itemModel);
         connect(itemModel,SIGNAL(itemChanged(QStandardItem*)),this,SLOT(itemChanged(QStandardItem*)));
         connect(tag,SIGNAL(dataChanged(Tag*)),this,SLOT(loadTag()));
-
-        show();
     }
     Tag* tag = nullptr;
     QStandardItemModel* itemModel = nullptr;
@@ -86,16 +84,17 @@ private:
     QVBoxLayout *layout = nullptr;
     QHBoxLayout *verticalLayout = nullptr;
 
-    QList<QStandardItem*> items;
-    QList<QStandardItemModel*> properyBoxes;
+
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     ContextFilter *contextFilter = nullptr;
 
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
-
+    void clearConsole();
     //void propertyChanged(Property *property);
     //void slot_changed(QObject *property);
+private slots:
+    void loadTags();
 };
 

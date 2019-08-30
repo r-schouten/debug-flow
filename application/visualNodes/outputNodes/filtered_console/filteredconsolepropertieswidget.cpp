@@ -89,7 +89,24 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
     connect(ANSICheckbox,SIGNAL(stateChanged(int)),this,SLOT(ANSIStateChanged()));
     connect(autoScrollCheckbox,SIGNAL(stateChanged(int)),this,SLOT(autoScrollStateChanged()));
 
+    connect(clearButton,SIGNAL(clicked(bool)),settings,SLOT(clearConsoleClicked()));
+    connect(clearContextButton,SIGNAL(clicked(bool)),settings,SLOT(clearContextClicked()));
+
     connect(settings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
+    connect(settings,SIGNAL(tagsChanged()),this,SLOT(loadTags()));
+
+    loadTags();
+}
+
+FilteredConsolePropertiesWidget::~FilteredConsolePropertiesWidget()
+{
+    while(tagGroupboxes.size() > 0) delete tagGroupboxes.takeAt(0);
+
+}
+void FilteredConsolePropertiesWidget::loadTags()
+{
+    while(tagGroupboxes.size() > 0) delete tagGroupboxes.takeAt(0);
+
 
     QListIterator<Tag*> tagIterator(settings->tags);
     while(tagIterator.hasNext())
@@ -101,13 +118,6 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
         layout->addWidget(newGroupBox);
     }
 }
-
-FilteredConsolePropertiesWidget::~FilteredConsolePropertiesWidget()
-{
-    while(tagGroupboxes.size() > 0) tagGroupboxes.removeAt(0);
-
-}
-
 void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption* option)
 {
 
