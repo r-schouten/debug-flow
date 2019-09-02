@@ -68,8 +68,7 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
                 readingInContext = true;
                 contextBeginIndex = i;
             }
-
-            else if(character == '\033')
+            else if((character == '\033')&&(settings->ANSIEnabled))
             {
                 readingANSIEscape = true;
                 ANSIBeginIndex = i;

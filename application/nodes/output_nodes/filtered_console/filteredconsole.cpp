@@ -5,14 +5,14 @@ FilteredConsole::FilteredConsole()
     nodeSettings = new FilteredNodeSettings();
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
-    console->document()->setMaximumBlockCount(1000);
-
+    loadMaxLines();
 
     layout = new QVBoxLayout(this);
     verticalLayout = new QHBoxLayout(this);
 
     layout->addLayout(verticalLayout);
     layout->addWidget(console);
+
 
     QPalette p = palette();
     p.setColor(QPalette::Base, Qt::white);
@@ -21,18 +21,57 @@ FilteredConsole::FilteredConsole()
 
     contextFilter = new ContextFilter(nodeSettings);
 
+    loadScrollSettings();
     loadTags();
+    filterOnWindowChanged();
     connect(nodeSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
     connect(nodeSettings, SIGNAL(clearConsole()),this,SLOT(clearConsole()));
 
     connect(nodeSettings, SIGNAL(tagsChanged()),this,SLOT(loadTags()));
+    connect(nodeSettings,SIGNAL(maxLinesChanged()),this,SLOT(loadMaxLines()));
+    connect(nodeSettings,SIGNAL(scrollSettingsChanged()),this,SLOT(loadScrollSettings()));
+    connect(nodeSettings,SIGNAL(filterOnWindowChanged()),this,SLOT(filterOnWindowChanged()));
+
 
 }
-
 FilteredConsole::~FilteredConsole()
 {
     delete contextFilter;
 }
+void FilteredConsole::NotifyBufferUpdate(Subscription *source)
+{
+    if(source->bufferReader == nullptr){
+        qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
+    }
+    QString result;
+    result.reserve(source->bufferReader->availableSize());
+
+    QTextCharFormat oldFormat = currentCharFormat;
+    bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
+
+    if(nodeSettings->autoScrollEnabled)
+    {
+        console->moveCursor(QTextCursor::End);
+        console->setCurrentCharFormat(oldFormat);
+        console->insertPlainText(result);
+        console->moveCursor(QTextCursor::End);
+    }
+    else {
+        QTextCursor cursor = console->textCursor();
+
+        cursor.movePosition(QTextCursor::End);
+        cursor.setCharFormat(oldFormat);
+        cursor.insertText(result);
+    }
+
+
+    if(styleChanged)
+    {
+        //when ansi is found the filter stops searching and is perhaps not empty, read it again
+        NotifyBufferUpdate(source);
+    }
+}
+
 void FilteredConsole::loadTags()
 {
     while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
@@ -46,6 +85,7 @@ void FilteredConsole::loadTags()
         newTagComboBox->loadTag();
         verticalLayout->addWidget(newTagComboBox);
     }
+
 }
 
 void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
@@ -56,6 +96,7 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
         destinationComboBox = new TagComboBox(destinationTag);
         tagComboBoxes.append(destinationComboBox);
         verticalLayout->addWidget(destinationComboBox);
+
     }
     else {
         destinationComboBox = tagComboBoxes.at(destinationTag->tagIndex);
@@ -68,35 +109,54 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
 
     destinationComboBox->itemModel->appendRow(item);
 }
+void FilteredConsole::filterOnWindowChanged()
+{
+    if(nodeSettings->getFilterOnWindow())
+    {
+        QListIterator<TagComboBox*> comboBoxIterator(tagComboBoxes);
+        while(comboBoxIterator.hasNext())
+        {
+            TagComboBox* currentTag = comboBoxIterator.next();
+            currentTag->show();
+        }
+    }
+    else {
+        QListIterator<TagComboBox*> comboBoxIterator(tagComboBoxes);
+        while(comboBoxIterator.hasNext())
+        {
+            TagComboBox* currentTag = comboBoxIterator.next();
+            currentTag->hide();
+        }
+    }
+}
+void FilteredConsole::loadScrollSettings()
+{
+    if(nodeSettings->getHorizontalScroll() == HorizontalScrollOptions::scrollbar)
+    {
+        console->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    }
+    else {
+        console->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        if(nodeSettings->getHorizontalScroll() == HorizontalScrollOptions::ignore)
+        {
+            console->setLineWrapMode(QPlainTextEdit::NoWrap);
 
+        }
+        else if(nodeSettings->getHorizontalScroll() == HorizontalScrollOptions::newline)
+        {
+            console->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+        }
+    }
+}
+void FilteredConsole::loadMaxLines()
+{
+    console->document()->setMaximumBlockCount(nodeSettings->getMaxLines());
+}
 void FilteredConsole::clearConsole()
 {
     console->clear();
 }
 
-void FilteredConsole::NotifyBufferUpdate(Subscription *source)
-{
-    if(source->bufferReader == nullptr){
-        qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
-    }
-    QString result;
-    result.reserve(source->bufferReader->availableSize());
-
-    QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
-
-
-    console->moveCursor(QTextCursor::End);
-    console->setCurrentCharFormat(oldFormat);
-    console->insertPlainText(result);
-    console->moveCursor(QTextCursor::End);
-
-    if(styleChanged)
-    {
-        //when ansi is found the filter stops searching and is perhaps not empty, read it again
-        NotifyBufferUpdate(source);
-    }
-}
 
 void FilteredConsole::keyPressEvent(QKeyEvent *e)
 {

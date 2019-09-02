@@ -4,9 +4,6 @@
 FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent, FilteredNodeSettings* settings)
     :PropertyWidgetBase (parent),settings(settings)
 {
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    this->setSizePolicy(sizePolicy);
-
     layout = new QVBoxLayout;
     layout->setMargin(5);
     layout->setAlignment(Qt::AlignTop);
@@ -20,7 +17,7 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
 
 
     filterOnWindowCheckbox = new QCheckBox(this);
-    filterOnWindowCheckbox->setChecked(settings->filterOnWindow);
+    filterOnWindowCheckbox->setChecked(settings->getFilterOnWindow());
     containerLayout->addRow("show filter",filterOnWindowCheckbox);
 
     lineNumbersCheckbox = new QCheckBox(this);
@@ -55,7 +52,6 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
 
     maxLinesComboBox = new QComboBox(this);
     containerLayout->addRow("max lines",maxLinesComboBox);
-    maxLinesComboBox->addItem("fit",0);
     maxLinesComboBox->addItem("100",100);
     maxLinesComboBox->addItem("1,000",1000);
     maxLinesComboBox->addItem("10,000",10000);
@@ -64,7 +60,7 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
 
     for(int i = 0;i<maxLinesComboBox->count();i++)
     {
-        if(maxLinesComboBox->itemData(i) == settings->getMaxLinesComboBox())
+        if(maxLinesComboBox->itemData(i) == settings->getMaxLines())
         {
             maxLinesComboBox->setCurrentIndex(i);
             break;
@@ -127,7 +123,6 @@ void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption
         destinationGroupbox = new TagGroupbox(destinationTag);
         tagGroupboxes.append(destinationGroupbox);
         layout->addWidget(destinationGroupbox);
-        destinationGroupbox->show();
     }
     else {
         destinationGroupbox = tagGroupboxes.at(destinationTag->tagIndex);
@@ -155,7 +150,7 @@ void FilteredConsolePropertiesWidget::maxLinesIndexChanged(int index)
 }
 void FilteredConsolePropertiesWidget::filterOnWindowStateChanged()
 {
-    settings->filterOnWindow = filterOnWindowCheckbox->checkState();
+    settings->setFilterOnWindow(filterOnWindowCheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::lineNumbersStateChanged()
 {

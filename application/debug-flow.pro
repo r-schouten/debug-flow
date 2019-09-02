@@ -46,6 +46,7 @@ SOURCES += \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/visualnodebase.cpp \
     widgets/combobox.cpp \
+    widgets/taggroupbox.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
     windows/windowbase.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
     widgets/combobox.h \
+    widgets/taggroupbox.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h \

@@ -59,24 +59,30 @@ public:
     void setHorizontalScroll(const HorizontalScrollOptions &value);
     HorizontalScrollOptions getHorizontalScroll() const;
 
-    int getMaxLinesComboBox() const;
+    int getMaxLines() const;
     void setMaxLinesComboBox(int value);
 
     QList<Tag*> tags;
-    bool filterOnWindow = true;
     bool LineNumbersEnabled = false;
     bool ANSIEnabled = true;
     bool autoScrollEnabled = true;
     bool hideContext = false;
 
+    bool getFilterOnWindow() const;
+    void setFilterOnWindow(bool value);
+
 private:
-    int maxLinesComboBox = DEFAULT_CONSOLE_BLOCK_COUNT;
+    int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;
+    bool filterOnWindow = true;
 
 signals:
     void optionAdded(Tag* tag,TagOption* option);
     void clearConsole();
     void tagsChanged();
+    void maxLinesChanged();
+    void scrollSettingsChanged();
+    void filterOnWindowChanged();
 public slots:
     void clearConsoleClicked();
     void clearContextClicked();

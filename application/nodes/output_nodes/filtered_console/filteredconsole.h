@@ -96,5 +96,8 @@ public slots:
     //void slot_changed(QObject *property);
 private slots:
     void loadTags();
+    void filterOnWindowChanged();
+    void loadMaxLines();
+    void loadScrollSettings();
 };
 

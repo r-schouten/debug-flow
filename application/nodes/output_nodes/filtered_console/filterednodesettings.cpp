@@ -14,6 +14,7 @@ void FilteredNodeSettings::addOption(Tag *tag, TagOption *option)
 void FilteredNodeSettings::setHorizontalScroll(const HorizontalScrollOptions &value)
 {
     horizontalScroll = value;
+    emit scrollSettingsChanged();
 }
 
 HorizontalScrollOptions FilteredNodeSettings::getHorizontalScroll() const
@@ -21,14 +22,26 @@ HorizontalScrollOptions FilteredNodeSettings::getHorizontalScroll() const
     return horizontalScroll;
 }
 
-int FilteredNodeSettings::getMaxLinesComboBox() const
+int FilteredNodeSettings::getMaxLines() const
 {
-    return maxLinesComboBox;
+    return maxLines;
 }
 
 void FilteredNodeSettings::setMaxLinesComboBox(int value)
 {
-    maxLinesComboBox = value;
+    maxLines = value;
+    emit maxLinesChanged();
+}
+
+bool FilteredNodeSettings::getFilterOnWindow() const
+{
+    return filterOnWindow;
+}
+
+void FilteredNodeSettings::setFilterOnWindow(bool value)
+{
+    filterOnWindow = value;
+    emit filterOnWindowChanged();
 }
 
 void FilteredNodeSettings::clearConsoleClicked()
