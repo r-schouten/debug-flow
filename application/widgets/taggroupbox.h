@@ -25,6 +25,6 @@ public slots:
     void itemChanged(QStandardItem *item);
 
 private:
-    QListView* comboBox = nullptr;
+    QListView* tagList = nullptr;
     QVBoxLayout* layout = new QVBoxLayout;
 };

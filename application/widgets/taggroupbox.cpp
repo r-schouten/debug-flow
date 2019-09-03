@@ -6,13 +6,13 @@ TagGroupbox::TagGroupbox(Tag *tag)
 {
     this->setTitle(tag->tagName);
 
-    comboBox = new QListView();
-    comboBox->setResizeMode(QListView::Adjust);
-    comboBox->setFixedSize(125,125);
-    comboBox->setSizeAdjustPolicy(QListWidget::AdjustToContents);
+    tagList = new QListView();
+    tagList->setResizeMode(QListView::Adjust);
+    tagList->setFixedSize(125,125);
+    tagList->setSizeAdjustPolicy(QListWidget::AdjustToContents);
     itemModel = new QStandardItemModel();
-    comboBox->setModel(itemModel);
-    layout->addWidget(comboBox);
+    tagList->setModel(itemModel);
+    layout->addWidget(tagList);
 
     layout->addStretch(0);
     this->setLayout(layout);
@@ -25,7 +25,7 @@ TagGroupbox::TagGroupbox(Tag *tag)
 TagGroupbox::~TagGroupbox()
 {
     delete layout;
-    delete comboBox;
+    delete tagList;
     delete itemModel;
 }
 

@@ -35,7 +35,8 @@ SOURCES += \
     visualNodes/outputNodes/visualsimpleconsole.cpp \
     visualNodes/propertywidgetbase.cpp \
     visualNodes/propertywidgetmanager.cpp \
-    visualNodes/prossesing_nodes/visualcontextfilter.cpp \
+    visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilter.cpp \
+    visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilterpropertieswidget.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
     visualNodes/scene/graphicsview.cpp \
@@ -88,7 +89,8 @@ HEADERS += \
     visualNodes/propertywidgetbase.h \
     visualNodes/propertywidgetmanager.h \
     visualNodes/prossesing_nodes/processingstyle.h \
-    visualNodes/prossesing_nodes/visualcontextfilter.h \
+    visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilter.h \
+    visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilterpropertieswidget.h \
     visualNodes/resourceList/itemlist.h \
     visualNodes/resourceList/mytreewidgetitem.h \
     visualNodes/scene/graphicsview.h \
@@ -130,6 +132,7 @@ INCLUDEPATH += \
     visualNodes/outputNodes \
     visualNodes/outputNodes/filtered_console \
     nodes/processing_nodes \
+    nodes/processing_nodes/visual_context_filter \
     nodes/output_nodes/filtered_console \
     nodes/source_nodes \
     nodes/output_nodes \
