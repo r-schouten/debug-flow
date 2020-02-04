@@ -23,7 +23,7 @@ void VisualSimpleConsole::activate()
 
 QWidget *VisualSimpleConsole::loadPropertiesWidget(QWidget* parent)
 {
-
+    return nullptr;
 }
 
 void VisualSimpleConsole::releasePropertiesWidget()
@@ -61,5 +61,15 @@ void VisualSimpleConsole::paint(QPainter *painter, const QStyleOptionGraphicsIte
 VisualNodeBase *VisualSimpleConsole::clone()
 {
     return new VisualSimpleConsole();
+}
+
+QJsonObject *VisualSimpleConsole::serialize()
+{
+    return nullptr;
+}
+
+void VisualSimpleConsole::deserialize(QJsonObject *jsonObject)
+{
+
 }
 

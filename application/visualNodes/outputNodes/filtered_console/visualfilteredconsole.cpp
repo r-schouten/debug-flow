@@ -73,3 +73,12 @@ VisualNodeBase *VisualFilteredConsole::clone()
 {
     return new VisualFilteredConsole();
 }
+
+QJsonObject *VisualFilteredConsole::serialize()
+{
+    return nullptr;
+}
+void VisualFilteredConsole::deserialize(QJsonObject *jsonObject)
+{
+
+}

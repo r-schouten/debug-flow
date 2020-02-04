@@ -13,6 +13,8 @@ public:
     void activate();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     VisualNodeBase *clone();
+    QJsonObject* serialize();
+    void deserialize(QJsonObject* jsonObject);
 protected:
     QWidget *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

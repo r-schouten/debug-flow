@@ -11,11 +11,15 @@ class VisualFilteredConsole : public VisualOutputNodeBase, public OutputStyle
     Q_OBJECT
 public:
     VisualFilteredConsole();
+    ~VisualFilteredConsole();
+
     void setWindowManager(WindowManager* _windowManager);
     void activate();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     VisualNodeBase *clone();
-    ~VisualFilteredConsole();
+
+    QJsonObject* serialize();
+    void deserialize(QJsonObject* jsonObject);
 protected:
     QWidget *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

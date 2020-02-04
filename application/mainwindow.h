@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QGraphicsView>
 #include <mdiwindow.cpp>
+#include <QMenuBar>
 
 #include "propertywidgetmanager.h"
 #include "nodescene.h"
@@ -12,8 +13,9 @@
 #include "visualnodeconfig.h"
 #include "windowmanager.h"
 
-QT_BEGIN_NAMESPACE
 
+QT_BEGIN_NAMESPACE
+class QMenuBar;
 class QLabel;
 
 namespace Ui {
@@ -33,8 +35,14 @@ public:
 
 public slots:
     void updateUI();
-
-
+private slots:
+    void newFlow();
+    void openFlow();
+    void saveFlow();
+    void closeFlow();
+    void pauseFlow();
+    void resumeFlow();
+    void clearFlow();
 private:
     Ui::MainWindow *m_ui = nullptr;
     NodeScene *nodeScene = nullptr;
@@ -42,4 +50,16 @@ private:
     QTimer *UiUpdatetimer = nullptr;
     WindowManager* windowManager = nullptr;
     PropertyWidgetManager* propertyWidgetManager = nullptr;
+
+    QMenu *windowMenu = nullptr;
+    QAction *newAction = nullptr;
+    QAction *openAction = nullptr;
+    QAction *saveAction = nullptr;
+    QAction *pauseAction = nullptr;
+    QAction *resetAction = nullptr;
+    QAction *resumeAction = nullptr;
+    void createToolbar();
+
+
+
 };

@@ -12,9 +12,10 @@
 #include "selectionmanager.h"
 #include "propertywidgetbase.h"
 
+#include "serializable.h"
 class SelectionManager;
 class Connector;
-class VisualNodeBase : public QObject, public QGraphicsItem
+class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
 {
     Q_OBJECT
 public:
@@ -50,6 +51,9 @@ public:
     NodeBase* getNode();
     virtual QWidget* loadPropertiesWidget(QWidget* parent) = 0;
     virtual void releasePropertiesWidget() = 0;
+
+    virtual QJsonObject* serialize()=0;
+    virtual void deserialize(QJsonObject* jsonObject)=0;
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
@@ -67,6 +71,7 @@ protected:
 
     QList<Connector*> connectors;
     SelectionManager* selectionManager = nullptr;
+
 
 private:
     bool pressedOnConnection = false;

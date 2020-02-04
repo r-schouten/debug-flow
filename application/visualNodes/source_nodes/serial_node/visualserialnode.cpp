@@ -33,6 +33,7 @@ void VisualSerialNode::openPort()
 {
     node->openSerialPort();
 }
+
 VisualNodeBase* VisualSerialNode::clone()
 {
     return new VisualSerialNode();
@@ -122,4 +123,13 @@ void VisualSerialNode::releasePropertiesWidget()
         delete propertyWidget;
         propertyWidget = nullptr;
     }
+}
+QJsonObject *VisualSerialNode::serialize()
+{
+    return nullptr;
+}
+
+void VisualSerialNode::deserialize(QJsonObject *jsonObject)
+{
+
 }

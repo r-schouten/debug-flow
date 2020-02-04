@@ -10,6 +10,9 @@ class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 public:
     VisualContextFilter();
     ~VisualContextFilter();
+
+    QJsonObject* serialize();
+    void deserialize(QJsonObject* jsonObject);
 protected:
     QWidget* loadPropertiesWidget(QWidget* parent);
     void releasePropertiesWidget();

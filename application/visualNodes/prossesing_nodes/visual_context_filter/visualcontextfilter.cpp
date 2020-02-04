@@ -26,7 +26,7 @@ VisualContextFilter::~VisualContextFilter()
 }
 QWidget *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {
-
+    return nullptr;
 }
 
 void VisualContextFilter::releasePropertiesWidget()
@@ -47,4 +47,14 @@ void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsIte
 {
     paintBase(painter,this,name);
     drawConnectors(painter,this);
+}
+
+QJsonObject *VisualContextFilter::serialize()
+{
+    return nullptr;
+}
+
+void VisualContextFilter::deserialize(QJsonObject *jsonObject)
+{
+
 }

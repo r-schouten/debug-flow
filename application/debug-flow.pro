@@ -71,6 +71,7 @@ HEADERS += \
     nodes/source_nodes/serialnode.h \
     nodes/source_nodes/serialsettings.h \
     nodes/subscription.h \
+    serializable.h \
     settingsdialog.h \
     test/circularbuffertest.h \
     utils/ansi_types.h \

@@ -20,12 +20,19 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
             currentShownNode = nullptr;
         }
     }
+
     qDebug("[debug][propertyWidgetManager] open properties");
 
     currentShownNode = node;
 
     tabWidget->setCurrentWidget(propertyWidget);
-    propertyWidget->setWidget(node->loadPropertiesWidget(nullptr));
+    QWidget * nodePropertiesWidget = node->loadPropertiesWidget(nullptr);
+    if(nodePropertiesWidget == nullptr)
+    {
+        qDebug("[error][propertyWidgetManager] node->loadPropertiesWidget() returned NULL");
+        return;
+    }
+    propertyWidget->setWidget(nodePropertiesWidget);
 }
 
 void PropertyWidgetManager::notifyMultipleSelected()

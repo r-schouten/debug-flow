@@ -9,5 +9,11 @@
         <file>images/output_icon.png</file>
         <file>images/processing_icon.png</file>
         <file>images/clear.png</file>
+        <file>images/menu/copy.png</file>
+        <file>images/menu/cut.png</file>
+        <file>images/menu/new.png</file>
+        <file>images/menu/open.png</file>
+        <file>images/menu/paste.png</file>
+        <file>images/menu/save.png</file>
     </qresource>
 </RCC>
