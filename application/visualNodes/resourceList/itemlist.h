@@ -6,13 +6,13 @@
 
 #include "mytreewidgetitem.h"
 
-#include "visualcontextfilter.h"
+#include <visual_context_filter/visualcontextfilter.h>
+
 #include "visualserialnode.h"
 #include "nodescene.h"
 
 #include "visualnodebase.h"
 
-#include "visualcontextfilter.h"
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
 #include "visualsimpleconsole.h"

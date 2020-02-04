@@ -25,7 +25,7 @@ public:
     QString shortDiscription = "";
     int centerX = graphicsViewOriginX;
     int centerY = graphicsViewOriginY;
-    int width = 100;
+    int width = 125;
     int height = 50;
     QRectF boundingRect() const;
     QRectF innerRect() const;

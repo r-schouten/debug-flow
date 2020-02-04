@@ -16,7 +16,7 @@ public:
         borderPen.setWidth(3);
 
         titlePen = QColor::fromRgbF(1, 1, 1, 1);
-        titleFont.setPointSize(10);
+        titleFont.setPointSize(9);
         titleFont.setBold(true);
 
         textPen = QColor::fromRgbF(1, 1, 1, 1);

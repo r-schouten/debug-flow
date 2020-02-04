@@ -1,6 +1,7 @@
 #include "itemlist.h"
 
 
+
 ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
     :resourceList(resourceList),nodeScene(nodeScene)
 {
@@ -47,7 +48,7 @@ void ItemList::generateCategory(QList<VisualNodeBase*>& nodes, QString name, QSt
     sources->setSizeHint(0,QSize(100,50));
     sources->setText(0, name);
 
-    QFont font0("Times", 11, QFont::Bold);
+    QFont font0("Times", 9, QFont::Bold);
     sources->setFont(0,font0);
 
     QListIterator<VisualNodeBase*> iterator(nodes);
@@ -67,7 +68,7 @@ void ItemList::generateCategory(QList<VisualNodeBase*>& nodes, QString name, QSt
             item->setIcon(0,icon);
             item->setSizeHint(0,QSize(100,70));
             item->setText(0,currentNode->name);
-            QFont font1("Times", 11, QFont::Normal);
+            QFont font1("Times", 9, QFont::Normal);
             item->setFont(0,font1);
 
         }

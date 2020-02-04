@@ -8,7 +8,7 @@ TagGroupbox::TagGroupbox(Tag *tag)
 
     tagList = new QListView();
     tagList->setResizeMode(QListView::Adjust);
-    tagList->setFixedSize(125,125);
+    //tagList->setFixedSize(125,125);
     tagList->setSizeAdjustPolicy(QListWidget::AdjustToContents);
     itemModel = new QStandardItemModel();
     tagList->setModel(itemModel);

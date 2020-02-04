@@ -112,6 +112,7 @@ void FilteredConsolePropertiesWidget::loadTags()
         tagGroupboxes.append(newGroupBox);
         newGroupBox->loadTag();
         layout->addWidget(newGroupBox);
+        this->update();
     }
 }
 void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption* option)
