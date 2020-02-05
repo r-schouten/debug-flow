@@ -28,13 +28,10 @@ QJsonObject *LoadStore::serialize()
         QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize();
 
         QJsonObject jsonObject;
-        jsonObject.insert("derived", *derivedJson);
-        jsonObject.insert("base", *baseJson);
-        jsonObject.insert("settings", *nodeSettingsJson);
-        jsonObject.insert("connections", "nullptr");
-
-//        QJsonObject nodeJsonObject;
-//        nodeJsonObject.insert("node",jsonObject);
+        jsonObject.insert(JSON_DERIVED, *derivedJson);
+        jsonObject.insert(JSON_BASE, *baseJson);
+        jsonObject.insert(JSON_NODE_SETTINGS, *nodeSettingsJson);
+        jsonObject.insert(JSON_CONNECTIONS, "nullptr");
 
         allObjectsJson.append(jsonObject);
 
@@ -43,13 +40,15 @@ QJsonObject *LoadStore::serialize()
         delete nodeSettingsJson;
     }
     QJsonObject *completeNodeJson = new QJsonObject;
-    completeNodeJson->insert("nodes",allObjectsJson);
+    completeNodeJson->insert(JSON_NODES,allObjectsJson);
     return completeNodeJson;
 }
 
+
+
 void LoadStore::deserialize(QJsonObject &jsonObject)
 {
-    QJsonArray nodesJson = jsonObject.find("nodes").value().toArray();
+    QJsonArray nodesJson = jsonObject.find(JSON_NODES)->toArray();
     QJsonArray::iterator it;
     for (it = nodesJson.begin(); it != nodesJson.end(); it++) {
         QJsonObject object = it->toObject();
@@ -60,10 +59,10 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
 {
     VisualNodeBase* newNode = nullptr;
     //deserialize derived
-    QJsonObject::iterator derivedIt = jsonNodeObject.find("derived");
+    QJsonObject::iterator derivedIt = jsonNodeObject.find(JSON_DERIVED);
     if(derivedIt != jsonNodeObject.end())
     {
-        QJsonObject derivedJson = derivedIt.value().toObject();
+        QJsonObject derivedJson = derivedIt->toObject();
         newNode = deserializeDerived(derivedJson);
     }
     else
@@ -76,10 +75,10 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
     }
 
     //deserialize base
-    QJsonObject::iterator base = jsonNodeObject.find("base");
+    QJsonObject::iterator base = jsonNodeObject.find(JSON_BASE);
     if(base != jsonNodeObject.end())
     {
-        QJsonObject baseJson = base.value().toObject();
+        QJsonObject baseJson = base->toObject();
         newNode->deserializeBase(baseJson);
     }
     else
@@ -98,10 +97,10 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
 
     //deserialize settings
     //note scene->addItem need to run before loading the settings
-    QJsonObject::iterator settings = jsonNodeObject.find("base");
+    QJsonObject::iterator settings = jsonNodeObject.find(JSON_NODE_SETTINGS);
     if(settings != jsonNodeObject.end())
     {
-        QJsonObject settingsJson = settings.value().toObject();
+        QJsonObject settingsJson = settings->toObject();
         if(newNode->getNode())
         {
             newNode->getNode()->getNodeSettings()->deserialize(settingsJson);
@@ -125,7 +124,7 @@ VisualNodeBase* LoadStore::deserializeDerived(QJsonObject &jsonNodeObject)
 
     VisualNodeBase* newNode = nullptr;
 
-    QString type = jsonNodeObject.find("type").value().toString();
+    QString type = jsonNodeObject.find(JSON_NODE_TYPE)->toString();
     if(type == VisualFilteredConsole::staticMetaObject.className())
     {
         qDebug("deserializing derived");
@@ -133,10 +132,6 @@ VisualNodeBase* LoadStore::deserializeDerived(QJsonObject &jsonNodeObject)
         newNode->deserialize(jsonNodeObject);
     }
     return newNode;
-}
-void LoadStore::deserializeSettings(QJsonObject &jsonNodeObject)
-{
-
 }
 
 

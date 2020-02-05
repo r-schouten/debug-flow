@@ -78,7 +78,7 @@ QJsonObject *FilteredNodeSettings::serialize()
 
     jsonObject->insert("maxlines",maxLines);
 
-    jsonObject->insert("ScrollOptionsText",ScrollOptionsText[(int)horizontalScroll]);
+    jsonObject->insert("scrollOption",ScrollOptionsText[(int)horizontalScroll]);
     jsonObject->insert("filterOnWindow",filterOnWindow);
     jsonObject->insert("tags",tagsJson);
     return jsonObject;
@@ -86,6 +86,36 @@ QJsonObject *FilteredNodeSettings::serialize()
 
 void FilteredNodeSettings::deserialize(QJsonObject &jsonObject)
 {
+    LineNumbersEnabled = jsonObject.find("LineNumbersEnabled")->toBool();
+    ANSIEnabled = jsonObject.find("ANSIEnabled")->toBool();
+    autoScrollEnabled = jsonObject.find("autoScrollEnabled")->toBool();
+    hideContext = jsonObject.find("hideContext")->toBool();
 
+    maxLines = jsonObject.find("maxlines")->toInt();
+
+    filterOnWindow = jsonObject.find("filterOnWindow")->toBool();
+
+    QString scrollOption = jsonObject.find("scrollOption")->toString();
+    bool found = false;
+    for(int i =0;i<ScrollOptionsText.size();i++)
+    {
+        if(scrollOption.compare(ScrollOptionsText[i]) == 0)
+        {
+           horizontalScroll = (HorizontalScrollOptions)i;
+           found = true;
+        }
+    }
+    if(!found)
+    {
+        qFatal("[fatal][FilteredNodeSettings] scroll option not found");
+    }
+
+
+    QJsonArray tagsJson = jsonObject.find(JSON_FILTEREDCONSOLE_TAGS)->toArray();
+    QJsonArray::iterator it;
+    for (it = tagsJson.begin(); it != tagsJson.end(); it++) {
+        QJsonObject tagJson = it->toObject();
+        tags.append(new Tag(tagJson));
+    }
 }
 

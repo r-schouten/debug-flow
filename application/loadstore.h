@@ -9,6 +9,8 @@
 #include "flowdata.h"
 
 #include "visualfilteredconsole.h"
+
+#include "json_defs.h"
 class LoadStore
 {
 public:
@@ -21,6 +23,5 @@ private:
     NodeScene* scene = nullptr;
 
     VisualNodeBase *deserializeDerived(QJsonObject &jsonNodeObject);
-    void deserializeSettings(QJsonObject &jsonNodeObject);
 };
 

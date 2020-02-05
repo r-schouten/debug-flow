@@ -13,6 +13,7 @@
 #include "propertywidgetbase.h"
 
 #include "serializable.h"
+#include "json_defs.h"
 class SelectionManager;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable

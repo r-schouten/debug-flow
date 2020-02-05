@@ -19,6 +19,7 @@ SOURCES += \
     nodes/output_nodes/filtered_console/filteredconsole.cpp \
     nodes/output_nodes/filtered_console/filteredconsolewidgets.cpp \
     nodes/output_nodes/filtered_console/filterednodesettings.cpp \
+    nodes/output_nodes/filtered_console/filtertag.cpp \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
@@ -62,6 +63,7 @@ HEADERS += \
     flowdata.h \
     flowwidget.h \
     globalconfig.h \
+    json_defs.h \
     loadstore.h \
     main.h \
     mainwindow.h \
@@ -71,6 +73,7 @@ HEADERS += \
     nodes/output_nodes/filtered_console/filteredconsole.h \
     nodes/output_nodes/filtered_console/filteredconsolewidgets.h \
     nodes/output_nodes/filtered_console/filterednodesettings.h \
+    nodes/output_nodes/filtered_console/filtertag.h \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \

@@ -79,11 +79,11 @@ QJsonObject *VisualFilteredConsole::serialize()
 {
     QJsonObject *jsonObject = new QJsonObject();
 
-    jsonObject->insert("type",metaObject()->className());
+    jsonObject->insert(JSON_NODE_TYPE, metaObject()->className());
 
     return jsonObject;
 }
 void VisualFilteredConsole::deserialize(QJsonObject &jsonObject)
 {
-
+    //empty becuase the "type" is deserialized in the loadstore class
 }

@@ -397,18 +397,18 @@ void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 QJsonObject *VisualNodeBase::serializeBase()
 {
     QJsonObject *jsonObject = new QJsonObject();
-    jsonObject->insert("name",name);
-    jsonObject->insert("centerX",centerX);
-    jsonObject->insert("centerY",centerY);
+    jsonObject->insert(JSON_BASE_NAME,name);
+    jsonObject->insert(JSON_BASE_CENTERX,centerX);
+    jsonObject->insert(JSON_BASE_CENTERY,centerY);
 
     return jsonObject;
 }
 
 void VisualNodeBase::deserializeBase(QJsonObject &jsonObject)
 {
-    name = jsonObject.find("name").value().toString();
-    centerX = jsonObject.find("centerX").value().toInt();
-    centerY  = jsonObject.find("centerY").value().toInt();
+    name = jsonObject.find(JSON_BASE_NAME)->toString();
+    centerX = jsonObject.find(JSON_BASE_CENTERX)->toInt();
+    centerY  = jsonObject.find(JSON_BASE_CENTERY)->toInt();
 }
 
 
