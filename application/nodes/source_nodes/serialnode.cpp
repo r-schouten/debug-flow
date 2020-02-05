@@ -8,7 +8,15 @@ SerialNode::SerialNode()
 
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
     connect(m_serial, &QSerialPort::readyRead, this, &SerialNode::readData);
-
+}
+SerialNode::~SerialNode()
+{
+    delete settings;
+    delete m_serial;
+}
+NodeSettingsBase *SerialNode::getNodeSettings()
+{
+    return settings;
 }
 void SerialNode::openSerialPort()
 {

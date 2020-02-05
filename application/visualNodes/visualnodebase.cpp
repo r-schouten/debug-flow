@@ -10,7 +10,9 @@ VisualNodeBase::VisualNodeBase()
 }
 VisualNodeBase::~VisualNodeBase()
 {
-    baseNode = nullptr;//the node is already deleted in de inherited class
+    //there is a image available that explains how a node is deleted
+    delete baseNode;
+    baseNode = nullptr;
     emit onDelete(this);
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
@@ -44,54 +46,6 @@ void VisualNodeBase::addOutputConnector()
     Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10,0);
     connectors.append(connector);
 }
-bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode)
-{
-    bool circularDepencencyDetected = false;
-    QListIterator<Connector*> iterator(this->connectors);
-    while(iterator.hasNext())
-    {
-        Connector* connector = iterator.next();
-        if(connector->type == ConnectorType::OUTPUT)
-        {
-            QListIterator<VisualConnection*> iterator2(connector->connections);
-            while(iterator2.hasNext())
-            {
-                VisualConnection* currentConnection = iterator2.next();
-                Connector* inputConnector = nullptr;
-                if((currentConnection->getConnector1()!=nullptr)&&(currentConnection->getConnector1()->type == ConnectorType::INPUT))
-                {
-                    inputConnector = currentConnection->getConnector1();
-                }
-                else if((currentConnection->getConnector2()!=nullptr)&&(currentConnection->getConnector2()->type == ConnectorType::INPUT))
-                {
-                    inputConnector = currentConnection->getConnector2();
-                }
-                else {
-                    qDebug("[error][recursiveCircularDependencyCheck] no input connector");
-                    break;
-                }
-                if(inputConnector->getParent() == originNode)
-                {
-                    circularDepencencyDetected = true;
-                    return circularDepencencyDetected;
-                }
-                circularDepencencyDetected = inputConnector->getParent()->recursiveCircularDependencyCheck(originNode);
-                if(circularDepencencyDetected)
-                {
-                    return circularDepencencyDetected;
-                }
-            }
-        }
-    }
-    return circularDepencencyDetected;
-
-}
-
-NodeBase *VisualNodeBase::getNode()
-{
-    return baseNode;
-}
-
 void VisualNodeBase::makeConnection(VisualConnection* connection)
 {
 #ifdef QT_DEBUG
@@ -114,15 +68,16 @@ void VisualNodeBase::makeConnection(VisualConnection* connection)
     OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
     if(outputNode == nullptr)
     {
-        qFatal("[fatal][VisualNodeBase] given output is no outputnode");
+        qFatal("[fatal][VisualNodeBase] given output is not a outputnode");
     }
     InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
     if(outputNode == nullptr)
     {
-        qFatal("[fatal][VisualNodeBase] given input is no inputNode");
+        qFatal("[fatal][VisualNodeBase] given input is not a inputNode");
     }
     inputNode->addSubscription(outputNode);
 }
+
 bool VisualNodeBase::requestConnection(Connector *connector)
 {
     if(connector->type == ConnectorType::OUTPUT)
@@ -224,6 +179,55 @@ bool VisualNodeBase::requestConnection(Connector *connector1, Connector* connect
     }
     return true;
 }
+bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode)
+{
+    bool circularDepencencyDetected = false;
+    QListIterator<Connector*> iterator(this->connectors);
+    while(iterator.hasNext())
+    {
+        Connector* connector = iterator.next();
+        if(connector->type == ConnectorType::OUTPUT)
+        {
+            QListIterator<VisualConnection*> iterator2(connector->connections);
+            while(iterator2.hasNext())
+            {
+                VisualConnection* currentConnection = iterator2.next();
+                Connector* inputConnector = nullptr;
+                if((currentConnection->getConnector1()!=nullptr)&&(currentConnection->getConnector1()->type == ConnectorType::INPUT))
+                {
+                    inputConnector = currentConnection->getConnector1();
+                }
+                else if((currentConnection->getConnector2()!=nullptr)&&(currentConnection->getConnector2()->type == ConnectorType::INPUT))
+                {
+                    inputConnector = currentConnection->getConnector2();
+                }
+                else {
+                    qDebug("[error][recursiveCircularDependencyCheck] no input connector");
+                    break;
+                }
+                if(inputConnector->getParent() == originNode)
+                {
+                    circularDepencencyDetected = true;
+                    return circularDepencencyDetected;
+                }
+                circularDepencencyDetected = inputConnector->getParent()->recursiveCircularDependencyCheck(originNode);
+                if(circularDepencencyDetected)
+                {
+                    return circularDepencencyDetected;
+                }
+            }
+        }
+    }
+    return circularDepencencyDetected;
+
+}
+
+NodeBase *VisualNodeBase::getNode()
+{
+    return baseNode;
+}
+
+
 
 void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 {
@@ -390,5 +394,19 @@ void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     }
 }
 
+QJsonObject *VisualNodeBase::serializeBase()
+{
+    QJsonObject *jsonObject = new QJsonObject();
+    jsonObject->insert("name",name);
+    jsonObject->insert("centerX",centerX);
+    jsonObject->insert("centerY",centerY);
+
+    return jsonObject;
+}
+
+void VisualNodeBase::deserializeBase(QJsonObject *jsonObject)
+{
+
+}
 
 

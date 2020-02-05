@@ -1,8 +1,5 @@
 #include "serialsettings.h"
 
-#include <QSerialPortInfo>
-
-#include <QDebug>
 SerialSettings::SerialSettings()
 {
     nodeSettings.running = false;
@@ -23,4 +20,14 @@ void SerialSettings::print()
     qDebug() << "port :" << nodeSettings.name;
     qDebug() << "baudrate :" << nodeSettings.baudRate;
     qDebug() << "parity : " << nodeSettings.parity;
+}
+
+QJsonObject *SerialSettings::serialize()
+{
+    return nullptr;
+}
+
+void SerialSettings::deserialize(QJsonObject *jsonObject)
+{
+
 }

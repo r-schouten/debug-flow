@@ -172,7 +172,6 @@ void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, Q
     painter->drawLines(lines.data(), lines.size());
 }
 
-
 void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if(nodePlacementState != NodePlacementState::NOT_PLACING)
@@ -301,3 +300,46 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
         }
     }
 }
+
+
+QJsonObject *NodeScene::serialize()
+{
+    QListIterator<VisualConnection*>iterator(connections);
+    while(iterator.hasNext())
+    {
+        VisualConnection* connection = iterator.next();
+
+    }
+    QListIterator<VisualNodeBase*>iterator2(nodes);
+    while(iterator2.hasNext())
+    {
+        VisualNodeBase* node = iterator2.next();
+
+        QJsonObject* derivedJson = node->serialize();
+        QJsonObject* baseJson = node->serializeBase();
+        if(node->getNode()->getNodeSettings() == nullptr)
+        {
+            qFatal("[fatal][NodeScene] node->getNode()->getNodeSettings() == nullptr");
+        }
+        QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize();
+
+        QJsonObject jsonObject;
+        jsonObject.insert("derived", *derivedJson);
+        jsonObject.insert("base", *baseJson);
+        jsonObject.insert("settings", *nodeSettingsJson);
+        jsonObject.insert("connections", "nullptr");
+
+        QJsonObject *completeNodeJson = new QJsonObject();
+        completeNodeJson->insert("node", jsonObject);
+
+        QJsonDocument doc(*completeNodeJson);
+        QString strJson(doc.toJson(QJsonDocument::Indented));
+        qDebug(strJson.toStdString().c_str());
+    }
+    return nullptr;
+}
+void NodeScene::deserialize(QJsonObject *jsonObject)
+{
+
+}
+

@@ -26,7 +26,7 @@ public:
     QJsonObject* serialize();
     void deserialize(QJsonObject* jsonObject);
 protected:
-    QWidget *loadPropertiesWidget(QWidget *parent);
+    PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();
 
     SerialNode *node = nullptr;

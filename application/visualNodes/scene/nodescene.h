@@ -2,6 +2,10 @@
 #include <QGraphicsScene>
 #include <windowmanager.h>
 
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+
 #include <qevent.h>
 #include <QPainter>
 
@@ -11,7 +15,8 @@
 #include "selectionmanager.h"
 #include "outputstyle.h"
 
-class NodeScene:public QGraphicsScene
+#include "serializable.h"
+class NodeScene : public QGraphicsScene, public Serializable
 {
     Q_OBJECT
 public:
@@ -20,6 +25,9 @@ public:
     //function to insert items from the resource list
     void insertItem(VisualNodeBase* node);
     void addItem(VisualNodeBase *item);
+
+    QJsonObject* serialize();
+    void deserialize(QJsonObject* jsonObject);
 public slots:
     //slots for visualnode communication
     void connectorPressed(VisualNodeBase *node, Connector *connector);
@@ -43,16 +51,7 @@ private:
 
     //flag for adding connections
     bool anyConnectorPressed = false;
-protected:
-    void drawBackground(QPainter *painter, const QRectF &rect);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
 
-    //draw all connections
-    void drawForeground(QPainter *painter, const QRectF &rect);
-private:
     WindowManager* windowManager = nullptr;
     //hold all connections, they are not graphics items
     QList<VisualConnection*> connections;
@@ -68,6 +67,16 @@ private:
     //if true selected nodes will move with the mouse
     bool moveSelected = false;
     QPointF lastMousePosition;
+protected:
+    void drawBackground(QPainter *painter, const QRectF &rect);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+
+    //draw all connections
+    void drawForeground(QPainter *painter, const QRectF &rect);
+
 
 };
 

@@ -1,11 +1,14 @@
 #pragma once
 #include <QList>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "nodesettingsbase.h"
 
 #define DEFAULT_CONSOLE_BLOCK_COUNT 10000
 
-
+//waring, when changing to enum also change the serialization an deserialisation
+static QString ScrollOptionsText[] = {"scrollbar","ignore","newline"};
 enum class HorizontalScrollOptions:int{
     scrollbar=0,
     ignore=1,
@@ -29,6 +32,28 @@ public:
     int tagIndex;
     QList<TagOption*> options;
     bool visible = true;
+
+    QJsonObject* serialize()
+    {
+        QJsonObject* jsonObject = new QJsonObject;
+        jsonObject->insert("name",tagName);
+        jsonObject->insert("visible",visible);
+        jsonObject->insert("index",tagIndex);
+
+        QJsonArray optionsJsonArray;
+        QListIterator<TagOption*> iterator(options);
+        while(iterator.hasNext())
+        {
+            TagOption* option = iterator.next();
+            QJsonObject jsonOption;
+            jsonOption.insert("tagName",option->name);
+            jsonOption.insert("enabled",option->enabled);
+            optionsJsonArray.append(jsonOption);
+        }
+
+        jsonObject->insert("options",optionsJsonArray);
+        return jsonObject;
+    }
     TagOption* getOption(QString OptionName)
     {
         QListIterator<TagOption*> iterator(options);
@@ -71,6 +96,8 @@ public:
     bool getFilterOnWindow() const;
     void setFilterOnWindow(bool value);
 
+    QJsonObject *serialize();
+    void deserialize(QJsonObject *jsonObject);
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;

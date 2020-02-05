@@ -1,5 +1,7 @@
 #pragma once
 #include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QDebug>
 
 #include "nodesettingsbase.h"
 class SerialSettings : public NodeSettingsBase
@@ -25,5 +27,8 @@ public:
         return nodeSettings;
     }
     void print();
+
+    QJsonObject *serialize();
+    void deserialize(QJsonObject *jsonObject);
 };
 

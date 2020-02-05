@@ -37,6 +37,15 @@ FilteredConsole::FilteredConsole()
 FilteredConsole::~FilteredConsole()
 {
     delete contextFilter;
+    delete nodeSettings;
+    delete layout;
+    delete verticalLayout;
+    delete  console;
+}
+
+NodeSettingsBase *FilteredConsole::getNodeSettings()
+{
+    return nodeSettings;
 }
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {

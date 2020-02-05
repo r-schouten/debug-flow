@@ -1,4 +1,7 @@
 #pragma once
+#include <QJsonDocument>
+#include<QJsonArray>
+
 #include "visualnodebase.h"
 #include "outputstyle.h"
 #include "visualoutputnodebase.h"
@@ -21,7 +24,7 @@ public:
     QJsonObject* serialize();
     void deserialize(QJsonObject* jsonObject);
 protected:
-    QWidget *loadPropertiesWidget(QWidget *parent);
+    PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();
 
 private:

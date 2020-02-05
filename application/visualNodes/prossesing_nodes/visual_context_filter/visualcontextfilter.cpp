@@ -24,7 +24,7 @@ VisualContextFilter::~VisualContextFilter()
         baseNode = nullptr;
     }
 }
-QWidget *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
+PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {
     return nullptr;
 }

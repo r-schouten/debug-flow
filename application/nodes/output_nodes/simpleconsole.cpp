@@ -22,6 +22,11 @@ SimpleConsole::~SimpleConsole()
 {
     delete ansiReader;
 }
+
+NodeSettingsBase *SimpleConsole::getNodeSettings()
+{
+    return nullptr;//todo make settings
+}
 void SimpleConsole::NotifyBufferUpdate(Subscription *source)
 {
     console->setUpdatesEnabled(false);

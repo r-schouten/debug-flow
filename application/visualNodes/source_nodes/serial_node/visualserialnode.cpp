@@ -104,7 +104,7 @@ void VisualSerialNode::mousePressEvent(QGraphicsSceneMouseEvent *event)
     VisualSourceNodeBase::mousePressEvent(event);
 }
 
-QWidget *VisualSerialNode::loadPropertiesWidget(QWidget* parent)
+PropertyWidgetBase *VisualSerialNode::loadPropertiesWidget(QWidget* parent)
 {
     if(propertyWidget == nullptr)
     {

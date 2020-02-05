@@ -8,6 +8,7 @@ TEMPLATE = app
 SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
+    flowwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -56,6 +57,7 @@ SOURCES += \
 HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
+    flowwidget.h \
     globalconfig.h \
     main.h \
     mainwindow.h \
@@ -74,6 +76,7 @@ HEADERS += \
     serializable.h \
     settingsdialog.h \
     test/circularbuffertest.h \
+    ui_flow_widget.h \
     utils/ansi_types.h \
     utils/ansiescapereader.h \
     utils/contextfilter.h \

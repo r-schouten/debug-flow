@@ -10,4 +10,7 @@ public:
     virtual void setWindowManager(WindowManager* _windowManager) = 0;
 signals:
     void WindowDeleted(VisualOutputNodeBase* window);
+
+
+
 };

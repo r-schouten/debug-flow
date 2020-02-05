@@ -22,39 +22,59 @@ public:
     VisualNodeBase();
     ~VisualNodeBase();
 
+    //will be filled in by the derived class
     QString name = "";
     QString shortDiscription = "";
+
+    //position on the scene
     int centerX = graphicsViewOriginX;
     int centerY = graphicsViewOriginY;
     int width = 125;
     int height = 50;
+
     QRectF boundingRect() const;
     QRectF innerRect() const;
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;
 
+    //this function is used to copy a node from the resource list. Its implemented in the derived class so a upcasted type will be returned
     virtual VisualNodeBase* clone() = 0;
 
     //easy acces methods for adding the basic connectors, of more needed the can be added to the QList connectors
     void addInputConnector();
     void addOutputConnector();
 
+    //makes the connection in the low level VisualBase object, (run requestConnection and recursiveCircularDependencyCheck first)
     void makeConnection(VisualConnection *connection);
 
+    //check if the connection is possible
     bool requestConnection(Connector *connector);
     bool requestConnection(Connector *connector1, Connector *connector2, bool exist = false);
 
-    void moveBy(QPointF &by);
+    //checks if there is no infinity loop made
     bool recursiveCircularDependencyCheck(VisualNodeBase *node);
+
+    void moveBy(QPointF &by);
+
+    //activate the derived class
     virtual void activate() = 0;
 
     NodeBase* getNode();
-    virtual QWidget* loadPropertiesWidget(QWidget* parent) = 0;
+
+    virtual PropertyWidgetBase* loadPropertiesWidget(QWidget* parent) = 0;
     virtual void releasePropertiesWidget() = 0;
 
-    virtual QJsonObject* serialize()=0;
-    virtual void deserialize(QJsonObject* jsonObject)=0;
+    QJsonObject* serializeBase();
+    void deserializeBase(QJsonObject* jsonObject);
 protected:
+    PropertyWidgetBase* propertyWidget = nullptr;
+
+    NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer
+
+    QList<Connector*> connectors;
+    //note that selection manager is a singleton
+    SelectionManager* selectionManager = nullptr;
+
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
@@ -63,15 +83,6 @@ protected:
     void drawConnectors(QPainter *painter, NodeStyleBase *nodeStyle);
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);
     bool isSelected();
-
-
-    PropertyWidgetBase* propertyWidget = nullptr;
-
-    NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer
-
-    QList<Connector*> connectors;
-    SelectionManager* selectionManager = nullptr;
-
 
 private:
     bool pressedOnConnection = false;

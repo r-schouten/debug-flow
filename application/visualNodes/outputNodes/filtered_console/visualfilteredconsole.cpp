@@ -1,4 +1,5 @@
 #include "visualfilteredconsole.h"
+
 VisualFilteredConsole::VisualFilteredConsole()
 {
 
@@ -41,7 +42,7 @@ void VisualFilteredConsole::activate()
     window = windowManager->getMdiWindow(node);
 }
 
-QWidget *VisualFilteredConsole::loadPropertiesWidget(QWidget *parent)
+PropertyWidgetBase *VisualFilteredConsole::loadPropertiesWidget(QWidget *parent)
 {
     if(propertyWidget == nullptr)
     {
@@ -76,7 +77,11 @@ VisualNodeBase *VisualFilteredConsole::clone()
 
 QJsonObject *VisualFilteredConsole::serialize()
 {
-    return nullptr;
+    QJsonObject *jsonObject = new QJsonObject();
+
+    jsonObject->insert("type",metaObject()->className());
+
+    return jsonObject;
 }
 void VisualFilteredConsole::deserialize(QJsonObject *jsonObject)
 {

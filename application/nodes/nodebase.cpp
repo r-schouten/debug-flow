@@ -4,3 +4,7 @@ NodeBase::NodeBase()
 {
 
 }
+NodeBase::~NodeBase()
+{
+
+}

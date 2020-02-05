@@ -18,6 +18,8 @@ public:
 
     SimpleConsole();
     ~SimpleConsole();
+    NodeSettingsBase *getNodeSettings();
+
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void mousePressEvent(QMouseEvent *e) override;

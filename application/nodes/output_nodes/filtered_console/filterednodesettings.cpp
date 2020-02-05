@@ -57,3 +57,35 @@ void FilteredNodeSettings::clearContextClicked()
     }
     emit tagsChanged();
 }
+
+QJsonObject *FilteredNodeSettings::serialize()
+{
+    QJsonArray tagsJson;
+
+    QListIterator<Tag*>iterator(tags);
+    while(iterator.hasNext())
+    {
+        Tag* tag = iterator.next();
+        QJsonObject* tagJson = tag->serialize();
+        tagsJson.append(*tagJson);
+        delete tagJson;
+    }
+    QJsonObject *jsonObject = new QJsonObject();
+    jsonObject->insert("LineNumbersEnabled",LineNumbersEnabled);
+    jsonObject->insert("ANSIEnabled",ANSIEnabled);
+    jsonObject->insert("autoScrollEnabled",autoScrollEnabled);
+    jsonObject->insert("hideContext",hideContext);
+
+    jsonObject->insert("maxlines",maxLines);
+
+    jsonObject->insert("ScrollOptionsText",ScrollOptionsText[(int)horizontalScroll]);
+    jsonObject->insert("filterOnWindow",filterOnWindow);
+    jsonObject->insert("tags",tagsJson);
+    return jsonObject;
+}
+
+void FilteredNodeSettings::deserialize(QJsonObject *jsonObject)
+{
+
+}
+

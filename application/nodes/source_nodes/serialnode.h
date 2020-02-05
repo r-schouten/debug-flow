@@ -10,6 +10,10 @@ class SerialNode : public QObject, public OutputNode
     Q_OBJECT
 public:
     SerialNode();
+    ~SerialNode();
+
+    NodeSettingsBase *getNodeSettings();
+
     SerialSettings* settings = nullptr;
 
 private:
@@ -22,5 +26,6 @@ public slots:
     void handleError(QSerialPort::SerialPortError error);
 signals:
     void SerialPortError(QSerialPort::SerialPortError error);
+
 };
 

@@ -68,6 +68,7 @@ public:
 
     FilteredConsole();
     ~FilteredConsole();
+    NodeSettingsBase *getNodeSettings();
 
 
     FilteredNodeSettings* nodeSettings = nullptr;

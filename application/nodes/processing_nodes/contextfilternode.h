@@ -6,8 +6,7 @@ class ContextFilterNode : public InputNode, public OutputNode
 {
 public:
     ContextFilterNode();
-
-public:
+    NodeSettingsBase *getNodeSettings();
     void NotifyBufferUpdate(Subscription *source);
 };
 

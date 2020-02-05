@@ -1,3 +1,4 @@
+#pragma once
 #include <QJsonObject>
 
 class Serializable

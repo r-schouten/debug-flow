@@ -21,7 +21,7 @@ void VisualSimpleConsole::activate()
     window = windowManager->getMdiWindow(node);
 }
 
-QWidget *VisualSimpleConsole::loadPropertiesWidget(QWidget* parent)
+PropertyWidgetBase *VisualSimpleConsole::loadPropertiesWidget(QWidget* parent)
 {
     return nullptr;
 }
