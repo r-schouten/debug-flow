@@ -28,27 +28,9 @@ public:
 
     QJsonObject* serialize();
     void deserialize(QJsonObject* jsonObject);
-public slots:
-    //slots for visualnode communication
-    void connectorPressed(VisualNodeBase *node, Connector *connector);
-    void connectorReleased(VisualNodeBase *node, Connector *connector);
+    void deserializeNode(QJsonObject *jsonNodeObject);
 
-    //slot for visualConnector communication
-    void onConnectionDelete(VisualConnection *connection);
-    void onNodeDelete(VisualNodeBase *node);
 private:
-    //background
-    void drawGrid(QPainter *painter, const QRectF &rect, int gridSize, QPen *pen);
-
-    //when a new node is inserted from the resource list its hold by nodeToPlace
-    //set it back to nullptr
-    VisualNodeBase* nodeToPlace = nullptr;
-    enum class NodePlacementState
-    {
-        NOT_PLACING,
-        PLACE_AFTER_CLICK
-    }nodePlacementState = NodePlacementState::NOT_PLACING;
-
     //flag for adding connections
     bool anyConnectorPressed = false;
 
@@ -64,9 +46,22 @@ private:
     //selectionmanager singleton
     SelectionManager* selectionManager;
 
-    //if true selected nodes will move with the mouse
+    //if true selected nodes will follow the mouse movement
     bool moveSelected = false;
     QPointF lastMousePosition;
+
+    //when a new node is inserted from the resource list its hold by nodeToPlace
+    //set it back to nullptr
+    VisualNodeBase* nodeToPlace = nullptr;
+    enum class NodePlacementState
+    {
+        NOT_PLACING,
+        PLACE_AFTER_CLICK
+    }nodePlacementState = NodePlacementState::NOT_PLACING;
+
+    //background
+    void drawGrid(QPainter *painter, const QRectF &rect, int gridSize, QPen *pen);
+
 protected:
     void drawBackground(QPainter *painter, const QRectF &rect);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -76,7 +71,14 @@ protected:
 
     //draw all connections
     void drawForeground(QPainter *painter, const QRectF &rect);
+public slots:
+    //slots for visualnode communication
+    void connectorPressed(VisualNodeBase *node, Connector *connector);
+    void connectorReleased(VisualNodeBase *node, Connector *connector);
 
+    //slot for visualConnector communication
+    void onConnectionDelete(VisualConnection *connection);
+    void onNodeDelete(VisualNodeBase *node);
 
 };
 

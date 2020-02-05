@@ -39,8 +39,7 @@ FilteredConsole::~FilteredConsole()
     delete contextFilter;
     delete nodeSettings;
     delete layout;
-    delete verticalLayout;
-    delete  console;
+    delete console;
 }
 
 NodeSettingsBase *FilteredConsole::getNodeSettings()

@@ -332,14 +332,35 @@ QJsonObject *NodeScene::serialize()
         QJsonObject *completeNodeJson = new QJsonObject();
         completeNodeJson->insert("node", jsonObject);
 
-        QJsonDocument doc(*completeNodeJson);
-        QString strJson(doc.toJson(QJsonDocument::Indented));
-        qDebug(strJson.toStdString().c_str());
+        delete derivedJson;
+        delete baseJson;
+        delete nodeSettingsJson;
+
+        return completeNodeJson;
     }
-    return nullptr;
+
 }
 void NodeScene::deserialize(QJsonObject *jsonObject)
 {
+    QJsonObject::iterator it;
+    for (it = jsonObject->begin(); it != jsonObject->end(); it++) {
+        QJsonObject object = it.value().toObject();
 
+        if(it.key().compare("node", Qt::CaseInsensitive) == 0)
+        {
+            deserializeNode(&object);
+
+        }
+    }
 }
+void NodeScene::deserializeNode(QJsonObject *jsonNodeObject)//note jsonNodeObject is a stack variable when called from deserialize()
+{
+    //deserialize base
 
+    //deserialize derived
+
+    //deserialize
+    QJsonDocument doc(*jsonNodeObject);
+    QString strJson(doc.toJson(QJsonDocument::Indented));
+    qDebug(strJson.toStdString().c_str());
+}

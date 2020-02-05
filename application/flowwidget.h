@@ -18,7 +18,9 @@ class FlowWidget : public QWidget
 public:
     explicit FlowWidget(QWidget *parent = nullptr);
     ~FlowWidget();
-    void save();//todo add path
+
+    void open(QJsonObject *jsonObject);
+    QJsonObject *save();
 private:
     Ui_flowWidget *m_ui = nullptr;
 

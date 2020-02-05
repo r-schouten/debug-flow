@@ -33,7 +33,11 @@ void FlowWidget::updateUI()
 {
     nodeScene->update();
 }
-void FlowWidget::save()
+void FlowWidget::open(QJsonObject* jsonObject)
 {
-    nodeScene->serialize();
+    nodeScene->deserialize(jsonObject);
+}
+QJsonObject* FlowWidget::save()
+{
+   return nodeScene->serialize();
 }
