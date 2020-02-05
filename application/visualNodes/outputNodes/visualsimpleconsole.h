@@ -14,7 +14,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     VisualNodeBase *clone();
     QJsonObject* serialize();
-    void deserialize(QJsonObject* jsonObject);
+    void deserialize(QJsonObject &jsonObject);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

@@ -40,7 +40,7 @@ void MainWindow::saveFlow()
     delete activeFlow;
     activeFlow = nullptr;
     newFlow();
-    activeFlow->open(serializedFlow);
+    activeFlow->open(*serializedFlow);
 
     delete serializedFlow;
 }

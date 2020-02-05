@@ -83,7 +83,7 @@ QJsonObject *VisualFilteredConsole::serialize()
 
     return jsonObject;
 }
-void VisualFilteredConsole::deserialize(QJsonObject *jsonObject)
+void VisualFilteredConsole::deserialize(QJsonObject &jsonObject)
 {
 
 }

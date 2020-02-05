@@ -1,16 +1,15 @@
 #include "nodescene.h"
 
-NodeScene::NodeScene(WindowManager* windowManager)
-    :windowManager(windowManager)
+NodeScene::NodeScene(FlowData *_flowData)
+    :flowData(_flowData)
 {
     selectionManager = SelectionManager::getInstance();
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
     setItemIndexMethod(NoIndex);
-
-
 }
+
 //this methode takes the ownership over
 void NodeScene::insertItem(VisualNodeBase *node)
 {
@@ -33,10 +32,10 @@ void NodeScene::addItem(VisualNodeBase *item)
 
     if(dynamic_cast<VisualOutputNodeBase*>(item))
     {
-        dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(windowManager);
+        dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(flowData->windowManager);
     }
     item->activate();
-    nodes.append(item);
+    flowData->nodes.append(item);
     QGraphicsScene::addItem(item);
 }
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
@@ -59,7 +58,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
     }
     selectionManager->clearSelected();
     VisualConnection* newConnection = new VisualConnection(connector);
-    connections.append(newConnection);
+    flowData->connections.append(newConnection);
     currentTrackingConnection = newConnection;
     connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));
 }
@@ -103,7 +102,7 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 {
     removeItem(node);
     selectionManager->removeOne(node);
-    if(nodes.removeOne(node))
+    if(flowData->nodes.removeOne(node))
     {
 
     }
@@ -118,7 +117,7 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 }
 void NodeScene::onConnectionDelete(VisualConnection* connection)
 {
-    if(connections.removeOne(connection))
+    if(flowData->connections.removeOne(connection))
     {
 
     }
@@ -136,7 +135,7 @@ void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
 
-    QListIterator<VisualConnection*>iterator(connections);
+    QListIterator<VisualConnection*>iterator(flowData->connections);
     while(iterator.hasNext())
     {
         VisualConnection* connection = iterator.next();
@@ -235,7 +234,7 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
         if(currentTrackingConnection == nullptr)
         {
-            QListIterator<VisualConnection*>iterator(connections);
+            QListIterator<VisualConnection*>iterator(flowData->connections);
             while(iterator.hasNext())
             {
                 VisualConnection* currentConnection = iterator.next();
@@ -261,7 +260,7 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     moveSelected = false;
     if(currentTrackingConnection)
     {
-        QListIterator<VisualNodeBase*>iterator(nodes);
+        QListIterator<VisualNodeBase*>iterator(flowData->nodes);
         while(iterator.hasNext())
         {
             VisualNodeBase* node = iterator.next();
@@ -299,68 +298,4 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
             currentTrackingConnection = nullptr;
         }
     }
-}
-
-
-QJsonObject *NodeScene::serialize()
-{
-    QListIterator<VisualConnection*>iterator(connections);
-    while(iterator.hasNext())
-    {
-        VisualConnection* connection = iterator.next();
-
-    }
-    QListIterator<VisualNodeBase*>iterator2(nodes);
-    while(iterator2.hasNext())
-    {
-        VisualNodeBase* node = iterator2.next();
-
-        QJsonObject* derivedJson = node->serialize();
-        QJsonObject* baseJson = node->serializeBase();
-        if(node->getNode()->getNodeSettings() == nullptr)
-        {
-            qFatal("[fatal][NodeScene] node->getNode()->getNodeSettings() == nullptr");
-        }
-        QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize();
-
-        QJsonObject jsonObject;
-        jsonObject.insert("derived", *derivedJson);
-        jsonObject.insert("base", *baseJson);
-        jsonObject.insert("settings", *nodeSettingsJson);
-        jsonObject.insert("connections", "nullptr");
-
-        QJsonObject *completeNodeJson = new QJsonObject();
-        completeNodeJson->insert("node", jsonObject);
-
-        delete derivedJson;
-        delete baseJson;
-        delete nodeSettingsJson;
-
-        return completeNodeJson;
-    }
-
-}
-void NodeScene::deserialize(QJsonObject *jsonObject)
-{
-    QJsonObject::iterator it;
-    for (it = jsonObject->begin(); it != jsonObject->end(); it++) {
-        QJsonObject object = it.value().toObject();
-
-        if(it.key().compare("node", Qt::CaseInsensitive) == 0)
-        {
-            deserializeNode(&object);
-
-        }
-    }
-}
-void NodeScene::deserializeNode(QJsonObject *jsonNodeObject)//note jsonNodeObject is a stack variable when called from deserialize()
-{
-    //deserialize base
-
-    //deserialize derived
-
-    //deserialize
-    QJsonDocument doc(*jsonNodeObject);
-    QString strJson(doc.toJson(QJsonDocument::Indented));
-    qDebug(strJson.toStdString().c_str());
 }

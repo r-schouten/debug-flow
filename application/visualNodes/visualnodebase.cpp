@@ -368,7 +368,7 @@ void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
         if(connector->getRect(CONNECTOR_MARGINS).contains(event->pos()))
         {
             selectionManager->hoveredConnector = connector;
-            setToolTip(("test tooljdsfkl;aaaaaaaaaaajfkl;asjflkadsjflkasjioeja;kdjaklejraskldjklfjeioaj;dksljfiaejalkdjifjeriajdklfhikerhfikfjdkshfkerhfueshladsjfheuilahjdkhfueihaskjldkfheuitip"));
+            setToolTip("test tool tip");
 
         }
         else {
@@ -404,9 +404,11 @@ QJsonObject *VisualNodeBase::serializeBase()
     return jsonObject;
 }
 
-void VisualNodeBase::deserializeBase(QJsonObject *jsonObject)
+void VisualNodeBase::deserializeBase(QJsonObject &jsonObject)
 {
-
+    name = jsonObject.find("name").value().toString();
+    centerX = jsonObject.find("centerX").value().toInt();
+    centerY  = jsonObject.find("centerY").value().toInt();
 }
 
 

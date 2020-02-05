@@ -8,7 +8,9 @@ TEMPLATE = app
 SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
+    flowdata.cpp \
     flowwidget.cpp \
+    loadstore.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -57,8 +59,10 @@ SOURCES += \
 HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
+    flowdata.h \
     flowwidget.h \
     globalconfig.h \
+    loadstore.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \

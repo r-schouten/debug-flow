@@ -97,7 +97,7 @@ public:
     void setFilterOnWindow(bool value);
 
     QJsonObject *serialize();
-    void deserialize(QJsonObject *jsonObject);
+    void deserialize(QJsonObject &jsonObject);
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;

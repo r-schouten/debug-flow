@@ -10,7 +10,12 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 
     windowManager = new WindowManager(m_ui->mdiArea);
 
-    nodeScene = new NodeScene(windowManager);
+    flowData = new FlowData(windowManager);
+
+    nodeScene = new NodeScene(flowData);
+
+    loadStore = new LoadStore(flowData, nodeScene);
+
     m_ui->graphicsView->setScene(nodeScene);
 
     itemsList = new ItemList(m_ui->resourceList,nodeScene);
@@ -28,16 +33,18 @@ FlowWidget::~FlowWidget()
     delete itemsList;
     delete windowManager;
     delete propertyWidgetManager;
+    delete flowData;
+    delete loadStore;
 }
 void FlowWidget::updateUI()
 {
     nodeScene->update();
 }
-void FlowWidget::open(QJsonObject* jsonObject)
+void FlowWidget::open(QJsonObject &jsonObject)
 {
-    nodeScene->deserialize(jsonObject);
+    loadStore->deserialize(jsonObject);
 }
 QJsonObject* FlowWidget::save()
 {
-   return nodeScene->serialize();
+   return loadStore->serialize();
 }

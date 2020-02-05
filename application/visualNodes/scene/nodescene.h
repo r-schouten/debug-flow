@@ -15,33 +15,26 @@
 #include "selectionmanager.h"
 #include "outputstyle.h"
 
+#include "flowdata.h"
 #include "serializable.h"
-class NodeScene : public QGraphicsScene, public Serializable
+class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    NodeScene(WindowManager *windowManager);
+    NodeScene(FlowData* _flowData);
 
     //function to insert items from the resource list
     void insertItem(VisualNodeBase* node);
     void addItem(VisualNodeBase *item);
 
-    QJsonObject* serialize();
-    void deserialize(QJsonObject* jsonObject);
-    void deserializeNode(QJsonObject *jsonNodeObject);
-
 private:
+    FlowData* flowData = nullptr;
+
     //flag for adding connections
     bool anyConnectorPressed = false;
 
-    WindowManager* windowManager = nullptr;
-    //hold all connections, they are not graphics items
-    QList<VisualConnection*> connections;
     //connection that is tracked by the mouse, set back to nullptr
     VisualConnection* currentTrackingConnection = nullptr;
-
-    //list with all nodes
-    QList<VisualNodeBase*> nodes;
 
     //selectionmanager singleton
     SelectionManager* selectionManager;
@@ -79,6 +72,5 @@ public slots:
     //slot for visualConnector communication
     void onConnectionDelete(VisualConnection *connection);
     void onNodeDelete(VisualNodeBase *node);
-
 };
 

@@ -84,7 +84,7 @@ QJsonObject *FilteredNodeSettings::serialize()
     return jsonObject;
 }
 
-void FilteredNodeSettings::deserialize(QJsonObject *jsonObject)
+void FilteredNodeSettings::deserialize(QJsonObject &jsonObject)
 {
 
 }

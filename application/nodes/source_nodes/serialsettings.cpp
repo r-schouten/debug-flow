@@ -27,7 +27,7 @@ QJsonObject *SerialSettings::serialize()
     return nullptr;
 }
 
-void SerialSettings::deserialize(QJsonObject *jsonObject)
+void SerialSettings::deserialize(QJsonObject &jsonObject)
 {
 
 }

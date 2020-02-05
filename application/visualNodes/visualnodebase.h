@@ -65,7 +65,7 @@ public:
     virtual void releasePropertiesWidget() = 0;
 
     QJsonObject* serializeBase();
-    void deserializeBase(QJsonObject* jsonObject);
+    void deserializeBase(QJsonObject &jsonObject);
 protected:
     PropertyWidgetBase* propertyWidget = nullptr;
 

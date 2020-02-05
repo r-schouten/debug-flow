@@ -11,6 +11,9 @@
 #include "nodescene.h"
 #include "ui_flow_widget.h"
 
+#include "flowdata.h"
+#include "loadstore.h"
+
 class FilteredConsole;
 class FlowWidget : public QWidget
 {
@@ -19,7 +22,7 @@ public:
     explicit FlowWidget(QWidget *parent = nullptr);
     ~FlowWidget();
 
-    void open(QJsonObject *jsonObject);
+    void open(QJsonObject &jsonObject);
     QJsonObject *save();
 private:
     Ui_flowWidget *m_ui = nullptr;
@@ -29,6 +32,8 @@ private:
     QTimer *UiUpdatetimer = nullptr;
     WindowManager* windowManager = nullptr;
     PropertyWidgetManager* propertyWidgetManager = nullptr;
+    FlowData* flowData = nullptr;
+    LoadStore* loadStore = nullptr;
 public slots:
     void updateUI();
 

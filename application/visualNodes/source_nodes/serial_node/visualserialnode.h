@@ -24,7 +24,7 @@ public:
     void openPort();
 
     QJsonObject* serialize();
-    void deserialize(QJsonObject* jsonObject);
+    void deserialize(QJsonObject &jsonObject);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

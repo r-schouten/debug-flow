@@ -22,7 +22,7 @@ public:
     VisualNodeBase *clone();
 
     QJsonObject* serialize();
-    void deserialize(QJsonObject* jsonObject);
+    void deserialize(QJsonObject &jsonObject);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

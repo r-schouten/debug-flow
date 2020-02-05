@@ -29,6 +29,6 @@ public:
     void print();
 
     QJsonObject *serialize();
-    void deserialize(QJsonObject *jsonObject);
+    void deserialize(QJsonObject &jsonObject);
 };
 
