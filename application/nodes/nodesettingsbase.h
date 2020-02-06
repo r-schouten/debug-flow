@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
-#include <serializable.h>
+
+#include "serializable.h"
 
 #include "nodebase.h"
 

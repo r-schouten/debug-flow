@@ -10,7 +10,7 @@ SOURCES += \
     circularbuffer/circularbufferreader.cpp \
     flowdata.cpp \
     flowwidget.cpp \
-    loadstore.cpp \
+    loadstore/loadstore.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -26,7 +26,6 @@ SOURCES += \
     nodes/source_nodes/serialnode.cpp \
     nodes/source_nodes/serialsettings.cpp \
     nodes/subscription.cpp \
-    settingsdialog.cpp \
     test/circularbuffertest.cpp \
     utils/ansiescapereader.cpp \
     utils/contextfilter.cpp \
@@ -63,8 +62,9 @@ HEADERS += \
     flowdata.h \
     flowwidget.h \
     globalconfig.h \
-    json_defs.h \
-    loadstore.h \
+    loadstore/json_defs.h \
+    loadstore/loadstore.h \
+    loadstore/serializable.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \
@@ -80,10 +80,9 @@ HEADERS += \
     nodes/source_nodes/serialnode.h \
     nodes/source_nodes/serialsettings.h \
     nodes/subscription.h \
-    serializable.h \
-    settingsdialog.h \
     test/circularbuffertest.h \
-    ui_flow_widget.h \
+    userinterface/ui_flow_widget.h \
+    userinterface/ui_mainwindow.h \
     utils/ansi_types.h \
     utils/ansiescapereader.h \
     utils/contextfilter.h \
@@ -118,7 +117,6 @@ HEADERS += \
     windows/dialogwindow.h \
     windows/mdiwindow.h \
     windows/windowbase.h \
-    ui_mainwindow.h \
     windows/windowmanager.h
 
 FORMS += \
@@ -148,6 +146,8 @@ INCLUDEPATH += \
     nodes/source_nodes \
     nodes/output_nodes \
     utils \
+    loadstore \
+    userinterface \
     widgets
 target.path = C:/debug-flow/builds
 INSTALLS += target
