@@ -54,7 +54,3 @@ QJsonObject *VisualContextFilter::serialize()
     return nullptr;
 }
 
-void VisualContextFilter::deserialize(QJsonObject &jsonObject)
-{
-
-}

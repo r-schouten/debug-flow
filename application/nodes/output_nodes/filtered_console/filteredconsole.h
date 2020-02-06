@@ -63,13 +63,13 @@ class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
 public:
+    FilteredConsole();
+    ~FilteredConsole();
+
     void clear();
     void NotifyBufferUpdate(Subscription *source)override;
 
-    FilteredConsole();
-    ~FilteredConsole();
     NodeSettingsBase *getNodeSettings();
-
 
     FilteredNodeSettings* nodeSettings = nullptr;
 
@@ -84,7 +84,6 @@ private:
 
     QVBoxLayout *layout = nullptr;
     QHBoxLayout *verticalLayout = nullptr;
-
 
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;

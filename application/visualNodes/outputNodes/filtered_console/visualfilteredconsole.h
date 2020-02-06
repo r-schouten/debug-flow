@@ -14,6 +14,9 @@ class VisualFilteredConsole : public VisualOutputNodeBase, public OutputStyle
     Q_OBJECT
 public:
     VisualFilteredConsole();
+    VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson);
+    //calling an other constructor in C++ 11 compiles but doesn't work as expected, therefore a construct method
+    void construct();
     ~VisualFilteredConsole();
 
     void setWindowManager(WindowManager* _windowManager);
@@ -22,7 +25,6 @@ public:
     VisualNodeBase *clone();
 
     QJsonObject* serialize();
-    void deserialize(QJsonObject &jsonObject);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

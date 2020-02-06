@@ -7,6 +7,7 @@ protected:
     WindowManager* windowManager = nullptr;
 public:
     VisualOutputNodeBase();
+    VisualOutputNodeBase(QJsonObject &baseJson);
     virtual void setWindowManager(WindowManager* _windowManager) = 0;
 signals:
     void WindowDeleted(VisualOutputNodeBase* window);

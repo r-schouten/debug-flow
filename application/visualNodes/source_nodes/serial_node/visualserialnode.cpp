@@ -129,7 +129,3 @@ QJsonObject *VisualSerialNode::serialize()
     return nullptr;
 }
 
-void VisualSerialNode::deserialize(QJsonObject &jsonObject)
-{
-
-}

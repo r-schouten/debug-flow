@@ -22,6 +22,6 @@ private:
     FlowData* flowData = nullptr;
     NodeScene* scene = nullptr;
 
-    VisualNodeBase *deserializeDerived(QJsonObject &jsonNodeObject);
+    VisualNodeBase *constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson);
 };
 

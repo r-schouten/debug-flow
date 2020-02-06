@@ -4,3 +4,8 @@ VisualOutputNodeBase::VisualOutputNodeBase()
 {
 
 }
+
+VisualOutputNodeBase::VisualOutputNodeBase(QJsonObject &baseJson)
+    :VisualNodeBase(baseJson)
+{
+}

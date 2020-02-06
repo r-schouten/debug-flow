@@ -57,34 +57,33 @@ void LoadStore::deserialize(QJsonObject &jsonObject)
 }
 void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
 {
-    VisualNodeBase* newNode = nullptr;
     //deserialize derived
     QJsonObject::iterator derivedIt = jsonNodeObject.find(JSON_DERIVED);
-    if(derivedIt != jsonNodeObject.end())
-    {
-        QJsonObject derivedJson = derivedIt->toObject();
-        newNode = deserializeDerived(derivedJson);
-    }
-    else
+    if(derivedIt == jsonNodeObject.end())
     {
         qFatal("[fatal][LoadStore] can't find derived tag");
-    }
-    if(newNode == nullptr)
-    {
-        qFatal("[fatal][LoadStore] newNode == nullptr");
     }
 
     //deserialize base
     QJsonObject::iterator base = jsonNodeObject.find(JSON_BASE);
-    if(base != jsonNodeObject.end())
-    {
-        QJsonObject baseJson = base->toObject();
-        newNode->deserializeBase(baseJson);
-    }
-    else
+    if(base == jsonNodeObject.end())
     {
         qFatal("[fatal][LoadStore] can't find base tag");
     }
+
+    //deserialize settings
+    QJsonObject::iterator settings = jsonNodeObject.find(JSON_NODE_SETTINGS);
+    if(settings == jsonNodeObject.end())
+    {
+        qFatal("[fatal][LoadStore] can't find settings tag");
+    }
+
+    QJsonObject baseJson = base->toObject();
+    QJsonObject derivedJson = derivedIt->toObject();
+    QJsonObject settingsJson = settings->toObject();
+
+    VisualNodeBase* newNode = nullptr;
+    newNode = constructNode(baseJson, derivedJson, settingsJson);
 
     if(newNode)
     {
@@ -95,41 +94,16 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
         qFatal("[fatal][LoadStore] newNode is nullptr");
     }
 
-    //deserialize settings
-    //note scene->addItem need to run before loading the settings
-    QJsonObject::iterator settings = jsonNodeObject.find(JSON_NODE_SETTINGS);
-    if(settings != jsonNodeObject.end())
-    {
-        QJsonObject settingsJson = settings->toObject();
-        if(newNode->getNode())
-        {
-            newNode->getNode()->getNodeSettings()->deserialize(settingsJson);
-        }
-        else
-        {
-             qFatal("[fatal][LoadStore] getNode is nullptr");
-        }
-    }
-    else
-    {
-        qFatal("[fatal][LoadStore] can't find settings tag");
-    }
 
 }
-VisualNodeBase* LoadStore::deserializeDerived(QJsonObject &jsonNodeObject)
+VisualNodeBase* LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson)
 {
-    QJsonDocument doc(jsonNodeObject);
-    QString strJson(doc.toJson(QJsonDocument::Indented));
-    qDebug(strJson.toStdString().c_str());
-
     VisualNodeBase* newNode = nullptr;
 
-    QString type = jsonNodeObject.find(JSON_NODE_TYPE)->toString();
+    QString type = derivedJson.find(JSON_NODE_TYPE)->toString();
     if(type == VisualFilteredConsole::staticMetaObject.className())
     {
-        qDebug("deserializing derived");
-        newNode = new VisualFilteredConsole();
-        newNode->deserialize(jsonNodeObject);
+        newNode = new VisualFilteredConsole(baseJson, derivedJson, settingsJson);
     }
     return newNode;
 }

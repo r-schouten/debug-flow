@@ -2,19 +2,21 @@
 
 VisualFilteredConsole::VisualFilteredConsole()
 {
+    construct();
+}
 
+VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson)
+    :VisualOutputNodeBase(baseJson)
+{
+    construct();
+    node->nodeSettings->deserialize(settingsJson);
+}
+
+//calling an other constructor in C++ 11 compiles but doesn't work as expected, therefore a construct method
+void VisualFilteredConsole::construct()
+{
     name = "filtered console";
     shortDiscription = QString("this node provides a console with configurable filters for %1 context").arg(CONTEXT_STYLE_NAME);
-};
-
-void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
-{
-    qDebug("[debug][VisualFiteredConsole] setWindowManager");
-    if(_windowManager == nullptr)
-    {
-        qFatal("[fatal][VisualFiteredConsole] windowManager == nullptr");
-    }
-    windowManager = _windowManager;
 
     node = new FilteredConsole();
     baseNode = node;
@@ -26,6 +28,15 @@ void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
     {
         addOutputConnector();
     }
+}
+void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
+{
+    qDebug("[debug][VisualFiteredConsole] setWindowManager");
+    if(_windowManager == nullptr)
+    {
+        qFatal("[fatal][VisualFiteredConsole] windowManager == nullptr");
+    }
+    windowManager = _windowManager;
 }
 
 VisualFilteredConsole::~VisualFilteredConsole()
@@ -83,7 +94,4 @@ QJsonObject *VisualFilteredConsole::serialize()
 
     return jsonObject;
 }
-void VisualFilteredConsole::deserialize(QJsonObject &jsonObject)
-{
-    //empty becuase the "type" is deserialized in the loadstore class
-}
+

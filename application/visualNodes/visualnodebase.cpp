@@ -8,6 +8,12 @@ VisualNodeBase::VisualNodeBase()
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
 }
+
+VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject)
+    :VisualNodeBase()
+{
+    deserializeBase(jsonObject);
+}
 VisualNodeBase::~VisualNodeBase()
 {
     //there is a image available that explains how a node is deleted

@@ -68,8 +68,4 @@ QJsonObject *VisualSimpleConsole::serialize()
     return nullptr;
 }
 
-void VisualSimpleConsole::deserialize(QJsonObject &jsonObject)
-{
-
-}
 

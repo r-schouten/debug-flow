@@ -21,6 +21,7 @@ class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
     Q_OBJECT
 public:
     VisualNodeBase();
+    VisualNodeBase(QJsonObject &jsonObject);
     ~VisualNodeBase();
 
     //will be filled in by the derived class
