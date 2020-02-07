@@ -3,6 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include <serialization_handler.h>
 #include "json_defs.h"
 
 struct TagOption
@@ -24,19 +25,21 @@ public:
 
     Tag(QString tagName, int tagIndex)
         :tagName(tagName),tagIndex(tagIndex){}
-    Tag(QJsonObject &jsonTag)
+    Tag(QJsonObject &jsonTag, SerializationHandler &handler)
     {
-        tagName = jsonTag.find(JSON_FILTEREDCONSOLE_TAG_NAME)->toString();
-        visible = jsonTag.find(JSON_FILTEREDCONSOLE_TAG_VISIBLE)->toBool();
-        tagIndex = jsonTag.find(JSON_FILTEREDCONSOLE_TAG_INDEX)->toInt();
+        tagName = handler.findStringSafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAG_NAME, jsonTag);
+        visible = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAG_VISIBLE, jsonTag);
+        tagIndex = handler.findIntSafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAG_INDEX, jsonTag);
 
-        QJsonArray optionJson = jsonTag.find(JSON_FILTEREDCONSOLE_OPTIONS)->toArray();
+        QJsonArray optionJson = handler.findArraySafe(CLASSNAME, JSON_FILTEREDCONSOLE_OPTIONS, jsonTag);
         QJsonArray::iterator it;
         for (it = optionJson.begin(); it != optionJson.end(); it++) {
-            QJsonObject tagJson = it->toObject();
+            if(!it->isObject()) handler.logError(CLASSNAME, "JSON_FILTEREDCONSOLE_OPTIONS is not a object", jsonTag);
+            QJsonObject optionJson = it->toObject();
 
-            QString optionName = tagJson.find(JSON_FILTEREDCONSOLE_OPTION_TAGNAME)->toString();
-            bool enabled = tagJson.find(JSON_FILTEREDCONSOLE_OPTION_ENABLED)->toBool();
+            QString optionName = handler.findStringSafe(CLASSNAME, JSON_FILTEREDCONSOLE_OPTION_TAGNAME, optionJson);
+            bool enabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_OPTION_ENABLED, optionJson);
+
             TagOption *newOption = new TagOption(optionName, enabled);
             options.append(newOption);
         }

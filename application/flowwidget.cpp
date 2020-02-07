@@ -42,37 +42,42 @@ void FlowWidget::updateUI()
 }
 void FlowWidget::open(QJsonObject &jsonObject)
 {
-    DeserializationSettings_t settings = {
-        .restoreContext = true,
-        .restoreData = false,
-        .returnOnError = true,
-        .returnOnFatal = true
-    };
-    SerializationErrorLog errorLog;
-
-    loadStore->deserialize(jsonObject, settings, errorLog);
-
-    if(errorLog.anyErrorOccured)
+    SerializationHandler handler(
     {
-        errorLog.printMessages();
+       .restoreContext = true,
+       .restoreData = false,
+       .exceptionOnError = true,
+       .exceptionOnFatal = true,
+   });
+
+    loadStore->deserialize(jsonObject, handler);
+
+    if(handler.errorOccured())
+    {
+        handler.printMessages();
     }
 }
 QJsonObject* FlowWidget::save()
 {
    SerializationSettings_t settings =
    {
-       .serializeContext = false,
+       .serializeContext = true,
        .serializeData = false,
        .returnOnError = true
    };
 
-   SerializationErrorLog errorLog;
-
-   QJsonObject* completeJson = loadStore->serialize(settings, errorLog);
-
-   if(errorLog.anyErrorOccured)
+   SerializationHandler handler(
    {
-       errorLog.printMessages();
+      .restoreContext = true,
+      .restoreData = false,
+      .exceptionOnError = true,
+      .exceptionOnFatal = true,
+  });
+   QJsonObject* completeJson = loadStore->serialize(settings, handler);
+
+   if(handler.errorOccured())
+   {
+       handler.printMessages();
    }
    return completeJson;
 }

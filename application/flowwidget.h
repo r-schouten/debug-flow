@@ -15,8 +15,7 @@
 #include "loadstore.h"
 
 #include "serialization_settings.h"
-#include "deserialization_settings.h"
-#include "serialization_error_log.h"
+#include "serialization_handler.h"
 class FilteredConsole;
 class FlowWidget : public QWidget
 {

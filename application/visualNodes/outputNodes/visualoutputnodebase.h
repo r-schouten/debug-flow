@@ -2,15 +2,14 @@
 #include "visualnodebase.h"
 #include "windowmanager.h"
 
-#include "deserialization_settings.h"
-#include "serialization_error_log.h"
+#include "serialization_handler.h"
 class VisualOutputNodeBase : public VisualNodeBase
 {
 protected:
     WindowManager* windowManager = nullptr;
 public:
     VisualOutputNodeBase();
-    VisualOutputNodeBase(QJsonObject &baseJson, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog);
+    VisualOutputNodeBase(QJsonObject &baseJson, SerializationHandler &handler);
     virtual void setWindowManager(WindowManager* _windowManager) = 0;
 signals:
     void WindowDeleted(VisualOutputNodeBase* window);

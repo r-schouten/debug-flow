@@ -38,8 +38,8 @@ public:
     bool getFilterOnWindow() const;
     void setFilterOnWindow(bool value);
 
-    QJsonObject *serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog);
-    void deserialize(QJsonObject &jsonObject);
+    QJsonObject *serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog);
+    void deserialize(QJsonObject &jsonObject, SerializationHandler &handler);
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;

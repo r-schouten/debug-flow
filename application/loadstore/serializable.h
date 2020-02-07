@@ -2,10 +2,10 @@
 #include <QJsonObject>
 
 #include <serialization_settings.h>
-#include <serialization_error_log.h>
+#include <serialization_handler.h>
 class Serializable
 {
 public:
-    virtual QJsonObject* serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)=0;
+    virtual QJsonObject* serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)=0;
 };
 

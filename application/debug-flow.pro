@@ -11,7 +11,7 @@ SOURCES += \
     flowdata.cpp \
     flowwidget.cpp \
     loadstore/loadstore.cpp \
-    loadstore/serialization_error_log.cpp \
+    loadstore/serialization_handler.cpp \
     main.cpp \
     mainwindow.cpp \
     nodes/inputnode.cpp \
@@ -63,11 +63,11 @@ HEADERS += \
     flowdata.h \
     flowwidget.h \
     globalconfig.h \
-    loadstore/deserialization_settings.h \
+    loadstore/deserialistationexception.h \
     loadstore/json_defs.h \
     loadstore/loadstore.h \
     loadstore/serializable.h \
-    loadstore/serialization_error_log.h \
+    loadstore/serialization_handler.h \
     loadstore/serialization_settings.h \
     main.h \
     mainwindow.h \

@@ -22,7 +22,7 @@ void SerialSettings::print()
     qDebug() << "parity : " << nodeSettings.parity;
 }
 
-QJsonObject *SerialSettings::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
+QJsonObject *SerialSettings::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
 {
     return nullptr;
 }

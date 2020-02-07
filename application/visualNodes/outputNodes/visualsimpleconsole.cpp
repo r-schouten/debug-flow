@@ -63,7 +63,7 @@ VisualNodeBase *VisualSimpleConsole::clone()
     return new VisualSimpleConsole();
 }
 
-QJsonObject *VisualSimpleConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
+QJsonObject *VisualSimpleConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
 {
     return nullptr;
 }

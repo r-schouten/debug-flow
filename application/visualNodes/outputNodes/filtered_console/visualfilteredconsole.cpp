@@ -5,11 +5,11 @@ VisualFilteredConsole::VisualFilteredConsole()
     construct();
 }
 
-VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
-    :VisualOutputNodeBase(baseJson, deserializationSettings, errorLog)
+VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, SerializationHandler &handler)
+    :VisualOutputNodeBase(baseJson, handler)
 {
     construct();
-    node->nodeSettings->deserialize(settingsJson);
+    node->nodeSettings->deserialize(settingsJson, handler);
 }
 
 //calling an other constructor in C++ 11 compiles but doesn't work as expected, therefore a construct method
@@ -31,7 +31,6 @@ void VisualFilteredConsole::construct()
 }
 void VisualFilteredConsole::setWindowManager(WindowManager *_windowManager)
 {
-    qDebug("[debug][VisualFiteredConsole] setWindowManager");
     if(_windowManager == nullptr)
     {
         qFatal("[fatal][VisualFiteredConsole] windowManager == nullptr");
@@ -86,7 +85,7 @@ VisualNodeBase *VisualFilteredConsole::clone()
     return new VisualFilteredConsole();
 }
 
-QJsonObject *VisualFilteredConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
+QJsonObject *VisualFilteredConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
 {
     QJsonObject *jsonObject = new QJsonObject();
 

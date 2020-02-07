@@ -23,7 +23,7 @@ public:
 
     void openPort();
 
-    QJsonObject* serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog);
+    QJsonObject* serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

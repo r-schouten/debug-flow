@@ -9,10 +9,10 @@ VisualNodeBase::VisualNodeBase()
     setAcceptHoverEvents(true);
 }
 
-VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
+VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, SerializationHandler &handler)
     :VisualNodeBase()
 {
-    deserializeBase(jsonObject, deserializationSettings, errorLog);
+    deserializeBase(jsonObject, handler);
 }
 VisualNodeBase::~VisualNodeBase()
 {
@@ -400,7 +400,7 @@ void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     }
 }
 
-QJsonObject *VisualNodeBase::serializeBase(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
+QJsonObject *VisualNodeBase::serializeBase(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
 {
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_BASE_NAME,name);
@@ -410,32 +410,9 @@ QJsonObject *VisualNodeBase::serializeBase(SerializationSettings_t &serialisatio
     return jsonObject;
 }
 
-void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
+void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, SerializationHandler &handler)
 {
-    QJsonValue nameObj = jsonObject.find(JSON_BASE_NAME).value();
-    if(nameObj.isString()){
-        name = nameObj.toString();
-    }
-    else{
-        errorLog.LogError(ErrorSource::NODES_BASE, metaObject()->className(),"JSON_BASE_NAME not found or invalid",jsonObject);
-        if(deserializationSettings.needToReturn(errorLog))return;
-    }
-
-    QJsonValue centerXObj = jsonObject.find(JSON_BASE_CENTERX).value();
-    if(centerXObj.isDouble()){
-        centerX = centerXObj.toInt();
-    }
-    else{
-        errorLog.LogError(ErrorSource::NODES_BASE, metaObject()->className(),"JSON_BASE_CENTERX not found or invalid",jsonObject);
-        if(deserializationSettings.needToReturn(errorLog))return;
-    }
-
-    QJsonValue centerYObj = jsonObject.find(JSON_BASE_CENTERY).value();
-    if(centerYObj.isDouble()){
-        centerY = centerYObj.toInt();
-    }
-    else{
-        errorLog.LogError(ErrorSource::NODES_BASE, metaObject()->className(),"JSON_BASE_CENTERY not found or invalid",jsonObject);
-        if(deserializationSettings.needToReturn(errorLog))return;
-    }
+    name = handler.findStringSafe(CLASSNAME, JSON_BASE_NAME, jsonObject);
+    centerX = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERX, jsonObject);
+    centerY = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERY, jsonObject);
 }
