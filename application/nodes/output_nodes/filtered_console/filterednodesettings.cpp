@@ -58,44 +58,48 @@ void FilteredNodeSettings::clearContextClicked()
     emit tagsChanged();
 }
 
-QJsonObject *FilteredNodeSettings::serialize()
+QJsonObject *FilteredNodeSettings::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
 {
-    QJsonArray tagsJson;
-
-    QListIterator<Tag*>iterator(tags);
-    while(iterator.hasNext())
-    {
-        Tag* tag = iterator.next();
-        QJsonObject* tagJson = tag->serialize();
-        tagsJson.append(*tagJson);
-        delete tagJson;
-    }
     QJsonObject *jsonObject = new QJsonObject();
-    jsonObject->insert("LineNumbersEnabled",LineNumbersEnabled);
-    jsonObject->insert("ANSIEnabled",ANSIEnabled);
-    jsonObject->insert("autoScrollEnabled",autoScrollEnabled);
-    jsonObject->insert("hideContext",hideContext);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,LineNumbersEnabled);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_ANSIENABLED,ANSIEnabled);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_AUTO_SCROLL,autoScrollEnabled);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_HIDE_CONTEXT,hideContext);
 
-    jsonObject->insert("maxlines",maxLines);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_MAX_LINES,maxLines);
 
-    jsonObject->insert("scrollOption",ScrollOptionsText[(int)horizontalScroll]);
-    jsonObject->insert("filterOnWindow",filterOnWindow);
-    jsonObject->insert("tags",tagsJson);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_H_SCROLL,ScrollOptionsText[(int)horizontalScroll]);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_FILTER_ON_WINDOW,filterOnWindow);
+
+    if(serialisationSettings.serializeContext)
+    {
+        QJsonArray tagsJson;
+
+        QListIterator<Tag*>iterator(tags);
+        while(iterator.hasNext())
+        {
+            Tag* tag = iterator.next();
+            QJsonObject* tagJson = tag->serialize();
+            tagsJson.append(*tagJson);
+            delete tagJson;
+        }
+        jsonObject->insert(JSON_FILTEREDCONSOLE_TAGS,tagsJson);
+    }
     return jsonObject;
 }
 
 void FilteredNodeSettings::deserialize(QJsonObject &jsonObject)
 {
-    LineNumbersEnabled = jsonObject.find("LineNumbersEnabled")->toBool();
-    ANSIEnabled = jsonObject.find("ANSIEnabled")->toBool();
-    autoScrollEnabled = jsonObject.find("autoScrollEnabled")->toBool();
-    hideContext = jsonObject.find("hideContext")->toBool();
+    LineNumbersEnabled = jsonObject.find(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED)->toBool();
+    ANSIEnabled = jsonObject.find(JSON_FILTEREDCONSOLE_ANSIENABLED)->toBool();
+    autoScrollEnabled = jsonObject.find(JSON_FILTEREDCONSOLE_AUTO_SCROLL)->toBool();
+    hideContext = jsonObject.find(JSON_FILTEREDCONSOLE_HIDE_CONTEXT)->toBool();
 
-    maxLines = jsonObject.find("maxlines")->toInt();
+    maxLines = jsonObject.find(JSON_FILTEREDCONSOLE_MAX_LINES)->toInt();
 
-    filterOnWindow = jsonObject.find("filterOnWindow")->toBool();
+    filterOnWindow = jsonObject.find(JSON_FILTEREDCONSOLE_FILTER_ON_WINDOW)->toBool();
 
-    QString scrollOption = jsonObject.find("scrollOption")->toString();
+    QString scrollOption = jsonObject.find(JSON_FILTEREDCONSOLE_H_SCROLL)->toString();
     bool found = false;
     for(int i =0;i<ScrollOptionsText.size();i++)
     {
@@ -110,7 +114,7 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject)
         qFatal("[fatal][FilteredNodeSettings] scroll option not found");
     }
 
-
+    //depending on to the SerializationSettings_t the JSON_FILTEREDCONSOLE_TAGS key is not in the json
     QJsonArray tagsJson = jsonObject.find(JSON_FILTEREDCONSOLE_TAGS)->toArray();
     QJsonArray::iterator it;
     for (it = tagsJson.begin(); it != tagsJson.end(); it++) {

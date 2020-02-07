@@ -5,7 +5,8 @@ VisualOutputNodeBase::VisualOutputNodeBase()
 
 }
 
-VisualOutputNodeBase::VisualOutputNodeBase(QJsonObject &baseJson)
-    :VisualNodeBase(baseJson)
+VisualOutputNodeBase::VisualOutputNodeBase(QJsonObject &baseJson, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
+    :VisualNodeBase(baseJson, deserializationSettings, errorLog)
 {
+
 }

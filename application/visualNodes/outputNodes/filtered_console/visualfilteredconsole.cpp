@@ -5,8 +5,8 @@ VisualFilteredConsole::VisualFilteredConsole()
     construct();
 }
 
-VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson)
-    :VisualOutputNodeBase(baseJson)
+VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
+    :VisualOutputNodeBase(baseJson, deserializationSettings, errorLog)
 {
     construct();
     node->nodeSettings->deserialize(settingsJson);
@@ -86,12 +86,21 @@ VisualNodeBase *VisualFilteredConsole::clone()
     return new VisualFilteredConsole();
 }
 
-QJsonObject *VisualFilteredConsole::serialize()
+QJsonObject *VisualFilteredConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
 {
     QJsonObject *jsonObject = new QJsonObject();
 
     jsonObject->insert(JSON_NODE_TYPE, metaObject()->className());
 
     return jsonObject;
+}
+
+bool VisualFilteredConsole::classNameEquals(QString name)
+{
+    if(name.compare(staticMetaObject.className(),Qt::CaseInsensitive) == 0)
+    {
+        return true;
+    }
+    return false;
 }
 

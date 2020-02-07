@@ -49,7 +49,7 @@ void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsIte
     drawConnectors(painter,this);
 }
 
-QJsonObject *VisualContextFilter::serialize()
+QJsonObject *VisualContextFilter::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog)
 {
     return nullptr;
 }

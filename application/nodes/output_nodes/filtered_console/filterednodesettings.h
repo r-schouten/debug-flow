@@ -38,7 +38,7 @@ public:
     bool getFilterOnWindow() const;
     void setFilterOnWindow(bool value);
 
-    QJsonObject *serialize();
+    QJsonObject *serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog);
     void deserialize(QJsonObject &jsonObject);
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;

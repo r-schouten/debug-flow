@@ -11,7 +11,7 @@ public:
     VisualContextFilter();
     ~VisualContextFilter();
 
-    QJsonObject* serialize();
+    QJsonObject* serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &serialisationErrorLog);
 protected:
     PropertyWidgetBase* loadPropertiesWidget(QWidget* parent);
     void releasePropertiesWidget();

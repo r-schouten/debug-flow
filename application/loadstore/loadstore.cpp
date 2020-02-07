@@ -5,7 +5,7 @@ LoadStore::LoadStore(FlowData* flowData, NodeScene* scene)
 {
 
 }
-QJsonObject *LoadStore::serialize()
+QJsonObject *LoadStore::serialize(SerializationSettings_t &serialisationSettings, SerializationErrorLog &errorLog)
 {
     QJsonArray allObjectsJson;
     QListIterator<VisualConnection*>iterator(flowData->connections);
@@ -19,13 +19,13 @@ QJsonObject *LoadStore::serialize()
     {
         VisualNodeBase* node = iterator2.next();
 
-        QJsonObject* derivedJson = node->serialize();
-        QJsonObject* baseJson = node->serializeBase();
+        QJsonObject* derivedJson = node->serialize(serialisationSettings, errorLog);
+        QJsonObject* baseJson = node->serializeBase(serialisationSettings, errorLog);
         if(node->getNode()->getNodeSettings() == nullptr)
         {
             qFatal("[fatal][NodeScene] node->getNode()->getNodeSettings() == nullptr");
         }
-        QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize();
+        QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize(serialisationSettings, errorLog);
 
         QJsonObject jsonObject;
         jsonObject.insert(JSON_DERIVED, *derivedJson);
@@ -46,44 +46,75 @@ QJsonObject *LoadStore::serialize()
 
 
 
-void LoadStore::deserialize(QJsonObject &jsonObject)
+void LoadStore::deserialize(QJsonObject &jsonObject, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
 {
-    QJsonArray nodesJson = jsonObject.find(JSON_NODES)->toArray();
-    QJsonArray::iterator it;
-    for (it = nodesJson.begin(); it != nodesJson.end(); it++) {
-        QJsonObject object = it->toObject();
-        deserializeNode(object);
+    if(jsonObject.contains(JSON_NODES))
+    {
+        QJsonArray nodesJson = jsonObject.find(JSON_NODES)->toArray();
+
+        QJsonArray::iterator it;
+        for (it = nodesJson.begin(); it != nodesJson.end(); it++) {
+            QJsonObject object = it->toObject();
+            deserializeNode(object, deserializationSettings, errorLog);
+        }
+    }
+    else
+    {
+        errorLog.LogWaring(ErrorSource::NODES_BASE, QMetaObject().className(), "element JSON_NODES not found", jsonObject);
     }
 }
-void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
+void LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
 {
     //deserialize derived
     QJsonObject::iterator derivedIt = jsonNodeObject.find(JSON_DERIVED);
-    if(derivedIt == jsonNodeObject.end())
+    if(derivedIt == jsonNodeObject.end()){
+        errorLog.LogFatal(ErrorSource::NODE_SPECIFIC, QMetaObject().className(), "element JSON_DERIVED not found", jsonNodeObject);
+        if(deserializationSettings.needToReturn(errorLog))return;
+    }
+    QJsonObject derivedJson;
+    if(derivedIt->isObject())
     {
-        qFatal("[fatal][LoadStore] can't find derived tag");
+        derivedJson = derivedIt->toObject();
+    }
+    else
+    {
+        errorLog.LogFatal(ErrorSource::NODE_SPECIFIC, QMetaObject().className(), "element JSON_DERIVED is not a object", jsonNodeObject);
+        if(deserializationSettings.needToReturn(errorLog))return;
     }
 
     //deserialize base
     QJsonObject::iterator base = jsonNodeObject.find(JSON_BASE);
-    if(base == jsonNodeObject.end())
-    {
-        qFatal("[fatal][LoadStore] can't find base tag");
+    if(base == jsonNodeObject.end()){
+        errorLog.LogFatal(ErrorSource::NODES_BASE, QMetaObject().className(), "element JSON_BASE not found", jsonNodeObject);
+        if(deserializationSettings.needToReturn(errorLog))return;
+    }
+    QJsonObject baseJson;
+    if(base->isObject()){
+        baseJson = base->toObject();
+    }
+    else{
+        errorLog.LogFatal(ErrorSource::NODES_BASE, QMetaObject().className(), "element JSON_BASE is not a object", baseJson);
+        if(deserializationSettings.needToReturn(errorLog))return;
     }
 
     //deserialize settings
     QJsonObject::iterator settings = jsonNodeObject.find(JSON_NODE_SETTINGS);
-    if(settings == jsonNodeObject.end())
-    {
-        qFatal("[fatal][LoadStore] can't find settings tag");
+    if(settings == jsonNodeObject.end()){
+        errorLog.LogError(ErrorSource::NODES_SETTINGS, QMetaObject().className(), "element JSON_NODE_SETTINGS not found", jsonNodeObject);
+        if(deserializationSettings.needToReturn(errorLog))return;
+    }
+    QJsonObject settingsJson;
+    if(settings->isObject()){
+        settingsJson = settings->toObject();
+    }
+    else{
+        errorLog.LogError(ErrorSource::NODES_SETTINGS, QMetaObject().className(), "element JSON_SETTINGS is not a object", settingsJson);
+        if(deserializationSettings.needToReturn(errorLog))return;
     }
 
-    QJsonObject baseJson = base->toObject();
-    QJsonObject derivedJson = derivedIt->toObject();
-    QJsonObject settingsJson = settings->toObject();
-
     VisualNodeBase* newNode = nullptr;
-    newNode = constructNode(baseJson, derivedJson, settingsJson);
+    newNode = constructNode(baseJson, derivedJson, settingsJson, deserializationSettings, errorLog);
+    if(deserializationSettings.needToReturn(errorLog))return;
 
     if(newNode)
     {
@@ -91,21 +122,25 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject)
     }
     else
     {
-        qFatal("[fatal][LoadStore] newNode is nullptr");
+        errorLog.LogFatal(ErrorSource::NODES_BASE, metaObject()->className(), "newNode is nullptr", jsonNodeObject);
+        if(deserializationSettings.needToReturn(errorLog))return;
     }
-
-
 }
-VisualNodeBase* LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson)
+VisualNodeBase* LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationSettings_t &deserializationSettings, SerializationErrorLog &errorLog)
 {
     VisualNodeBase* newNode = nullptr;
-
-    QString type = derivedJson.find(JSON_NODE_TYPE)->toString();
-    if(type == VisualFilteredConsole::staticMetaObject.className())
+    if(derivedJson.contains(JSON_NODE_TYPE))
     {
-        newNode = new VisualFilteredConsole(baseJson, derivedJson, settingsJson);
+        QString type = derivedJson.find(JSON_NODE_TYPE)->toString();
+        if(VisualFilteredConsole::classNameEquals(type))
+        {
+            newNode = new VisualFilteredConsole(baseJson, derivedJson, settingsJson, deserializationSettings, errorLog);
+        }
+    }
+    else
+    {
+        errorLog.LogFatal(ErrorSource::NODE_SPECIFIC, metaObject()->className(), "element JSON_NODE_TYPE not found", derivedJson);
+        if(deserializationSettings.needToReturn(errorLog))return nullptr;
     }
     return newNode;
 }
-
-

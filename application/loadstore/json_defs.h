@@ -30,7 +30,6 @@
 #define JSON_FILTEREDCONSOLE_OPTION_TAGNAME "tagName"
 #define JSON_FILTEREDCONSOLE_OPTION_ENABLED "enabled"
 
-
 /*
 {
     "nodes": [
@@ -62,5 +61,8 @@
 {
     "type": "VisualFilteredConsole"
 }
+
+test1: verander de naam van "nodes"
+test2: verander de naam van "derived" en "base"
 
 */
