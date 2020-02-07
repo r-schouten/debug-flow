@@ -14,8 +14,8 @@
 
 #include "serializable.h"
 #include "json_defs.h"
-#include "serialization_settings.h"
 #include "serialization_handler.h"
+#include "deserialization_handler.h"
 class SelectionManager;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
@@ -23,7 +23,7 @@ class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
     Q_OBJECT
 public:
     VisualNodeBase();
-    VisualNodeBase(QJsonObject &jsonObject, SerializationHandler &handler);
+    VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &handler);
     ~VisualNodeBase();
 
     //will be filled in by the derived class
@@ -68,8 +68,8 @@ public:
     virtual PropertyWidgetBase* loadPropertiesWidget(QWidget* parent) = 0;
     virtual void releasePropertiesWidget() = 0;
 
-    QJsonObject* serializeBase(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog);
-    void deserializeBase(QJsonObject &jsonObject, SerializationHandler &handler);
+    QJsonObject* serializeBase(SerializationHandler &handler);
+    void deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler);
 protected:
     PropertyWidgetBase* propertyWidget = nullptr;
 

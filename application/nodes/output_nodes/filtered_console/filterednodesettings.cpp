@@ -58,7 +58,7 @@ void FilteredNodeSettings::clearContextClicked()
     emit tagsChanged();
 }
 
-QJsonObject *FilteredNodeSettings::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
+QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,LineNumbersEnabled);
@@ -71,7 +71,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationSettings_t &serialisat
     jsonObject->insert(JSON_FILTEREDCONSOLE_H_SCROLL,ScrollOptionsText[(int)horizontalScroll]);
     jsonObject->insert(JSON_FILTEREDCONSOLE_FILTER_ON_WINDOW,filterOnWindow);
 
-    if(serialisationSettings.serializeContext)
+    if(handler.saveContext())
     {
         QJsonArray tagsJson;
 
@@ -88,7 +88,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationSettings_t &serialisat
     return jsonObject;
 }
 
-void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, SerializationHandler &handler)
+void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     LineNumbersEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED, jsonObject);
     ANSIEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_ANSIENABLED, jsonObject);

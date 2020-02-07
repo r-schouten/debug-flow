@@ -3,15 +3,16 @@
 #include <QList>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include "deserialistationexception.h"
+#include "serialistationexception.h"
 
 //macro to make functions like findStringSafe easier to use
 #define CLASSNAME (staticMetaObject.className())
-struct DeserializationSettings_t
+
+struct SerializationSettings_t
 {
 public:
-    bool restoreContext = true;
-    bool restoreData = false;//if supported
+    bool saveContext = true;
+    bool saveData = false; //if supported
 
     bool exceptionOnError = true;
     bool exceptionOnFatal = true;
@@ -20,26 +21,20 @@ public:
 class SerializationHandler
 {
 public:
-    SerializationHandler(DeserializationSettings_t settings);
-    void logWaring(QString callingClass, QString message, QJsonObject jsonObject);
-    void logError(QString callingClass, QString message, QJsonObject jsonObject);
-    void logFatal(QString callingClass, QString message, QJsonObject jsonObject);
+    SerializationHandler(SerializationSettings_t settings);
+    void logWaring(QString callingClass, QString message);
+    void logError(QString callingClass, QString message);
+    void logFatal(QString callingClass, QString message);
 
     void printMessages(bool printJson = false);
     bool errorOccured();
-    bool restoreContext();
-    bool restoreData();
+    bool saveContext();
+    bool saveData();
 
-    QString findStringSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
-    int findIntSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
-    bool findBoolSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
-    QJsonObject findObjectSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
-    QJsonArray findArraySafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
 private:
     bool anyErrorOccured = false;
 
-    DeserializationSettings_t settings;
+    SerializationSettings_t settings;
 
-    QList<DeserialistationException> occuredErrors;
-
+    QList<SerialistationException> occuredErrors;
 };

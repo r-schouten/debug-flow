@@ -3,7 +3,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include <serialization_handler.h>
+#include <deserialization_handler.h>
 #include "json_defs.h"
 
 struct TagOption
@@ -25,7 +25,7 @@ public:
 
     Tag(QString tagName, int tagIndex)
         :tagName(tagName),tagIndex(tagIndex){}
-    Tag(QJsonObject &jsonTag, SerializationHandler &handler)
+    Tag(QJsonObject &jsonTag, DeserializationHandler &handler)
     {
         tagName = handler.findStringSafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAG_NAME, jsonTag);
         visible = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAG_VISIBLE, jsonTag);

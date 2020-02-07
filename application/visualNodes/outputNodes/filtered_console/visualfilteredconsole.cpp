@@ -5,7 +5,7 @@ VisualFilteredConsole::VisualFilteredConsole()
     construct();
 }
 
-VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, SerializationHandler &handler)
+VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
     :VisualOutputNodeBase(baseJson, handler)
 {
     construct();
@@ -85,11 +85,11 @@ VisualNodeBase *VisualFilteredConsole::clone()
     return new VisualFilteredConsole();
 }
 
-QJsonObject *VisualFilteredConsole::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
+QJsonObject *VisualFilteredConsole::serialize(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
 
-    jsonObject->insert(JSON_NODE_TYPE, metaObject()->className());
+    jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);
 
     return jsonObject;
 }

@@ -9,7 +9,7 @@ VisualNodeBase::VisualNodeBase()
     setAcceptHoverEvents(true);
 }
 
-VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, SerializationHandler &handler)
+VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
     :VisualNodeBase()
 {
     deserializeBase(jsonObject, handler);
@@ -400,7 +400,7 @@ void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     }
 }
 
-QJsonObject *VisualNodeBase::serializeBase(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
+QJsonObject *VisualNodeBase::serializeBase(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_BASE_NAME,name);
@@ -410,7 +410,7 @@ QJsonObject *VisualNodeBase::serializeBase(SerializationSettings_t &serialisatio
     return jsonObject;
 }
 
-void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, SerializationHandler &handler)
+void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     name = handler.findStringSafe(CLASSNAME, JSON_BASE_NAME, jsonObject);
     centerX = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERX, jsonObject);

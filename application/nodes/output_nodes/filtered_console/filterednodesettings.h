@@ -4,8 +4,9 @@
 #include <QJsonObject>
 
 #include "nodesettingsbase.h"
-#include "json_defs.h"
 #include "filtertag.h"
+
+#include "json_defs.h"
 
 #define DEFAULT_CONSOLE_BLOCK_COUNT 10000
 
@@ -38,8 +39,8 @@ public:
     bool getFilterOnWindow() const;
     void setFilterOnWindow(bool value);
 
-    QJsonObject *serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog);
-    void deserialize(QJsonObject &jsonObject, SerializationHandler &handler);
+    QJsonObject *serialize(SerializationHandler &handler);
+    void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;

@@ -10,6 +10,7 @@ SOURCES += \
     circularbuffer/circularbufferreader.cpp \
     flowdata.cpp \
     flowwidget.cpp \
+    loadstore/deserialization_handler.cpp \
     loadstore/loadstore.cpp \
     loadstore/serialization_handler.cpp \
     main.cpp \
@@ -64,11 +65,12 @@ HEADERS += \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \
+    loadstore/deserialization_handler.h \
     loadstore/json_defs.h \
     loadstore/loadstore.h \
+    loadstore/serialistationexception.h \
     loadstore/serializable.h \
     loadstore/serialization_handler.h \
-    loadstore/serialization_settings.h \
     main.h \
     mainwindow.h \
     nodes/inputnode.h \

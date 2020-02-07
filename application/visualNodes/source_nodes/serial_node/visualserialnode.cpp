@@ -124,7 +124,7 @@ void VisualSerialNode::releasePropertiesWidget()
         propertyWidget = nullptr;
     }
 }
-QJsonObject *VisualSerialNode::serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog)
+QJsonObject *VisualSerialNode::serialize(SerializationHandler &handler)
 {
     return nullptr;
 }

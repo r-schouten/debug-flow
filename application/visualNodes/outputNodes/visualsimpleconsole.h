@@ -13,7 +13,7 @@ public:
     void activate();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     VisualNodeBase *clone();
-    QJsonObject *serialize(SerializationSettings_t &serialisationSettings, SerializationHandler &serialisationErrorLog);
+    QJsonObject *serialize(SerializationHandler &handler);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

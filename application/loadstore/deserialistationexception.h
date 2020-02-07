@@ -5,15 +5,9 @@
 #include <QString>
 #include <QStringList>
 #include <exception>
-
+#include <serialistationexception.h>
 using std::exception;
 
-enum ErrorLevel
-{
-    WARNING = 0,
-    ERROR = 1,
-    FATAL = 2
-};
 class DeserialistationException : public exception
 {
 public:
