@@ -1,4 +1,3 @@
-#include "propertieswidgetnoneselected.h"
 #include "visualnodebase.h"
 
 VisualNodeBase::VisualNodeBase()
@@ -34,7 +33,7 @@ VisualNodeBase::~VisualNodeBase()
 };
 QRectF VisualNodeBase::boundingRect() const
 {
-    return QRectF(-5,0,width+10,height);
+    return QRectF(-CONNECTOR_DIAMETER/2,0,width+CONNECTOR_DIAMETER,height);
 }
 QRectF VisualNodeBase::innerRect() const
 {
@@ -43,13 +42,13 @@ QRectF VisualNodeBase::innerRect() const
 
 void VisualNodeBase::addInputConnector()
 {
-    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT,10,M_PI);
+    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT, CONNECTOR_DIAMETER,M_PI);
     connectors.append(connector);
 }
 
 void VisualNodeBase::addOutputConnector()
 {
-    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT,10,0);
+    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT, CONNECTOR_DIAMETER,0);
     connectors.append(connector);
 }
 void VisualNodeBase::makeConnection(VisualConnection* connection)
@@ -257,7 +256,7 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
                     painter->setBrush(QColor::fromRgbF(1,0,0,0.3));
                 }
             }
-            painter->drawEllipse(connector->getRect(10));
+            painter->drawEllipse(connector->getRect(1.0));
 
 
             painter->setPen(nodeStyle->connectorPen);
@@ -282,7 +281,7 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     painter->setPen(nodeStyle->nodeBackgroundColor);
     painter->setBrush(nodeStyle->nodeBackgroundColor);
 
-    painter->drawRoundRect(rect,10,10);
+    painter->drawRoundRect(rect,CONNECTOR_DIAMETER, CONNECTOR_DIAMETER);
 
     painter->setPen(nodeStyle->nodeCategoryColor);
     painter->setBrush(nodeStyle->nodeCategoryColor);
@@ -300,7 +299,7 @@ void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QStr
     }
     painter->setPen(pen);
     painter->setBrush(Qt::NoBrush);
-    painter->drawRoundRect(rect,10,10);
+    painter->drawRoundRect(rect,CONNECTOR_DIAMETER, CONNECTOR_DIAMETER);
 
 
     painter->setFont(nodeStyle->titleFont);
@@ -321,7 +320,7 @@ void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
     while(iterator.hasNext())
     {
         Connector* connector = iterator.next();
-        if(connector->getRect(5).contains(event->pos()))
+        if(connector->getRect(CONNECTOR_MARGINS).contains(event->pos()))
         {
             emit connectorPressed(this,connector);
             pressedOnConnection = true;
@@ -357,7 +356,7 @@ void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     while(iterator.hasNext())
     {
         Connector* connector = iterator.next();
-        if(connector->getRect(5).contains(event->pos()))
+        if(connector->getRect(CONNECTOR_MARGINS).contains(event->pos()))
         {
             emit connectorReleased(this,connector);
         }

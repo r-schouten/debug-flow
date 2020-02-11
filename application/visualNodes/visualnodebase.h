@@ -11,6 +11,7 @@
 #include "visualconnection.h"
 #include "selectionmanager.h"
 #include "propertywidgetbase.h"
+#include "propertieswidgetnoneselected.h"
 
 #include "serializable.h"
 #include "json_defs.h"
@@ -36,7 +37,9 @@ public:
     int width = 125;
     int height = 50;
 
+    //size including connectors
     QRectF boundingRect() const;
+    //size of the rectangle
     QRectF innerRect() const;
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) = 0;

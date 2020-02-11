@@ -32,6 +32,8 @@
                 <header_search_path>visualNodes/source_nodes/serial_node</header_search_path>
                 <header_search_path>widgets</header_search_path>
                 <header_search_path>windows</header_search_path>
+                <header_search_path>loadstore</header_search_path>
+                <header_search_path>userinterface</header_search_path>
             </header_search_paths>
             <name>C++ Source Group</name>
             <pch_flags>

@@ -8,6 +8,7 @@ Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, i
 {
 
 }
+
 Connector::~Connector()
 {
     QListIterator<VisualConnection*> iterator(connections);

@@ -11,3 +11,4 @@ const int graphicsViewOriginY = 500;
 
 #define TITLE_BAR_HEIGHT 20
 #define CONNECTOR_MARGINS 8
+#define CONNECTOR_DIAMETER 10
