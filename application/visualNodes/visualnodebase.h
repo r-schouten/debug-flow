@@ -17,6 +17,10 @@
 #include "json_defs.h"
 #include "serialization_handler.h"
 #include "deserialization_handler.h"
+
+#include "movecommand.h"
+
+class UndoRedoManager;
 class SelectionManager;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
@@ -32,8 +36,9 @@ public:
     QString shortDiscription = "";
 
     //position on the scene
-    int centerX = graphicsViewOriginX;
-    int centerY = graphicsViewOriginY;
+    QPoint nodePosition;
+    //used for undo
+    QPoint oldPosition;
     int width = 125;
     int height = 50;
 
@@ -86,6 +91,8 @@ protected:
     QList<Connector*> connectors;
     //note that selection manager is a singleton
     SelectionManager* selectionManager = nullptr;
+    //note that selection manager is a singleton
+    UndoRedoManager* undoRedoManager = nullptr;
 
     //the unique id is used to connect nodes and connectors when deserializing
     int64_t uniqueId = 0;

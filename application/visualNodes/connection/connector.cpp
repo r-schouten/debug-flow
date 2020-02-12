@@ -58,17 +58,21 @@ void Connector::disconnect(VisualConnection *connection)
             {
                 inputNode->deleteSubscription(outputNode);
             }
+            else
+            {
+                qDebug("[error][Connector] can't cast to input noe or ouput node");
+            }
         }
         if(connections.removeOne(connection))
         {
 
         }
         else {
-            qDebug("[error,Connector] remove connection failed");
+            qDebug("[error][Connector] remove connection failed");
         }
     }
     else {
-        qDebug("[error,Connector] disconnect failed connection not in connections");
+        qDebug("[error][Connector] disconnect failed connection not in connections");
     }
 }
 

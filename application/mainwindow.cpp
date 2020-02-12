@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
      m_ui->setupUi(this);
      connect(m_ui->saveAction,&QAction::triggered,this,&saveFlow);
+     connect(m_ui->undoAction,&QAction::triggered,this,&undo);
+     connect(m_ui->redoAction,&QAction::triggered,this,&redo);
+
      newFlow();
 }
 
@@ -63,5 +66,15 @@ void MainWindow::resumeFlow()
 void MainWindow::clearFlow()
 {
 
+}
+
+void MainWindow::undo()
+{
+    activeFlow->undo();
+}
+
+void MainWindow::redo()
+{
+    activeFlow->redo();
 }
 

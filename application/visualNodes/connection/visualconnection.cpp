@@ -29,6 +29,7 @@ VisualConnection::~VisualConnection()
         connection2Set = false;
     }
     emit onDelete(this);
+
 }
 
 void VisualConnection::draw(QPainter* painter)

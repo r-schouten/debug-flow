@@ -2,13 +2,14 @@
 
 FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 {
-    m_ui = new Ui_flowWidget();
-    m_ui->setupUi(this);
+    flow_ui = new Ui_flowWidget();
+    flow_ui->setupUi(this);
     //when a node in a scene is clicked its property's will been shown in the right tab bar, to give the nodes acces to the tab bar the selectionmanager have a propertyWidgetManager to open the property's on a node is selected
-    propertyWidgetManager = new PropertyWidgetManager(m_ui->propertiesWidget,m_ui->rightTabWidget);
+    propertyWidgetManager = new PropertyWidgetManager(flow_ui->propertiesWidget,flow_ui->rightTabWidget);
+
     SelectionManager::getInstance()->setPropertyWidgetManager(propertyWidgetManager);
 
-    windowManager = new WindowManager(m_ui->mdiArea);
+    windowManager = new WindowManager(flow_ui->mdiArea);
 
     flowData = new FlowData(windowManager);
 
@@ -16,19 +17,22 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 
     loadStore = new LoadStore(flowData, nodeScene);
 
-    m_ui->graphicsView->setScene(nodeScene);
+    undoRedoManager = UndoRedoManager::get();
+    undoRedoManager->setData(flow_ui->undoRedoWidget, nodeScene, loadStore);
 
-    itemsList = new ItemList(m_ui->resourceList,nodeScene);
+    flow_ui->graphicsView->setScene(nodeScene);
+
+    itemsList = new ItemList(flow_ui->resourceList,nodeScene);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &FlowWidget::updateUI);
     UiUpdatetimer->start(30);
-    m_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
+    flow_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
 }
 FlowWidget::~FlowWidget()
 {
     delete UiUpdatetimer;
-    delete m_ui;
+    delete flow_ui;
     delete nodeScene;
     delete itemsList;
     delete windowManager;
@@ -80,4 +84,14 @@ QJsonObject* FlowWidget::save()
        handler.printMessages();
    }
    return completeJson;
+}
+
+void FlowWidget::undo()
+{
+    undoRedoManager->undo();
+}
+
+void FlowWidget::redo()
+{
+    undoRedoManager->redo();
 }

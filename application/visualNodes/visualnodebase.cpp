@@ -3,6 +3,7 @@
 VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
+    undoRedoManager = UndoRedoManager::get();
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
@@ -251,8 +252,6 @@ NodeBase *VisualNodeBase::getNode()
     return baseNode;
 }
 
-
-
 void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 {
     QListIterator<Connector*> iterator(connectors);
@@ -294,7 +293,7 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 
 void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QString name)
 {
-    setPos(centerX,centerY);
+    setPos(nodePosition.x(),nodePosition.y());
     QRectF rect = innerRect();
 
     painter->setPen(nodeStyle->nodeBackgroundColor);
@@ -365,8 +364,7 @@ void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void VisualNodeBase::moveBy(QPointF& by)
 {
-    centerX += by.x();
-    centerY += by.y();
+    nodePosition += by.toPoint();
 }
 void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -423,8 +421,8 @@ QJsonObject *VisualNodeBase::serializeBase(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_BASE_NAME,name);
-    jsonObject->insert(JSON_BASE_CENTERX,centerX);
-    jsonObject->insert(JSON_BASE_CENTERY,centerY);
+    jsonObject->insert(JSON_BASE_CENTERX,nodePosition.x());
+    jsonObject->insert(JSON_BASE_CENTERY,nodePosition.y());
     jsonObject->insert(JSON_BASE_UNIQUE_ID, getUniqueId());
 
     return jsonObject;
@@ -441,7 +439,7 @@ int64_t VisualNodeBase::getUniqueId()
 void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     name = handler.findStringSafe(CLASSNAME, JSON_BASE_NAME, jsonObject);
-    centerX = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERX, jsonObject);
-    centerY = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERY, jsonObject);
+    nodePosition.rx() = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERX, jsonObject);
+    nodePosition.ry() = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERY, jsonObject);
     uniqueId = handler.findInt64Safe(CLASSNAME, JSON_BASE_UNIQUE_ID, jsonObject);
 }

@@ -112,7 +112,7 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     return newNode;
 }
 
-void LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
+VisualConnection* LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
 {
     Connector* connector1 = nullptr;
     Connector* connector2 = nullptr;
@@ -143,10 +143,11 @@ void LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, Deserializati
     {
         VisualConnection* newConnection = new VisualConnection(connector1, connector2);
         scene->addConnection(newConnection);
+        return newConnection;
     }
     else
     {
         handler.logError(CLASSNAME, "deserializing connection failed",jsonNodeObject);
     }
-
+    return nullptr;
 }

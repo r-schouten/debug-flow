@@ -29,6 +29,7 @@ public:
     QSplitter *sceneSplitter = nullptr;
     QTabWidget* rightTabWidget = nullptr;
     QScrollArea* propertiesWidget = nullptr;
+    QScrollArea* undoRedoWidget = nullptr;
     QWidget* secondTab = nullptr;
 
     void setupUi(QWidget* flowWidget)
@@ -92,6 +93,13 @@ public:
         propertiesWidget->setObjectName("propertiesWidget");
         propertiesWidget->setSizePolicy(sizePolicy1);
         rightTabWidget->addTab(propertiesWidget,"node properties");
+
+        //properties tab in right tab widget
+        undoRedoWidget = new QScrollArea(rightTabWidget);
+        undoRedoWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        undoRedoWidget->setObjectName("undo redo Widget");
+        undoRedoWidget->setSizePolicy(sizePolicy1);
+        rightTabWidget->addTab(undoRedoWidget,"undo redo");
 
         //new tab, for testing
         secondTab = new QWidget(rightTabWidget);

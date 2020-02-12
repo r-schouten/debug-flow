@@ -9,6 +9,8 @@
 #include <qevent.h>
 #include <QPainter>
 
+#include <QAction>
+
 #include "visualoutputnodebase.h"
 #include "visualnodebase.h"
 #include "utils.h"
@@ -17,6 +19,14 @@
 
 #include "flowdata.h"
 #include "serializable.h"
+
+#include "undoredomanager.h"
+#include "deleteconnectioncommand.h"
+#include "movecommand.h"
+#include "createconnectioncommand.h"
+class DeleteConnectionCommand;
+class CreateConnectionCommand;
+class FlowData;
 class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -37,7 +47,9 @@ private:
     VisualConnection* currentTrackingConnection = nullptr;
 
     //selectionmanager singleton
-    SelectionManager* selectionManager;
+    SelectionManager* selectionManager = nullptr;
+    //mementomanager (undo redo) singleton
+    UndoRedoManager* undoRedoManager = nullptr;
 
     //if true selected nodes will follow the mouse movement
     bool moveSelected = false;

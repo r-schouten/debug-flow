@@ -4,10 +4,13 @@ NodeScene::NodeScene(FlowData *_flowData)
     :flowData(_flowData)
 {
     selectionManager = SelectionManager::getInstance();
+    undoRedoManager = UndoRedoManager::get();
+
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
     setItemIndexMethod(NoIndex);
+
 }
 
 //this methode takes the ownership over
@@ -70,6 +73,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
     VisualConnection* newConnection = new VisualConnection(connector);
     addConnection(newConnection);
     currentTrackingConnection = newConnection;
+    currentTrackingConnection->setMousePos(lastMousePosition.toPoint());
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
@@ -98,6 +102,11 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             currentTrackingConnection->setConnector1(connector);
             //make the low level connection between the nodes for data interaction
             node->makeConnection(currentTrackingConnection);
+
+            //push undo point
+            CreateConnectionCommand* connectionCommand = new CreateConnectionCommand(currentTrackingConnection);
+            undoRedoManager->pushChange(connectionCommand);
+
             //don't track anymore
             currentTrackingConnection = nullptr;
         }
@@ -107,6 +116,11 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             currentTrackingConnection->setConnector2(connector);
             //make the low level connection between the nodes for data interaction
             node->makeConnection(currentTrackingConnection);
+
+            //push undo point
+            CreateConnectionCommand* connectionCommand = new CreateConnectionCommand(currentTrackingConnection);
+            undoRedoManager->pushChange(connectionCommand);
+
             //don't track anymore
             currentTrackingConnection = nullptr;
         }
@@ -132,6 +146,7 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 }
 void NodeScene::onConnectionDelete(VisualConnection* connection)
 {
+
     if(flowData->connections.removeOne(connection))
     {
 
@@ -192,8 +207,7 @@ void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(nodePlacementState != NodePlacementState::NOT_PLACING)
     {
             nodeToPlace->setVisible(true);
-            nodeToPlace->centerX = event->scenePos().x();
-            nodeToPlace->centerY = event->scenePos().y();
+            nodeToPlace->nodePosition = event->scenePos().toPoint();
     }
     if(currentTrackingConnection)
     {
@@ -217,13 +231,16 @@ void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
             VisualNodeBase* node = iterator.next();
             node->moveBy(mouseMovement);
         }
-        lastMousePosition = event->scenePos();
+
     }
+    lastMousePosition = event->scenePos();
     QGraphicsScene::mouseMoveEvent(event);
 }
 
 void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    //make a undo redo event
+    undoRedoManager->registerEvent(*event);
     //qDebug("[debug][NodeScene] mousepress");
 
     //for placement of a new object
@@ -260,6 +277,12 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if(selectionManager->isUpdated())
         {
             moveSelected = true;
+            QListIterator<VisualNodeBase*>iterator(selectionManager->selectedNodes);
+            while(iterator.hasNext())
+            {
+                VisualNodeBase* node = iterator.next();
+                node->oldPosition = node->nodePosition;
+            }
             lastMousePosition = event->scenePos();
         }
         else
@@ -273,7 +296,22 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    moveSelected = false;
+    //make a undo redo event
+    undoRedoManager->registerEvent(*event);
+    if(moveSelected)
+    {
+        QListIterator<VisualNodeBase*>iterator(selectionManager->selectedNodes);
+        while(iterator.hasNext())
+        {
+            VisualNodeBase* node = iterator.next();
+            //save this change to the undo stack
+            undoRedoManager->pushChange(new MoveCommand(node,node->oldPosition, node->nodePosition));
+
+        }
+        moveSelected = false;
+    }
+
+
 //    if(currentTrackingConnection)
 //    {
 //        QListIterator<VisualNodeBase*>iterator(flowData->nodes);
@@ -289,11 +327,20 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Delete)
     {
+        //make a undo redo event
+        undoRedoManager->registerEvent(*event);
+
         QListIterator<VisualConnection*>iterator(selectionManager->selectedConnections);
         while(iterator.hasNext())
         {
             VisualConnection* connection = iterator.next();
             //connection will delete notify its dependend objects
+
+            if(connection->connection1Set && connection->connection2Set)
+            {
+                CommandBase* command = new DeleteConnectionCommand(connection);
+                UndoRedoManager::get()->pushChange(command);
+            }
             delete connection;
         }
         QListIterator<VisualNodeBase*>iterator2(selectionManager->selectedNodes);
@@ -307,6 +354,9 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
     }
     if ((event->key() == Qt::Key_Escape)||(event->key() == Qt::Key_Delete))
     {
+        //make a undo redo event
+        undoRedoManager->registerEvent(*event);
+
         selectionManager->clearSelected();
         if(currentTrackingConnection)
         {
@@ -314,4 +364,5 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
             currentTrackingConnection = nullptr;
         }
     }
+
 }

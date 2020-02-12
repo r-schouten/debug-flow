@@ -43,6 +43,8 @@ public:
     QAction *pauseAction = nullptr;
     QAction *resetAction = nullptr;
     QAction *resumeAction = nullptr;
+    QAction *undoAction = nullptr;
+    QAction *redoAction = nullptr;
     void setupUi(QMainWindow *MainWindow)
     {
         //mainwindow
@@ -56,94 +58,8 @@ public:
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
 
-
-//        //central widget
-//        centralWidget = new QWidget(MainWindow);
-//        centralWidget->setObjectName("centralWidget");
-//        centralWidget->setEnabled(true);
-//        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
-//        sizePolicy1.setHorizontalStretch(0);
-//        sizePolicy1.setVerticalStretch(0);
-//        sizePolicy1.setHeightForWidth(centralWidget->sizePolicy().hasHeightForWidth());
-//        centralWidget->setSizePolicy(sizePolicy1);
-
-
-//        //layout and splitter
-//        verticalLayout = new QVBoxLayout(centralWidget);
-//        verticalLayout->setSpacing(6);
-//        verticalLayout->setContentsMargins(11, 11, 11, 11);
-//        verticalLayout->setObjectName("verticalLayout");
-
-//        splitter = new QSplitter(centralWidget);
-//        splitter->setObjectName("splitter");
-//        splitter->setEnabled(true);
-//        sizePolicy1.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
-//        splitter->setSizePolicy(sizePolicy1);
-//        splitter->setOrientation(Qt::Vertical);
-//        splitter->setOpaqueResize(true);
-//        splitter->setHandleWidth(5);
-
-
-//        sceneSplitter = new QSplitter(splitter);
-//        sceneSplitter->setObjectName("sceneSplitter");
-//        sceneSplitter->setEnabled(true);
-
-//        sizePolicy1.setHeightForWidth(sceneSplitter->sizePolicy().hasHeightForWidth());
-//        sceneSplitter->setSizePolicy(sizePolicy1);
-//        sceneSplitter->setOrientation(Qt::Horizontal);
-//        sceneSplitter->setOpaqueResize(true);
-//        sceneSplitter->setHandleWidth(3);
-
-//        //resourcelist
-//        resourceList = new QTreeWidget(sceneSplitter);
-//        resourceList->setObjectName("treeWidget");
-//        resourceList->setMinimumSize(QSize(125,100));
-
-//        //nodescene
-//        graphicsView = new GraphicsView(sceneSplitter);
-//        graphicsView->setObjectName("nodesScene");
-//        sizePolicy1.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
-//        graphicsView->setSizePolicy(sizePolicy1);
-//        graphicsView->setMinimumSize(QSize(0, 200));
-
-//        sceneSplitter->addWidget(graphicsView);
-//        //right tab widget
-//        rightTabWidget = new QTabWidget(sceneSplitter);
-//        rightTabWidget->setSizePolicy(sizePolicy1);
-//        rightTabWidget->setObjectName("rightTabWidget");
-//        rightTabWidget->setMinimumSize(QSize(125,100));
-
-//        //properties tab in right tab widget
-//        propertiesWidget = new QScrollArea(rightTabWidget);
-//        propertiesWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//        propertiesWidget->setObjectName("propertiesWidget");
-//        propertiesWidget->setSizePolicy(sizePolicy1);
-//        rightTabWidget->addTab(propertiesWidget,"node properties");
-
-//        //new tab, for testing
-//        secondTab = new QWidget(rightTabWidget);
-//        secondTab->setObjectName("propertiesWidget");
-//        secondTab->setSizePolicy(sizePolicy1);
-//        rightTabWidget->addTab(secondTab,"second tab");
-
-//        sceneSplitter->setCollapsible(0,false);
-//        sceneSplitter->setCollapsible(1,false);
-//        sceneSplitter->setCollapsible(2,false);
-//        sceneSplitter->setSizes(QList<int>({100, 400, 50}));
-
-//        splitter->addWidget(sceneSplitter);
-
-//        //mdi area
-//        mdiArea = new QMdiArea(splitter);
-//        mdiArea->setObjectName("mdiArea");
-//        mdiArea->setDocumentMode(false);
-//        splitter->addWidget(mdiArea);
-
-//        verticalLayout->addWidget(splitter);
-
         createToolbar(MainWindow);
 
-        //MainWindow->setCentralWidget(centralWidget);
         retranslateUi(MainWindow);
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -158,6 +74,7 @@ public:
     {
         QMenu *fileMenu = MainWindow->menuBar()->addMenu("file");
         QMenu *flowMenu = MainWindow->menuBar()->addMenu("flow");
+        QMenu *editMenu = MainWindow->menuBar()->addMenu("edit");
         QToolBar *fileToolBar = MainWindow->addToolBar("load save");
 
 
@@ -203,6 +120,17 @@ public:
         flowMenu->addAction(resetAction);
 
         fileToolBar->setMovable(false);
+
+        //menu only
+        //undo action
+        undoAction = new QAction("undo", MainWindow);
+        editMenu->addAction(undoAction);
+        undoAction->setShortcut(QKeySequence::Undo);
+
+        //redo  action
+        redoAction = new QAction("redo", MainWindow);
+        editMenu->addAction(redoAction);
+        redoAction->setShortcut(QKeySequence::Redo);
 
     }
 };

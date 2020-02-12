@@ -3,6 +3,7 @@
 #include "windowmanager.h"
 
 #include "deserialization_handler.h"
+
 class VisualOutputNodeBase : public VisualNodeBase
 {
 protected:
@@ -13,7 +14,5 @@ public:
     virtual void setWindowManager(WindowManager* _windowManager) = 0;
 signals:
     void WindowDeleted(VisualOutputNodeBase* window);
-
-
 
 };

@@ -1,6 +1,6 @@
 #include "selectionmanager.h"
 
-SelectionManager* SelectionManager::singletonSelectionManger = nullptr;
+SelectionManager SelectionManager::singletonSelectionManger;
 
 void SelectionManager::setPropertyWidgetManager(PropertyWidgetManager *value)
 {
@@ -9,11 +9,7 @@ void SelectionManager::setPropertyWidgetManager(PropertyWidgetManager *value)
 
 SelectionManager *SelectionManager::getInstance()
 {
-    if(singletonSelectionManger == nullptr)
-    {
-        singletonSelectionManger = new SelectionManager;
-    }
-    return singletonSelectionManger;
+    return &singletonSelectionManger;
 }
 
 bool SelectionManager::isSelected(VisualNodeBase* node)

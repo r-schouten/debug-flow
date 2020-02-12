@@ -16,6 +16,8 @@
 
 #include "serialization_handler.h"
 #include "deserialization_handler.h"
+
+#include "undoredomanager.h"
 class FilteredConsole;
 class FlowWidget : public QWidget
 {
@@ -26,8 +28,10 @@ public:
 
     void open(QJsonObject &jsonObject);
     QJsonObject *save();
+    void undo();
+    void redo();
 private:
-    Ui_flowWidget *m_ui = nullptr;
+    Ui_flowWidget *flow_ui = nullptr;
 
     NodeScene *nodeScene = nullptr;
     ItemList* itemsList = nullptr;
@@ -36,6 +40,7 @@ private:
     PropertyWidgetManager* propertyWidgetManager = nullptr;
     FlowData* flowData = nullptr;
     LoadStore* loadStore = nullptr;
+    UndoRedoManager* undoRedoManager = nullptr;
 public slots:
     void updateUI();
 

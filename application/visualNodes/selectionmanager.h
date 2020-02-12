@@ -1,6 +1,4 @@
 #pragma once
-#include "visualnodebase.h"
-#include "visualconnection.h"
 #include "propertywidgetmanager.h"
 
 class Connector;
@@ -12,7 +10,7 @@ class   SelectionManager
 {
 private:
     SelectionManager(){}
-    static SelectionManager* singletonSelectionManger;
+    static SelectionManager singletonSelectionManger;
 
     bool hadUpdate = false;
 

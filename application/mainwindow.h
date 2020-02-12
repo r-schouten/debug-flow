@@ -32,6 +32,8 @@ private slots:
     void pauseFlow();
     void resumeFlow();
     void clearFlow();
+    void undo();
+    void redo();
 private:
     Ui::MainWindow *m_ui = nullptr;
     FlowWidget* activeFlow = nullptr;

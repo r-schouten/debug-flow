@@ -9,6 +9,7 @@
 
 #include "serializable.h"
 
+#include "undoredomanager.h"
 class SelectionManager;
 class Connector;
 class VisualNodeBase;
