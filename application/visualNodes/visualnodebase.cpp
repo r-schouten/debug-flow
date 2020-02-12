@@ -407,6 +407,7 @@ void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
+    Q_UNUSED(event);
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {

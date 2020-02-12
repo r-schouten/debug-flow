@@ -30,7 +30,8 @@ static QPixmap QPixmapFromItem(QGraphicsItem *item){
     QPixmap pixmap(item->boundingRect().size().toSize());
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
-    painter.setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing);
+    painter.setRenderHints(QPainter::TextAntialiasing);
     QStyleOptionGraphicsItem opt;
     item->paint(&painter, &opt);
     return pixmap;
@@ -104,7 +105,7 @@ void ItemList::itemClicked(QTreeWidgetItem *item, int column)
             nodeScene->insertNode(myItem->getNodeCopy());
         }
         else {
-            qDebug("[verbose,ItemList] not inherited from MyTreeWidgetItem",column);
+            qDebug("[verbose,ItemList] not inherited from MyTreeWidgetItem");
         }
     }
 

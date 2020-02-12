@@ -8,6 +8,7 @@ VisualSerialNode::VisualSerialNode()
 VisualSerialNode::VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
     :VisualSourceNodeBase(baseJson, handler)
 {
+    Q_UNUSED(derivedJson);
     construct();
 }
 void VisualSerialNode::construct()
@@ -49,6 +50,8 @@ VisualNodeBase* VisualSerialNode::clone()
 }
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
 //    if(node->settings->nodeSettings.running)
 //    {

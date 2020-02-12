@@ -49,6 +49,7 @@ void NodeScene::addConnection(VisualConnection* newConnection)
 }
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 {
+    Q_UNUSED(node);
     //qDebug("[debug][NodeScene] connectorPressed");
     anyConnectorPressed = true;
 
@@ -147,6 +148,7 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
 
 void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
+    Q_UNUSED(rect);
     painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
 
     QListIterator<VisualConnection*>iterator(flowData->connections);
@@ -272,14 +274,14 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     moveSelected = false;
-    if(currentTrackingConnection)
-    {
-        QListIterator<VisualNodeBase*>iterator(flowData->nodes);
-        while(iterator.hasNext())
-        {
-            VisualNodeBase* node = iterator.next();
-        }
-    }
+//    if(currentTrackingConnection)
+//    {
+//        QListIterator<VisualNodeBase*>iterator(flowData->nodes);
+//        while(iterator.hasNext())
+//        {
+//            VisualNodeBase* node = iterator.next();
+//        }
+//    }
     QGraphicsScene::mouseReleaseEvent(event);
 }
 

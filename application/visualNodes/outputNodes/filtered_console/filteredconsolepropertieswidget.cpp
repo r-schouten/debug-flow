@@ -143,10 +143,12 @@ void FilteredConsolePropertiesWidget::hideContextStateChanged()
 }
 void FilteredConsolePropertiesWidget::horizontalScrollIndexChanged(int index)
 {
+    Q_UNUSED(index);
     settings->setHorizontalScroll((HorizontalScrollOptions)horizontalScrollComboBox->currentData().toInt());
 }
 void FilteredConsolePropertiesWidget::maxLinesIndexChanged(int index)
 {
+    Q_UNUSED(index);
     settings->setMaxLinesComboBox(maxLinesComboBox->currentData().toInt());
 }
 void FilteredConsolePropertiesWidget::filterOnWindowStateChanged()

@@ -34,8 +34,8 @@ public:
     ConnectorType type;
     QList<VisualConnection*> connections;
 private:
-    int connectionDiameter;
     VisualNodeBase* parent = nullptr;
+    int connectionDiameter;
 };
 
 

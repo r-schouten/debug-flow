@@ -52,7 +52,7 @@ private:
     QPoint mousePos;
     SelectionManager* selectionManager = nullptr;
     ConnectionStyle* style = nullptr;
-    void makePainterPath(PathStyle &pathStyle);
+    void makePainterPath();
 
     //only if anything is changed the painterpath need to be calculated again
     bool settingsChanged = true;

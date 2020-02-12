@@ -8,6 +8,7 @@ VisualFilteredConsole::VisualFilteredConsole()
 VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
     :VisualOutputNodeBase(baseJson, handler)
 {
+    Q_UNUSED(derivedJson);
     construct();
     node->nodeSettings->deserialize(settingsJson, handler);
 }
@@ -76,6 +77,8 @@ void VisualFilteredConsole::releasePropertiesWidget()
 
 void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     paintBase(painter,this,name);
     drawConnectors(painter,this);
 }

@@ -287,6 +287,7 @@ bool SerialNodePropertiesWidget::IsPortAvailable()
 }
 void SerialNodePropertiesWidget::handleSerialPortError(QSerialPort::SerialPortError error)
 {
+    Q_UNUSED(error)
     updateButtonStates();
 }
 void SerialNodePropertiesWidget::connectClicked()

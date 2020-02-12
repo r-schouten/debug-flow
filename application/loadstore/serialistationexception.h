@@ -25,8 +25,8 @@ public:
         return QString("%1 serialisation exception  from %2: \"%3\"").arg(errorLevelString.at(errorLevel), callingClass, message).toLatin1();
     }
 private:
-    QString callingClass;
     ErrorLevel errorLevel;
+    QString callingClass;
     QString message;
 };
 

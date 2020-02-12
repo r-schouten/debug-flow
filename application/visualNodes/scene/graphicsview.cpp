@@ -18,6 +18,8 @@ GraphicsView::GraphicsView(QWidget *parent)
 }
 void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
 {
+    Q_UNUSED(fromScenePoint);
+    Q_UNUSED(toScenePoint);
     QList<QGraphicsItem*> selectedItems = items(rubberBandRect,Qt::ItemSelectionMode::IntersectsItemBoundingRect);
     QListIterator<QGraphicsItem*> iterator(selectedItems);
     if(iterator.hasNext())

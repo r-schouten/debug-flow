@@ -65,7 +65,7 @@ void VisualConnection::draw(QPainter* painter)
         painter->setPen(style->selectedPen);
     }
 
-    makePainterPath(style->pathStyle);
+    makePainterPath();
     painter->drawPath(painterPath);
 
     if(connection1Set)
@@ -147,7 +147,7 @@ double calculateAngleBetweenPoints(QPointF& point1, QPointF& point2)
     double deltaY = point2.y() - point1.y();
     return atan2(deltaY,deltaX);
 }
-void VisualConnection::makePainterPath(PathStyle& pathStyle)
+void VisualConnection::makePainterPath()
 {
     if(style->pathStyle != oldPathStyle)
     {

@@ -27,8 +27,8 @@ public:
         qDebug(strJson.toLatin1());
     }
 private:
-    QString callingClass;
     ErrorLevel errorLevel;
+    QString callingClass;
     QString message;
     QJsonObject jsonObject;
 };
