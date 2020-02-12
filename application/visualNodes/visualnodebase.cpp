@@ -392,7 +392,7 @@ void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
         if(connector->getRect(CONNECTOR_MARGINS).contains(event->pos()))
         {
             selectionManager->hoveredConnector = connector;
-            setToolTip("test tool tip");
+            setToolTip(connector->name);
 
         }
         else {
@@ -400,7 +400,7 @@ void VisualNodeBase::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
             {
                 selectionManager->hoveredConnector = nullptr;
             }
-            setToolTip(("no tooltip"));
+            setToolTip(this->name);
         }
     }
 }
