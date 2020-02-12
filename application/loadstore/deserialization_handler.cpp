@@ -36,12 +36,16 @@ void DeserializationHandler::logFatal(QString callingClass, QString message, QJs
 
 void DeserializationHandler::printMessages(bool printJson)
 {
-    qDebug("---serialisation error log---");
+    qDebug("---deserialisation error log---");
     QListIterator<DeserialistationException> it(occuredErrors);
     while(it.hasNext())
     {
         DeserialistationException exception = it.next();
         qDebug(exception.what());
+        if(printJson)
+        {
+            exception.printJson();
+        }
     }
 }
 
@@ -94,8 +98,12 @@ QString DeserializationHandler::findStringSafe(QString callingClass, QString ele
         return "nullptr";
     }
 }
-
 int DeserializationHandler::findIntSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel)
+{
+    return findInt64Safe(callingClass, element, jsonObject, errorLevel);
+}
+
+int64_t DeserializationHandler::findInt64Safe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel)
 {
     QJsonValue value = jsonObject.find(element).value();
     if(value.isDouble())//works for both not found and not a string

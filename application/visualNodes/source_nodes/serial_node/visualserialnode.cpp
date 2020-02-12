@@ -2,10 +2,20 @@
 
 VisualSerialNode::VisualSerialNode()
 {
+    construct();
+}
+
+VisualSerialNode::VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
+    :VisualSourceNodeBase(baseJson, handler)
+{
+    construct();
+}
+void VisualSerialNode::construct()
+{
     node = new SerialNode();
     baseNode = node;
     name = "Serial node";
-    shortDiscription = "this node provide acces to serial ports";
+    shortDiscription = "this node provide access to serial ports";
     if(node->hasInput)
     {
         addInputConnector();
@@ -16,7 +26,6 @@ VisualSerialNode::VisualSerialNode()
     }
     height = 80;
 }
-
 VisualSerialNode::~VisualSerialNode()
 {
     if(node != nullptr)
@@ -126,6 +135,19 @@ void VisualSerialNode::releasePropertiesWidget()
 }
 QJsonObject *VisualSerialNode::serialize(SerializationHandler &handler)
 {
-    return nullptr;
+    QJsonObject *jsonObject = new QJsonObject();
+
+    jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);
+
+    return jsonObject;
+}
+
+bool VisualSerialNode::classNameEquals(QString name)
+{
+    if(name.compare(staticMetaObject.className(),Qt::CaseInsensitive) == 0)
+    {
+        return true;
+    }
+    return false;
 }
 

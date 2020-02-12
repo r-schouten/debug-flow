@@ -3,8 +3,8 @@
 #include <inputnode.h>
 
 
-Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter, double angle)
-    :parent(parent),x(x),y(y),type(type),connectionDiameter(diameter),angle(angle)
+Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter, double angle, QString name)
+    :parent(parent),x(x),y(y),type(type),connectionDiameter(diameter),angle(angle), name(name)
 {
 
 }

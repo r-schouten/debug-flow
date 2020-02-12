@@ -86,7 +86,6 @@ void VisualConnection::draw(QPainter* painter)
     }
     painter->drawEllipse(point2,5,5);
 
-
 }
 QPointF calculateBezierPoint(QPointF &startPoint, double angle, int distance)
 {
@@ -299,3 +298,38 @@ void VisualConnection::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 }
+
+QJsonObject *VisualConnection::serialize(SerializationHandler &handler)
+{
+    QJsonObject* jsonObject = new QJsonObject;
+    if(handler.saveTemp() == false)
+    {
+        if((connection1Set == false) || (connection2Set == false))
+        {
+            //this connection is temporary
+            return nullptr;
+        }
+    }
+
+    int64_t connector1Id = 0;
+    QString connector1Name = "";
+    if(connection1Set){
+        connector1Id = connector1->getParent()->getUniqueId();
+        connector1Name = connector1->name;
+    }
+    jsonObject->insert(JSON_CONNECTION_CONNECTOR1_NODE_ID,connector1Id);
+    jsonObject->insert(JSON_CONNECTION_CONNECTOR1_NAME,connector1Name);
+
+    int64_t connector2Id = 0;
+    QString connector2Name = "";
+    if(connection2Set){
+        connector2Id = connector2->getParent()->getUniqueId();
+        connector2Name = connector2->name;
+    }
+    jsonObject->insert(JSON_CONNECTION_CONNECTOR2_NODE_ID,connector2Id);
+    jsonObject->insert(JSON_CONNECTION_CONNECTOR2_NAME,connector2Name);
+
+
+    return jsonObject;
+}
+

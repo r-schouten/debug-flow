@@ -11,20 +11,20 @@ NodeScene::NodeScene(FlowData *_flowData)
 }
 
 //this methode takes the ownership over
-void NodeScene::insertItem(VisualNodeBase *node)
+void NodeScene::insertNode(VisualNodeBase *node)
 {
     if(nodeToPlace)//already placing a node
     {
         delete nodeToPlace;
     }
-    addItem(node);
+    addNode(node);
     node->setVisible(false);
     nodeToPlace = node;
     nodePlacementState = NodePlacementState::PLACE_AFTER_CLICK;
     selectionManager->setSelected(nodeToPlace, true);
 }
 
-void NodeScene::addItem(VisualNodeBase *item)
+void NodeScene::addNode(VisualNodeBase *item)
 {
     connect(item,SIGNAL(connectorPressed(VisualNodeBase*,Connector*)),this,SLOT(connectorPressed(VisualNodeBase*,Connector*)));
     connect(item,SIGNAL(connectorReleased(VisualNodeBase*,Connector*)),this,SLOT(connectorReleased(VisualNodeBase*,Connector*)));
@@ -37,6 +37,15 @@ void NodeScene::addItem(VisualNodeBase *item)
     item->activate();
     flowData->nodes.append(item);
     QGraphicsScene::addItem(item);
+}
+void NodeScene::addConnection(VisualConnection* newConnection)
+{
+    flowData->connections.append(newConnection);
+    connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));
+    if((newConnection->connection1Set) && (newConnection->connection2Set))
+    {
+        newConnection->getConnector1()->getParent()->makeConnection(newConnection);
+    }
 }
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 {
@@ -58,9 +67,8 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
     }
     selectionManager->clearSelected();
     VisualConnection* newConnection = new VisualConnection(connector);
-    flowData->connections.append(newConnection);
+    addConnection(newConnection);
     currentTrackingConnection = newConnection;
-    connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
@@ -85,14 +93,20 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
     else {
         if(!currentTrackingConnection->connection1Set)
         {
+            //connect the connection object to the connector
             currentTrackingConnection->setConnector1(connector);
+            //make the low level connection between the nodes for data interaction
             node->makeConnection(currentTrackingConnection);
+            //don't track anymore
             currentTrackingConnection = nullptr;
         }
         else if(!currentTrackingConnection->connection2Set)
         {
+            //connect the connection object to the connector
             currentTrackingConnection->setConnector2(connector);
+            //make the low level connection between the nodes for data interaction
             node->makeConnection(currentTrackingConnection);
+            //don't track anymore
             currentTrackingConnection = nullptr;
         }
     }
@@ -218,7 +232,7 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mousePressEvent(event);
-    //after the super call all the childeren are checked
+    //after the super class call all the childeren are checked
 
     //qDebug("[debug][NodeScene] mousepress done");
 

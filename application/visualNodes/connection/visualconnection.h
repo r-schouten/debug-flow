@@ -7,10 +7,12 @@
 #include "connectionstyle.h"
 #include "utils.h"
 
+#include "serializable.h"
+
 class SelectionManager;
 class Connector;
 class VisualNodeBase;
-class VisualConnection: public QObject
+class VisualConnection: public QObject, public Serializable
 {
     Q_OBJECT
 public:
@@ -38,6 +40,9 @@ public:
 
     //custom method, this class is not inherited from qgraphicsitem
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+    QJsonObject *serialize(SerializationHandler &handler);
+
 private:
     //begin point and end point
     QPointF point1,point2;
@@ -49,6 +54,7 @@ private:
     ConnectionStyle* style = nullptr;
     void makePainterPath(PathStyle &pathStyle);
 
+    //only if anything is changed the painterpath need to be calculated again
     bool settingsChanged = true;
     QPainterPath painterPath;
     PathStyle oldPathStyle;

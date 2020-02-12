@@ -24,9 +24,9 @@ public:
     NodeScene(FlowData* _flowData);
 
     //function to insert items from the resource list
-    void insertItem(VisualNodeBase* node);
-    void addItem(VisualNodeBase *item);
-
+    void insertNode(VisualNodeBase* node);
+    void addNode(VisualNodeBase *item);
+    void addConnection(VisualConnection *newConnection);
 private:
     FlowData* flowData = nullptr;
 

@@ -34,7 +34,7 @@ void SerializationHandler::logFatal(QString callingClass, QString message)
     }
 }
 
-void SerializationHandler::printMessages(bool printJson)
+void SerializationHandler::printMessages()
 {
     qDebug("---serialisation error log---");
     QListIterator<SerialistationException> it(occuredErrors);
@@ -58,6 +58,11 @@ bool SerializationHandler::saveContext()
 bool SerializationHandler::saveData()
 {
     return settings.saveData;
+}
+
+bool SerializationHandler::saveTemp()
+{
+    return settings.saveTempData;
 }
 
 

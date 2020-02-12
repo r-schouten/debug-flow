@@ -4,6 +4,12 @@ VisualSourceNodeBase::VisualSourceNodeBase()
 {
 
 }
+
+VisualSourceNodeBase::VisualSourceNodeBase(QJsonObject &baseJson, DeserializationHandler &handler)
+    :VisualNodeBase(baseJson, handler)
+{
+
+}
 void VisualSourceNodeBase::drawStartStop(QPainter *painter,bool running)
 {
     drawStartStop(painter,width-20,3,running);

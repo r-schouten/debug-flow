@@ -13,7 +13,7 @@ enum class ConnectorType
 class Connector
 {
 public:
-    Connector(VisualNodeBase* parent, int x,int y, ConnectorType type, int diameter, double angle);
+    Connector(VisualNodeBase* parent, int x,int y, ConnectorType type, int diameter, double angle, QString name);
     ~Connector();
 
     QRectF getRect(int margins);
@@ -30,10 +30,11 @@ public:
     int x;
     int y;
     double angle;
+    QString name;//used for serialization
     ConnectorType type;
     QList<VisualConnection*> connections;
 private:
-    int connectionDiameter = 10;
+    int connectionDiameter;
     VisualNodeBase* parent = nullptr;
 };
 

@@ -42,23 +42,39 @@ QRectF VisualNodeBase::innerRect() const
 
 void VisualNodeBase::addInputConnector()
 {
-    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT, CONNECTOR_DIAMETER,M_PI);
+    Connector* connector = new Connector(this, 0, height/2,ConnectorType::INPUT, CONNECTOR_DIAMETER,M_PI, "default input");
     connectors.append(connector);
 }
 
 void VisualNodeBase::addOutputConnector()
 {
-    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT, CONNECTOR_DIAMETER,0);
+    Connector* connector = new Connector(this, width, height/2,ConnectorType::OUTPUT, CONNECTOR_DIAMETER,0, "default output");
     connectors.append(connector);
+}
+Connector* VisualNodeBase::findConnectorWithName(QString name)
+{
+    QListIterator<Connector*> iterator(connectors);
+    while(iterator.hasNext())
+    {
+        Connector* currentConnector = iterator.next();
+        if(currentConnector->name.compare(name, Qt::CaseInsensitive) == 0)
+        {
+            return currentConnector;
+        }
+    }
+    return nullptr;
 }
 void VisualNodeBase::makeConnection(VisualConnection* connection)
 {
+    //run requistConnection and recursiveDependancyCheck first!
 #ifdef QT_DEBUG
     if(!requestConnection(connection->getConnector1(),connection->getConnector2(), true))
     {
         qFatal("[fatal][VisualNodeBase] makeConnection connection not permitted");
     }
 #endif
+
+    //place the connectors in the right order
     Connector* inputConnector = nullptr;
     Connector* outputConnector = nullptr;
     if(connection->getConnector1()->type == ConnectorType::INPUT)
@@ -80,6 +96,8 @@ void VisualNodeBase::makeConnection(VisualConnection* connection)
     {
         qFatal("[fatal][VisualNodeBase] given input is not a inputNode");
     }
+
+    //make the connection at the low level node
     inputNode->addSubscription(outputNode);
 }
 
@@ -165,6 +183,7 @@ bool VisualNodeBase::requestConnection(Connector *connector1, Connector* connect
     {
         return false;
     }
+    //check if the connector is already in the list
     if(!exist)
     {
         //check for double links
@@ -405,13 +424,23 @@ QJsonObject *VisualNodeBase::serializeBase(SerializationHandler &handler)
     jsonObject->insert(JSON_BASE_NAME,name);
     jsonObject->insert(JSON_BASE_CENTERX,centerX);
     jsonObject->insert(JSON_BASE_CENTERY,centerY);
+    jsonObject->insert(JSON_BASE_UNIQUE_ID, getUniqueId());
 
     return jsonObject;
 }
-
+int64_t VisualNodeBase::getUniqueId()
+{
+    if(uniqueId == 0)
+    {
+        uniqueId = (int64_t)this;
+    }
+    //use memory address as uniqui id
+    return uniqueId;
+}
 void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     name = handler.findStringSafe(CLASSNAME, JSON_BASE_NAME, jsonObject);
     centerX = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERX, jsonObject);
     centerY = handler.findIntSafe(CLASSNAME, JSON_BASE_CENTERY, jsonObject);
+    uniqueId = handler.findInt64Safe(CLASSNAME, JSON_BASE_UNIQUE_ID, jsonObject);
 }

@@ -9,6 +9,7 @@
 #include "flowdata.h"
 
 #include "visualfilteredconsole.h"
+#include "visualserialnode.h"
 
 #include "json_defs.h"
 #include "serialization_handler.h"
@@ -21,6 +22,7 @@ public:
     QJsonObject* serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
     void deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
+    void deserializeConnection(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
 private:
     FlowData* flowData = nullptr;
     NodeScene* scene = nullptr;

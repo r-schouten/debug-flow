@@ -32,6 +32,7 @@ public:
     bool restoreData();
 
     QString findStringSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
+    int64_t findInt64Safe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
     int findIntSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
     bool findBoolSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);
     QJsonObject findObjectSafe(QString callingClass, QString element, QJsonObject &jsonObject, ErrorLevel errorLevel = ErrorLevel::ERROR);

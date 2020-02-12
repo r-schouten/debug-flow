@@ -3,7 +3,11 @@
 #include <QSerialPortInfo>
 #include <QDebug>
 
+#include <QJsonObject>
+
 #include "nodesettingsbase.h"
+
+#include "json_defs.h"
 class SerialSettings : public NodeSettingsBase
 {
     Q_OBJECT

@@ -37,6 +37,7 @@ public:
     int width = 125;
     int height = 50;
 
+
     //size including connectors
     QRectF boundingRect() const;
     //size of the rectangle
@@ -47,11 +48,9 @@ public:
     //this function is used to copy a node from the resource list. Its implemented in the derived class so a upcasted type will be returned
     virtual VisualNodeBase* clone() = 0;
 
-    //easy acces methods for adding the basic connectors, of more needed the can be added to the QList connectors
-    void addInputConnector();
-    void addOutputConnector();
+    Connector *findConnectorWithName(QString name);
 
-    //makes the connection in the low level VisualBase object, (run requestConnection and recursiveCircularDependencyCheck first)
+    //makes the connection (definitive) in the low level VisualBase object, (run requestConnection and recursiveCircularDependencyCheck first)
     void makeConnection(VisualConnection *connection);
 
     //check if the connection is possible
@@ -73,14 +72,27 @@ public:
 
     QJsonObject* serializeBase(SerializationHandler &handler);
     void deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler);
+
+    //the unique id is used to connect nodes and connectors when deserializing
+    int64_t getUniqueId();
+
 protected:
+    //the current open property widget
     PropertyWidgetBase* propertyWidget = nullptr;
 
-    NodeBase* baseNode = nullptr;//each derived class has it own downcasted node pointer
+    //each derived class has it own downcasted node pointer
+    NodeBase* baseNode = nullptr;
 
     QList<Connector*> connectors;
     //note that selection manager is a singleton
     SelectionManager* selectionManager = nullptr;
+
+    //the unique id is used to connect nodes and connectors when deserializing
+    int64_t uniqueId = 0;
+
+    //easy access methods for adding the basic connectors at setup, of more needed the can be added to the QList connectors
+    void addInputConnector();
+    void addOutputConnector();
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

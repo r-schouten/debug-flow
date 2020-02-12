@@ -12,7 +12,13 @@
 #define JSON_BASE_CENTERY "centerY"
 #define JSON_BASE_NAME "name"
 #define JSON_NODE_TYPE "type"
+#define JSON_BASE_UNIQUE_ID "uniquedId"
 
+// connections
+#define JSON_CONNECTION_CONNECTOR1_NODE_ID "connector1NodeId"
+#define JSON_CONNECTION_CONNECTOR2_NODE_ID "connector2NodeId"
+#define JSON_CONNECTION_CONNECTOR1_NAME "connector1Name"
+#define JSON_CONNECTION_CONNECTOR2_NAME "connector2Name"
 //filtered console
 #define JSON_FILTEREDCONSOLE_ANSIENABLED "ANSIEnabled"
 #define JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED "LineNumbersEnabled"
@@ -29,6 +35,15 @@
 #define JSON_FILTEREDCONSOLE_OPTIONS "options"
 #define JSON_FILTEREDCONSOLE_OPTION_TAGNAME "tagName"
 #define JSON_FILTEREDCONSOLE_OPTION_ENABLED "enabled"
+
+#define JSON_SERIAL_RUNNING "running"
+#define JSON_SERIAL_NAME "name"
+#define JSON_SERIAL_BAUDRATE "baudrate"
+#define JSON_SERIAL_DATABITS "databits"
+#define JSON_SERIAL_PARITY "parity"
+#define JSON_SERIAL_STOPBITS "stopbits"
+#define JSON_SERIAL_FLOWCONTROL "flowcontrol"
+
 
 /*
 {

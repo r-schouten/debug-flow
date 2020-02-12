@@ -101,7 +101,7 @@ void ItemList::itemClicked(QTreeWidgetItem *item, int column)
         MyTreeWidgetItem* myItem = dynamic_cast<MyTreeWidgetItem*>(item);
         if(myItem)
         {
-            nodeScene->insertItem(myItem->getNodeCopy());
+            nodeScene->insertNode(myItem->getNodeCopy());
         }
         else {
             qDebug("[verbose,ItemList] not inherited from MyTreeWidgetItem",column);

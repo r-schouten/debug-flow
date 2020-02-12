@@ -2,6 +2,8 @@
 #include <QSerialPortInfo>
 #include <QGraphicsProxyWidget>
 
+#include <QJsonObject>
+
 #include "serialnode.h"
 #include "sourcestyle.h"
 #include "visualnodebase.h"
@@ -14,8 +16,10 @@
 class VisualSerialNode : public VisualSourceNodeBase
 {
     Q_OBJECT
+    void construct();
 public:
     VisualSerialNode();
+    VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
     VisualNodeBase *clone();
 
     ~VisualSerialNode();
@@ -24,6 +28,8 @@ public:
     void openPort();
 
     QJsonObject* serialize(SerializationHandler &handler);
+    //used by loadStore to check if node is this specific node type, its implemented in the class so its possible to make json files backward compatible when a className change
+    static bool classNameEquals(QString name);
 protected:
     PropertyWidgetBase *loadPropertiesWidget(QWidget *parent);
     void releasePropertiesWidget();

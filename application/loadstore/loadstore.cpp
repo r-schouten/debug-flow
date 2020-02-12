@@ -7,13 +7,25 @@ LoadStore::LoadStore(FlowData* flowData, NodeScene* scene)
 }
 QJsonObject *LoadStore::serialize(SerializationHandler &handler)
 {
-    QJsonArray allObjectsJson;
+    QJsonArray allConnectionsJson;
     QListIterator<VisualConnection*>iterator(flowData->connections);
     while(iterator.hasNext())
     {
         VisualConnection* connection = iterator.next();
+        QJsonObject* connectionJson = connection->serialize(handler);
 
+        if(connectionJson != nullptr)
+        {
+            allConnectionsJson.append(*connectionJson);
+
+            delete connectionJson;
+        }
+        else
+        {
+            handler.logWaring(CLASSNAME, "connection returned a nullptr json object");
+        }
     }
+    QJsonArray allNodesJson;
     QListIterator<VisualNodeBase*>iterator2(flowData->nodes);
     while(iterator2.hasNext())
     {
@@ -21,26 +33,30 @@ QJsonObject *LoadStore::serialize(SerializationHandler &handler)
 
         QJsonObject* derivedJson = node->serialize(handler);
         QJsonObject* baseJson = node->serializeBase(handler);
-        if(node->getNode()->getNodeSettings() == nullptr)
+        QJsonObject* nodeSettingsJson = nullptr;
+        if(node->getNode()->getNodeSettings())
         {
-            handler.logError(CLASSNAME, "node->getNode()->getNodeSettings() == nullptr");
+            nodeSettingsJson = node->getNode()->getNodeSettings()->serialize(handler);
         }
-        QJsonObject* nodeSettingsJson = node->getNode()->getNodeSettings()->serialize(handler);
+        else
+        {
+            handler.logFatal(CLASSNAME, "node->getNode()->getNodeSettings() == nullptr");
+        }
 
         QJsonObject jsonObject;
         jsonObject.insert(JSON_DERIVED, *derivedJson);
         jsonObject.insert(JSON_BASE, *baseJson);
         jsonObject.insert(JSON_NODE_SETTINGS, *nodeSettingsJson);
-        jsonObject.insert(JSON_CONNECTIONS, "nullptr");
 
-        allObjectsJson.append(jsonObject);
+        allNodesJson.append(jsonObject);
 
         delete derivedJson;
         delete baseJson;
         delete nodeSettingsJson;
     }
     QJsonObject *completeNodeJson = new QJsonObject;
-    completeNodeJson->insert(JSON_NODES,allObjectsJson);
+    completeNodeJson->insert(JSON_NODES,allNodesJson);
+    completeNodeJson->insert(JSON_CONNECTIONS, allConnectionsJson);
     return completeNodeJson;
 }
 
@@ -54,6 +70,12 @@ void LoadStore::deserialize(QJsonObject &jsonObject, DeserializationHandler &han
         QJsonObject object = it->toObject();
         deserializeNode(object, handler);
     }
+
+    QJsonArray connectionsJson = handler.findArraySafe(CLASSNAME, JSON_CONNECTIONS, jsonObject);
+    for (it = connectionsJson.begin(); it != connectionsJson.end(); it++) {
+        QJsonObject object = it->toObject();
+        deserializeConnection(object, handler);
+    }
 }
 void LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
 {
@@ -66,7 +88,7 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationHand
 
     if(newNode)
     {
-        scene->addItem(newNode);
+        scene->addNode(newNode);
     }
     else
     {
@@ -83,5 +105,48 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     {
         newNode = new VisualFilteredConsole(baseJson, derivedJson, settingsJson, handler);
     }
+    if(VisualSerialNode::classNameEquals(type))
+    {
+        newNode = new VisualSerialNode(baseJson, derivedJson, settingsJson, handler);
+    }
     return newNode;
+}
+
+void LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
+{
+    Connector* connector1 = nullptr;
+    Connector* connector2 = nullptr;
+
+
+    int64_t connector1NodeId = handler.findInt64Safe(CLASSNAME, JSON_CONNECTION_CONNECTOR1_NODE_ID, jsonNodeObject);
+    int64_t connector2NodeId = handler.findInt64Safe(CLASSNAME, JSON_CONNECTION_CONNECTOR2_NODE_ID, jsonNodeObject);
+    QString connector1Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR1_NAME, jsonNodeObject);
+    QString connector2Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR2_NAME, jsonNodeObject);
+
+    //search in the node list to find the connected node
+    QListIterator<VisualNodeBase*>iterator2(flowData->nodes);
+    while(iterator2.hasNext())
+    {
+        VisualNodeBase* node = iterator2.next();
+        if(node->getUniqueId() == connector1NodeId)
+        {
+            connector1 = node->findConnectorWithName(connector1Name);
+            if(connector1 == nullptr) handler.logError(CLASSNAME, "connector 1 name not found",jsonNodeObject);
+        }
+        if(node->getUniqueId() == connector2NodeId)
+        {
+            connector2 = node->findConnectorWithName(connector2Name);
+            if(connector2 == nullptr) handler.logError(CLASSNAME, "connector 2 name not found",jsonNodeObject);
+        }
+    }
+    if(connector1 && connector2)
+    {
+        VisualConnection* newConnection = new VisualConnection(connector1, connector2);
+        scene->addConnection(newConnection);
+    }
+    else
+    {
+        handler.logError(CLASSNAME, "deserializing connection failed",jsonNodeObject);
+    }
+
 }

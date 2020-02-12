@@ -14,8 +14,11 @@ public:
     bool saveContext = true;
     bool saveData = false; //if supported
 
+    bool saveTempData = true;//used for memento
+
     bool exceptionOnError = true;
     bool exceptionOnFatal = true;
+
 };
 
 class SerializationHandler
@@ -26,10 +29,11 @@ public:
     void logError(QString callingClass, QString message);
     void logFatal(QString callingClass, QString message);
 
-    void printMessages(bool printJson = false);
+    void printMessages();
     bool errorOccured();
     bool saveContext();
     bool saveData();
+    bool saveTemp();
 
 private:
     bool anyErrorOccured = false;

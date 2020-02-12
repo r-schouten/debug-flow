@@ -50,12 +50,18 @@ void FlowWidget::open(QJsonObject &jsonObject)
        .exceptionOnFatal = true,
    });
 
-    loadStore->deserialize(jsonObject, handler);
+    try {
+        loadStore->deserialize(jsonObject, handler);
+    } catch (DeserialistationException e) {
+        handler.printMessages(true);
 
-    if(handler.errorOccured())
-    {
-        handler.printMessages();
     }
+
+
+//    if(handler.errorOccured())
+//    {
+//        handler.printMessages(true);
+//    }
 }
 QJsonObject* FlowWidget::save()
 {
@@ -63,8 +69,9 @@ QJsonObject* FlowWidget::save()
    {
       .saveContext = true,
       .saveData = false,
+      .saveTempData = false,
       .exceptionOnError = true,
-      .exceptionOnFatal = true,
+      .exceptionOnFatal = true
   });
    QJsonObject* completeJson = loadStore->serialize(handler);
 
