@@ -8,7 +8,6 @@ CreateConnectionCommand::CreateConnectionCommand(VisualConnection *_connection)
     SerializationSettings_t settings;
     SerializationHandler serializationHandler(settings);
     connectionJson = connection->serialize(serializationHandler);
-
 }
 CreateConnectionCommand::~CreateConnectionCommand()
 {

@@ -22,6 +22,6 @@ void DeleteConnectionCommand::undo()
 }
 void DeleteConnectionCommand::redo()
 {
-    delete oldConnection;
+    //delete oldConnection;
 }
 

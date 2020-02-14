@@ -12,8 +12,8 @@ void UndoRedoManager::setData(QScrollArea *scrollArea, NodeScene *_scene, LoadSt
     loadStore = _loadStore;
     undoView = new QUndoView(&undoStack);
     scrollArea->setWidget(undoView);
-
 }
+
 UndoRedoManager* UndoRedoManager::get()
 {
     if(undoRedoManager == nullptr)
