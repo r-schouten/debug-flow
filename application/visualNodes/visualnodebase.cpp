@@ -6,6 +6,9 @@ VisualNodeBase::VisualNodeBase()
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
+
+    uniqueId = Utils::getRandom();
+    qDebug("[debug][VisualNodeBase] got new id %lu", uniqueId);
 }
 
 VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
@@ -428,11 +431,6 @@ QJsonObject *VisualNodeBase::serializeBase(SerializationHandler &handler)
 }
 int64_t VisualNodeBase::getUniqueId()
 {
-    if(uniqueId == 0)
-    {
-        uniqueId = (int64_t)this;
-    }
-    //use memory address as uniqui id
     return uniqueId;
 }
 void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler)

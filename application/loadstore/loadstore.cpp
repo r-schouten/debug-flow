@@ -31,35 +31,42 @@ QJsonObject *LoadStore::serialize(SerializationHandler &handler)
     {
         VisualNodeBase* node = iterator2.next();
 
-        QJsonObject* derivedJson = node->serialize(handler);
-        QJsonObject* baseJson = node->serializeBase(handler);
-        QJsonObject* nodeSettingsJson = nullptr;
-        if(node->getNode()->getNodeSettings())
-        {
-            nodeSettingsJson = node->getNode()->getNodeSettings()->serialize(handler);
-        }
-        else
-        {
-            handler.logFatal(CLASSNAME, "node->getNode()->getNodeSettings() == nullptr");
-        }
+        QJsonObject* jsonObject = serializeNode(node, handler);
 
-        QJsonObject jsonObject;
-        jsonObject.insert(JSON_DERIVED, *derivedJson);
-        jsonObject.insert(JSON_BASE, *baseJson);
-        jsonObject.insert(JSON_NODE_SETTINGS, *nodeSettingsJson);
+        allNodesJson.append(*jsonObject);
 
-        allNodesJson.append(jsonObject);
-
-        delete derivedJson;
-        delete baseJson;
-        delete nodeSettingsJson;
+        delete jsonObject;
     }
     QJsonObject *completeNodeJson = new QJsonObject;
     completeNodeJson->insert(JSON_NODES,allNodesJson);
     completeNodeJson->insert(JSON_CONNECTIONS, allConnectionsJson);
     return completeNodeJson;
 }
+QJsonObject* LoadStore::serializeNode(VisualNodeBase* node, SerializationHandler &handler)
+{
+    QJsonObject* derivedJson = node->serialize(handler);
+    QJsonObject* baseJson = node->serializeBase(handler);
+    QJsonObject* nodeSettingsJson = nullptr;
+    if(node->getNode()->getNodeSettings())
+    {
+        nodeSettingsJson = node->getNode()->getNodeSettings()->serialize(handler);
+    }
+    else
+    {
+        handler.logFatal(CLASSNAME, "node->getNode()->getNodeSettings() == nullptr");
+    }
 
+    QJsonObject *jsonObject = new QJsonObject;
+    jsonObject->insert(JSON_DERIVED, *derivedJson);
+    jsonObject->insert(JSON_BASE, *baseJson);
+    jsonObject->insert(JSON_NODE_SETTINGS, *nodeSettingsJson);
+
+    delete derivedJson;
+    delete baseJson;
+    delete nodeSettingsJson;
+
+    return jsonObject;
+}
 
 
 void LoadStore::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
@@ -77,7 +84,7 @@ void LoadStore::deserialize(QJsonObject &jsonObject, DeserializationHandler &han
         deserializeConnection(object, handler);
     }
 }
-void LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
+VisualNodeBase* LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler)
 {
     QJsonObject derivedJson = handler.findObjectSafe(CLASSNAME, JSON_DERIVED, jsonNodeObject);
     QJsonObject baseJson = handler.findObjectSafe(CLASSNAME, JSON_BASE, jsonNodeObject);
@@ -89,11 +96,13 @@ void LoadStore::deserializeNode(QJsonObject &jsonNodeObject, DeserializationHand
     if(newNode)
     {
         scene->addNode(newNode);
+        return newNode;
     }
     else
     {
         handler.logFatal(metaObject()->className(), "newNode is nullptr", jsonNodeObject);
     }
+    return nullptr;
 }
 
 VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)

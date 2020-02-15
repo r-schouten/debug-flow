@@ -23,6 +23,7 @@
 #include "undoredomanager.h"
 #include "movecommand.h"
 #include "createconnectioncommand.h"
+#include "createnodecommand.h"
 class FlowData;
 class NodeScene : public QGraphicsScene
 {

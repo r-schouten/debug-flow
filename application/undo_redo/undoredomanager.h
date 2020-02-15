@@ -25,7 +25,7 @@ public:
     ~UndoRedoManager();
     void setData(FlowData* _flowData, LoadStore* _loadStore);
 
-    void registerEvent(QEvent& event);
+    void registerEvent();
     void pushChange(CommandBase *command);
     void undo();
     void redo();

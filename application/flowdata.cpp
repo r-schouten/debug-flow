@@ -33,5 +33,33 @@ VisualConnection* FlowData::findConnection(uint64_t uniqueId)
             return current;
         }
     }
+    qDebug("[debug][VisualConnection] connection with id %u not found", uniqueId);
+    QListIterator<VisualConnection*> it2(connections);
+    while(it2.hasNext())
+    {
+        VisualConnection* current = it2.next();
+        qDebug("- %u", current->getUniqueId());
+    }
+    return nullptr;
+}
+
+VisualNodeBase *FlowData::findnode(int64_t uniqueId)
+{
+    QListIterator<VisualNodeBase*> it(nodes);
+    while(it.hasNext())
+    {
+        VisualNodeBase* current = it.next();
+        if(current->getUniqueId() == uniqueId)
+        {
+            return current;
+        }
+    }
+    qDebug("[debug][VisualConnection] connection with id %u not found", uniqueId);
+    QListIterator<VisualNodeBase*> it2(nodes);
+    while(it2.hasNext())
+    {
+        VisualNodeBase* current = it2.next();
+        qDebug("- %u  %s", current->getUniqueId(), current->name.toStdString().c_str());
+    }
     return nullptr;
 }

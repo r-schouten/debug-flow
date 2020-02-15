@@ -20,5 +20,6 @@ public:
     QList<VisualConnection*> connections;
 
     VisualConnection *findConnection(uint64_t uniqueId);
+    VisualNodeBase *findnode(int64_t uniqueId);
 };
 

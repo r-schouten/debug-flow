@@ -31,6 +31,7 @@ SOURCES += \
     test/circularbuffertest.cpp \
     undo_redo/commands/commandbase.cpp \
     undo_redo/commands/createconnectioncommand.cpp \
+    undo_redo/commands/createnodecommand.cpp \
     undo_redo/commands/movecommand.cpp \
     undo_redo/undoredomanager.cpp \
     utils/ansiescapereader.cpp \
@@ -93,6 +94,7 @@ HEADERS += \
     test/circularbuffertest.h \
     undo_redo/commands/commandbase.h \
     undo_redo/commands/createconnectioncommand.h \
+    undo_redo/commands/createnodecommand.h \
     undo_redo/commands/movecommand.h \
     undo_redo/undoredomanager.h \
     userinterface/ui_flow_widget.h \

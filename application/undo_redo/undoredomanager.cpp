@@ -19,7 +19,7 @@ void UndoRedoManager::setData(FlowData *_flowData, LoadStore *_loadStore)
     loadStore = _loadStore;
 }
 
-void UndoRedoManager::registerEvent(QEvent &event)
+void UndoRedoManager::registerEvent()
 {
     eventCounter++;
     //qDebug("[debug][MementoManager] event happended %d eventcounter = %d", event.type(), eventCounter);

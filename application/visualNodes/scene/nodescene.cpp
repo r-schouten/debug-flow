@@ -14,7 +14,7 @@ NodeScene::NodeScene(FlowData *_flowData, UndoRedoManager* _undoRedoManager)
 
 }
 
-//this methode takes the ownership over
+//this method takes the ownership over
 void NodeScene::insertNode(VisualNodeBase *node)
 {
     if(nodeToPlace)//already placing a node
@@ -26,6 +26,10 @@ void NodeScene::insertNode(VisualNodeBase *node)
     nodeToPlace = node;
     nodePlacementState = NodePlacementState::PLACE_AFTER_CLICK;
     selectionManager->setSelected(nodeToPlace, true);
+
+    //make a undo redo event
+    undoRedoManager->registerEvent();
+    undoRedoManager->pushChange(new NodeCommand(node, NodeCommand::CREATE));
 }
 
 void NodeScene::addNode(VisualNodeBase *item)
@@ -51,6 +55,81 @@ void NodeScene::addConnection(VisualConnection* newConnection)
         newConnection->getConnector1()->getParent()->makeConnection(newConnection);
     }
 }
+
+void NodeScene::onNodeDelete(VisualNodeBase* node)
+{
+    removeItem(node);
+    selectionManager->removeOne(node);
+    if(flowData->nodes.removeOne(node))
+    {
+
+    }
+    else {
+        qDebug("[error,NodeScene] failed to remove node");
+    }
+    if(nodeToPlace == node)
+    {
+        nodeToPlace = nullptr;
+        nodePlacementState = NodePlacementState::NOT_PLACING;
+    }
+}
+void NodeScene::onConnectionDelete(VisualConnection* connection)
+{
+    if(flowData->connections.removeOne(connection))
+    {
+
+    }
+    else {
+        qDebug("[error,NodeScene] failed to remove connection");
+    }
+    if(currentTrackingConnection == connection)
+    {
+        currentTrackingConnection = nullptr;
+    }
+}
+
+
+void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
+{
+    Q_UNUSED(rect);
+    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+
+    QListIterator<VisualConnection*>iterator(flowData->connections);
+    while(iterator.hasNext())
+    {
+        VisualConnection* connection = iterator.next();
+        connection->draw(painter);
+    }
+}
+void NodeScene::drawBackground(QPainter *painter, const QRectF &rect)
+{
+    QGraphicsScene::drawBackground(painter,rect);
+
+    QPen pen;
+
+    pen.setColor(QColor::fromRgb(110, 110, 110));
+    drawGrid(painter,rect,10,&pen);
+
+    pen.setColor(QColor::fromRgb(125, 125, 125));
+    drawGrid(painter,rect,50,&pen);
+
+}
+void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, QPen* pen)
+{
+    int left = rect.left() - (int(rect.left()) % gridSize);
+    int top = rect.top() - (int(rect.top()) % gridSize);
+
+    QVarLengthArray<QLineF, 100> lines;
+
+    for (int x = left; x < rect.right(); x += gridSize)
+        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
+    for (int y = top; y < rect.bottom(); y += gridSize)
+        lines.append(QLineF(rect.left(), y, rect.right(), y));
+
+    painter->setPen(*pen);
+    painter->drawLines(lines.data(), lines.size());
+}
+
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 {
     Q_UNUSED(node);
@@ -126,81 +205,8 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             currentTrackingConnection = nullptr;
         }
     }
-
-}
-void NodeScene::onNodeDelete(VisualNodeBase* node)
-{
-    removeItem(node);
-    selectionManager->removeOne(node);
-    if(flowData->nodes.removeOne(node))
-    {
-
-    }
-    else {
-        qDebug("[error,NodeScene] failed to remove node");
-    }
-    if(nodeToPlace == node)
-    {
-        nodeToPlace = nullptr;
-        nodePlacementState = NodePlacementState::NOT_PLACING;
-    }
-}
-void NodeScene::onConnectionDelete(VisualConnection* connection)
-{
-    if(flowData->connections.removeOne(connection))
-    {
-
-    }
-    else {
-        qDebug("[error,NodeScene] failed to remove connection");
-    }
-    if(currentTrackingConnection == connection)
-    {
-        currentTrackingConnection = nullptr;
-    }
 }
 
-
-void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
-{
-    Q_UNUSED(rect);
-    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
-
-    QListIterator<VisualConnection*>iterator(flowData->connections);
-    while(iterator.hasNext())
-    {
-        VisualConnection* connection = iterator.next();
-        connection->draw(painter);
-    }
-}
-void NodeScene::drawBackground(QPainter *painter, const QRectF &rect)
-{
-    QGraphicsScene::drawBackground(painter,rect);
-
-    QPen pen;
-
-    pen.setColor(QColor::fromRgb(110, 110, 110));
-    drawGrid(painter,rect,10,&pen);
-
-    pen.setColor(QColor::fromRgb(125, 125, 125));
-    drawGrid(painter,rect,50,&pen);
-
-}
-void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, QPen* pen)
-{
-    int left = rect.left() - (int(rect.left()) % gridSize);
-    int top = rect.top() - (int(rect.top()) % gridSize);
-
-    QVarLengthArray<QLineF, 100> lines;
-
-    for (int x = left; x < rect.right(); x += gridSize)
-        lines.append(QLineF(x, rect.top(), x, rect.bottom()));
-    for (int y = top; y < rect.bottom(); y += gridSize)
-        lines.append(QLineF(rect.left(), y, rect.right(), y));
-
-    painter->setPen(*pen);
-    painter->drawLines(lines.data(), lines.size());
-}
 
 void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -240,7 +246,7 @@ void NodeScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     //make a undo redo event
-    undoRedoManager->registerEvent(*event);
+    undoRedoManager->registerEvent();
     //qDebug("[debug][NodeScene] mousepress");
 
     QGraphicsScene::mousePressEvent(event);
@@ -298,7 +304,7 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     //make a undo redo event
-    undoRedoManager->registerEvent(*event);
+    undoRedoManager->registerEvent();
     if(moveSelected)
     {
         QListIterator<VisualNodeBase*>iterator(selectionManager->selectedNodes);
@@ -331,7 +337,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Delete)
     {
         //make a undo redo event
-        undoRedoManager->registerEvent(*event);
+        undoRedoManager->registerEvent();
 
         QListIterator<VisualConnection*>iterator(selectionManager->selectedConnections);
         while(iterator.hasNext())
@@ -350,6 +356,9 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
         {
             VisualNodeBase* node = iterator2.next();
             //node will notify depended objects(include nodeScene)
+
+            undoRedoManager->pushChange(new NodeCommand(node, NodeCommand::DELETE));
+
             delete node;
         }
         selectionManager->clearSelected();
@@ -357,7 +366,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
     if ((event->key() == Qt::Key_Escape)||(event->key() == Qt::Key_Delete))
     {
         //make a undo redo event
-        undoRedoManager->registerEvent(*event);
+        undoRedoManager->registerEvent();
 
         selectionManager->clearSelected();
         if(currentTrackingConnection)

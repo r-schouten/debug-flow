@@ -46,10 +46,11 @@ public:
       // distance
       return fabs(x*y2 - y*x2) / norm;
     }
+    static QRandomGenerator randomGenerator;
     static int64_t getRandom()
     {
-        QRandomGenerator randomGenerator;
-        return randomGenerator.generate();
+        //json supports no unsigned 32 bits, therefore 31 bits
+        return randomGenerator.bounded(pow(2,31));
     }
     static void printJson(QJsonObject* object)
     {

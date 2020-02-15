@@ -16,7 +16,7 @@ ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
 
         SerializationHandler handler(
         {
-           .saveContext = false,
+           .saveContext = true,
            .saveData = false,
            .saveTempData = false,
            .exceptionOnError = true,
@@ -26,7 +26,6 @@ ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
     }
 }
 
-
 void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
 {
     if(state == CREATE)
@@ -34,12 +33,12 @@ void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
         VisualConnection* connectionToDelete = _flowData->findConnection(connectionUniqueId);
         if(connectionToDelete == nullptr)
         {
-            qFatal("[fatal][CreateConnectionCommand] connectionToDelete = nullptr");
+            qFatal("[fatal][ConnectionCommand] connectionToDelete = nullptr");
         }
 
         SerializationHandler handler(
         {
-           .saveContext = false,
+           .saveContext = true,
            .saveData = false,
            .saveTempData = false,
            .exceptionOnError = true,
@@ -61,7 +60,12 @@ void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
            .exceptionOnError = true,
            .exceptionOnFatal = true,
        });
-      loadStore->deserializeConnection(*connectionJson, handler);
+      VisualConnection* recoveredConnection = loadStore->deserializeConnection(*connectionJson, handler);
+      if(recoveredConnection == nullptr)
+      {
+          qFatal("[fatal][ConnectionCommand] recoveredConnection = nullptr");
+      }
+      connectionUniqueId = recoveredConnection->getUniqueId();
       delete connectionJson;
       state = CREATE;
       setText("CREATE connection");

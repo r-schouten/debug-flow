@@ -21,8 +21,9 @@ public:
     LoadStore(FlowData* flowData, NodeScene* scene);
     QJsonObject* serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
-    void deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
+    VisualNodeBase *deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
     VisualConnection *deserializeConnection(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
+    static QJsonObject *serializeNode(VisualNodeBase *node, SerializationHandler &handler);
 private:
     FlowData* flowData = nullptr;
     NodeScene* scene = nullptr;
