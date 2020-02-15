@@ -4,17 +4,12 @@ MoveCommand::MoveCommand(VisualNodeBase *affectedNode, QPoint previousPosition, 
     :affectedNode(affectedNode),previousPosition(previousPosition), newPosition(newPosition)
 {
     setText(QString("move node %1").arg(affectedNode->name));
+
+}
+void MoveCommand::undo(FlowData *_flowData, LoadStore *loadStore)
+{
+    auto temp = affectedNode->nodePosition;
+    affectedNode->nodePosition = previousPosition;
+    previousPosition = temp;
 }
 
-void MoveCommand::undo()
-{
-    affectedNode->nodePosition = previousPosition;
-}
-void MoveCommand::redo()
-{
-    affectedNode->nodePosition = newPosition;
-}
-bool MoveCommand::mergeWith(const QUndoCommand *other)
-{
-    return true;
-}

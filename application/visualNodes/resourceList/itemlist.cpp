@@ -16,6 +16,11 @@ ItemList::ItemList(QTreeWidget *resourceList, NodeScene *nodeScene)
 
     generateList();
 }
+
+ItemList::~ItemList()
+{
+    //noting since the nodes are in a MytreeWidget and will be deleted automatically
+}
 void ItemList::generateList()
 {
     //ownership of this nodes will be given to myTreeWidgetItem, don't delete!

@@ -44,8 +44,10 @@ VisualFilteredConsole::~VisualFilteredConsole()
     if(window)
     {
         windowManager->deleteMdiWindow(window);
-        baseNode = nullptr;
     }
+    //node is already deleted with deleteMdiWindow(window);
+    node = nullptr;
+    baseNode = nullptr;
 }
 
 void VisualFilteredConsole::activate()

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <QJsonDocument>
 #include <QLineF>
 #include <QPoint>
+#include <QRandomGenerator64>
 #include <math.h>
 
 class Utils
@@ -43,5 +45,16 @@ public:
 
       // distance
       return fabs(x*y2 - y*x2) / norm;
+    }
+    static int64_t getRandom()
+    {
+        QRandomGenerator randomGenerator;
+        return randomGenerator.generate();
+    }
+    static void printJson(QJsonObject* object)
+    {
+        QJsonDocument doc(*object);
+        QString strJson(doc.toJson(QJsonDocument::Indented));
+        qDebug(strJson.toStdString().c_str());
     }
 };

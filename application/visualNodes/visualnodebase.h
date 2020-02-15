@@ -20,7 +20,6 @@
 
 #include "movecommand.h"
 
-class UndoRedoManager;
 class SelectionManager;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
@@ -91,8 +90,6 @@ protected:
     QList<Connector*> connectors;
     //note that selection manager is a singleton
     SelectionManager* selectionManager = nullptr;
-    //note that selection manager is a singleton
-    UndoRedoManager* undoRedoManager = nullptr;
 
     //the unique id is used to connect nodes and connectors when deserializing
     int64_t uniqueId = 0;

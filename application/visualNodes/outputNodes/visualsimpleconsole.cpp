@@ -11,8 +11,10 @@ VisualSimpleConsole::~VisualSimpleConsole()
     if(window)
     {
         windowManager->deleteMdiWindow(window);
-        baseNode = nullptr;
     }
+    //node is already deleted  with windowManager->deleteMdiWindow(window);
+    node = nullptr;
+    baseNode = nullptr;
 }
 
 

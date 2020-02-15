@@ -29,11 +29,9 @@ void VisualSerialNode::construct()
 }
 VisualSerialNode::~VisualSerialNode()
 {
-    if(node != nullptr)
-    {
-        delete node;
-        baseNode = nullptr;
-    }
+    delete node;
+    node = nullptr;
+    baseNode = nullptr;
 }
 void VisualSerialNode::activate()
 {

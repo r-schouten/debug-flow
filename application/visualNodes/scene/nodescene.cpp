@@ -1,14 +1,15 @@
 #include "nodescene.h"
 
-NodeScene::NodeScene(FlowData *_flowData)
-    :flowData(_flowData)
+NodeScene::NodeScene(FlowData *_flowData, UndoRedoManager* _undoRedoManager)
+    :flowData(_flowData), undoRedoManager(_undoRedoManager)
 {
     selectionManager = SelectionManager::getInstance();
-    undoRedoManager = UndoRedoManager::get();
 
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
+
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
+
     setItemIndexMethod(NoIndex);
 
 }
@@ -104,7 +105,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             node->makeConnection(currentTrackingConnection);
 
             //push undo point
-            CreateConnectionCommand* connectionCommand = new CreateConnectionCommand(currentTrackingConnection);
+            ConnectionCommand* connectionCommand = new ConnectionCommand(currentTrackingConnection, ConnectionCommand::CREATE);
             undoRedoManager->pushChange(connectionCommand);
 
             //don't track anymore
@@ -118,7 +119,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             node->makeConnection(currentTrackingConnection);
 
             //push undo point
-            CreateConnectionCommand* connectionCommand = new CreateConnectionCommand(currentTrackingConnection);
+            ConnectionCommand* connectionCommand = new ConnectionCommand(currentTrackingConnection, ConnectionCommand::CREATE);
             undoRedoManager->pushChange(connectionCommand);
 
             //don't track anymore
@@ -146,7 +147,6 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 }
 void NodeScene::onConnectionDelete(VisualConnection* connection)
 {
-
     if(flowData->connections.removeOne(connection))
     {
 
@@ -243,13 +243,6 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     undoRedoManager->registerEvent(*event);
     //qDebug("[debug][NodeScene] mousepress");
 
-    //for placement of a new object
-    if(nodePlacementState == NodePlacementState::PLACE_AFTER_CLICK)
-    {
-        nodePlacementState = NodePlacementState::NOT_PLACING;
-        nodeToPlace = nullptr;
-    }
-
     QGraphicsScene::mousePressEvent(event);
     //after the super class call all the childeren are checked
 
@@ -293,6 +286,14 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     selectionManager->clearUpdateFlag();
     anyConnectorPressed = false;
 
+    //for placement of a new object
+    if(nodePlacementState == NodePlacementState::PLACE_AFTER_CLICK)
+    {
+        nodePlacementState = NodePlacementState::NOT_PLACING;
+        nodeToPlace = nullptr;
+        moveSelected = false;
+    }
+
 }
 void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -304,9 +305,11 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         while(iterator.hasNext())
         {
             VisualNodeBase* node = iterator.next();
-            //save this change to the undo stack
-            undoRedoManager->pushChange(new MoveCommand(node,node->oldPosition, node->nodePosition));
-
+            if(node->oldPosition != node->nodePosition)
+            {
+                //save this change to the undo stack
+                undoRedoManager->pushChange(new MoveCommand(node,node->oldPosition, node->nodePosition));
+            }
         }
         moveSelected = false;
     }
@@ -338,8 +341,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
 
             if(connection->connection1Set && connection->connection2Set)
             {
-                CommandBase* command = new DeleteConnectionCommand(connection);
-                UndoRedoManager::get()->pushChange(command);
+                undoRedoManager->pushChange(new ConnectionCommand(connection,ConnectionCommand::DELETE));
             }
             delete connection;
         }

@@ -44,9 +44,14 @@ public:
 
     QJsonObject *serialize(SerializationHandler &handler);
 
+    uint64_t getUniqueId() const;
+    void setUniqueId(const uint64_t &value);
+
 private:
     //begin point and end point
     QPointF point1,point2;
+
+    int64_t uniqueId;
 
     Connector* connector1 = nullptr;
     Connector* connector2 = nullptr;

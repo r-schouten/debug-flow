@@ -20,17 +20,20 @@
 class ItemList :public QObject
 {
     Q_OBJECT
+public:
+    ItemList(QTreeWidget *resourceList, NodeScene *nodeScene);
+    ~ItemList();
 private:
     QTreeWidget *resourceList = nullptr;
     NodeScene* nodeScene = nullptr;
     QList<VisualNodeBase*> nodes;
     bool lastItemPressed = false;
+
     void generateList();
 
     template<typename T>
-    void generateCategory(QList<VisualNodeBase *> &nodes, QString name, QString iconName);    
-public:
-    ItemList(QTreeWidget *resourceList, NodeScene *nodeScene);
+    void generateCategory(QList<VisualNodeBase *> &nodes, QString name, QString iconName);
+
 public slots:
     void itemClicked(QTreeWidgetItem *item, int column);
     void itemPressed(QTreeWidgetItem *item, int column);

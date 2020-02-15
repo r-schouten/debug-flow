@@ -1,21 +1,25 @@
 #pragma once
+#include "QJsonObject"
 #include "commandbase.h"
 
-//#include "visualconnection.h"
+#include "visualconnection.h"
 #include "nodescene.h"
 #include "loadstore.h"
 
-class VisualConnection;
-class CreateConnectionCommand: public CommandBase
+class ConnectionCommand: public CommandBase
 {
 public:
-    CreateConnectionCommand(VisualConnection *_connection);
-    ~CreateConnectionCommand();
+    enum State
+    {
+        DELETE,
+        CREATE
+    }state;
+    ConnectionCommand(VisualConnection *object, State _state);
 
-    void undo();
-    void redo();
+    void undo(FlowData *_flowData, LoadStore *loadStore);
+
 private:
+    int64_t connectionUniqueId;
     QJsonObject *connectionJson;
-    VisualConnection* connection = nullptr;
 };
 

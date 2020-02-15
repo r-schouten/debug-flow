@@ -4,15 +4,17 @@
 //#include "nodescene.h"
 //#include "loadstore.h"
 
+#include <QListWidgetItem>
+class FlowData;
 class LoadStore;
 class NodeScene;
-class CommandBase : public QUndoCommand
+class CommandBase : public QListWidgetItem
 {
-protected:
-    NodeScene* nodeScene = nullptr;
-    LoadStore* loadStore = nullptr;
-
+private:
+    int id = 0;
 public:
-    void setUtils(NodeScene* scene, LoadStore* loadStore);
-
+    virtual void undo(FlowData* _flowData, LoadStore* loadStore)=0;
+    //virtual CommandBase* createRedo() = 0;
+    int getId() const;
+    void setId(int value);
 };

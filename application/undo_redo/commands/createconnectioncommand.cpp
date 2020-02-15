@@ -1,28 +1,71 @@
 #include "createconnectioncommand.h"
 
-//NodeScene and Loadstore can not be used in the costructor because they are not initialized yet
-CreateConnectionCommand::CreateConnectionCommand(VisualConnection *_connection)
+ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
 {
-    setText("create connetion");
-    connection = _connection;
-    SerializationSettings_t settings;
-    SerializationHandler serializationHandler(settings);
-    connectionJson = connection->serialize(serializationHandler);
-}
-CreateConnectionCommand::~CreateConnectionCommand()
-{
-    qDebug("[debug][DeleteConnectionCommand] destructor called");
-    delete connectionJson;
-}
-void CreateConnectionCommand::undo()
-{
-    delete connection;
-    connection = nullptr;
-}
-void CreateConnectionCommand::redo()
-{
-//    DeserializationSettings_t settings;
-//    DeserializationHandler handler(settings);
-//    connection = loadStore->deserializeConnection(*connectionJson, handler);
+    state = _state;
+    if(state == CREATE)
+    {
+        setText("CREATE connection");
+        state = CREATE;
+        connectionUniqueId = connection->getUniqueId();
+        qDebug("[debug][ConnectionCommand] constructor unique %lu", connectionUniqueId);
+    }
+    else
+    {
+        setText("DELETE connection");
+
+        SerializationHandler handler(
+        {
+           .saveContext = false,
+           .saveData = false,
+           .saveTempData = false,
+           .exceptionOnError = true,
+           .exceptionOnFatal = true
+        });
+        connectionJson = connection->serialize(handler);
+    }
 }
 
+
+void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
+{
+    if(state == CREATE)
+    {
+        VisualConnection* connectionToDelete = _flowData->findConnection(connectionUniqueId);
+        if(connectionToDelete == nullptr)
+        {
+            qFatal("[fatal][CreateConnectionCommand] connectionToDelete = nullptr");
+        }
+
+        SerializationHandler handler(
+        {
+           .saveContext = false,
+           .saveData = false,
+           .saveTempData = false,
+           .exceptionOnError = true,
+           .exceptionOnFatal = true
+        });
+        connectionJson = connectionToDelete->serialize(handler);
+
+        delete connectionToDelete;
+        state = DELETE;
+        setText("DELETE connection");
+
+    }
+    else if(state == DELETE)
+    {
+        DeserializationHandler handler(
+        {
+           .restoreContext = true,
+           .restoreData = false,
+           .exceptionOnError = true,
+           .exceptionOnFatal = true,
+       });
+      loadStore->deserializeConnection(*connectionJson, handler);
+      delete connectionJson;
+      state = CREATE;
+      setText("CREATE connection");
+
+    }
+
+}

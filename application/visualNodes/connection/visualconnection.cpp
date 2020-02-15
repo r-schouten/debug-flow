@@ -6,6 +6,9 @@ VisualConnection::VisualConnection(Connector *connector1)
     setConnector1(connector1);
     selectionManager = selectionManager->getInstance();
     style = new ConnectionStyle();
+
+    uniqueId = Utils::getRandom();
+
 }
 
 VisualConnection::VisualConnection(Connector *connector1, Connector *_connector2)
@@ -330,7 +333,17 @@ QJsonObject *VisualConnection::serialize(SerializationHandler &handler)
     jsonObject->insert(JSON_CONNECTION_CONNECTOR2_NODE_ID,connector2Id);
     jsonObject->insert(JSON_CONNECTION_CONNECTOR2_NAME,connector2Name);
 
-
+    jsonObject->insert(JSON_CONNECTION_UNIQUE_ID,(qint64)uniqueId);
     return jsonObject;
+}
+
+uint64_t VisualConnection::getUniqueId() const
+{
+    return uniqueId;
+}
+
+void VisualConnection::setUniqueId(const uint64_t &value)
+{
+    uniqueId = value;
 }
 

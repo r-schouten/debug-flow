@@ -8,9 +8,8 @@ class MoveCommand: public CommandBase
 {
 public:
     MoveCommand(VisualNodeBase* affectedNode,QPoint previousPosition, QPoint newPosition);
-    virtual void undo();
-    virtual void redo();
-    virtual bool mergeWith(const QUndoCommand *other);
+    void undo(FlowData *_flowData, LoadStore *loadStore);
+
     VisualNodeBase* affectedNode = nullptr;
 
 private:

@@ -3,7 +3,6 @@
 VisualNodeBase::VisualNodeBase()
 {
     selectionManager = SelectionManager::getInstance();
-    undoRedoManager = UndoRedoManager::get();
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
@@ -17,9 +16,8 @@ VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &
 VisualNodeBase::~VisualNodeBase()
 {
     //there is a image available that explains how a node is deleted
-    delete baseNode;
-    baseNode = nullptr;
     emit onDelete(this);
+
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {
@@ -31,6 +29,7 @@ VisualNodeBase::~VisualNodeBase()
         delete propertyWidget;
         propertyWidget = nullptr;
     }
+
 };
 QRectF VisualNodeBase::boundingRect() const
 {

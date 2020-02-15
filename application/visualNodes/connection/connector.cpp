@@ -54,13 +54,14 @@ void Connector::disconnect(VisualConnection *connection)
             }
             InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
             OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
+            VisualNodeBase* visuabaseNode = outputConnector->getParent();
             if((inputNode) && (outputNode))
             {
                 inputNode->deleteSubscription(outputNode);
             }
             else
             {
-                qDebug("[error][Connector] can't cast to input noe or ouput node");
+                qDebug("[error][Connector] can't cast to input node or ouput node");
             }
         }
         if(connections.removeOne(connection))

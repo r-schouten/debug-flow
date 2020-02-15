@@ -13,12 +13,14 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 
     flowData = new FlowData(windowManager);
 
-    nodeScene = new NodeScene(flowData);
+    undoRedoManager = new UndoRedoManager(flow_ui->undoRedoWidget);
+
+    nodeScene = new NodeScene(flowData, undoRedoManager);
 
     loadStore = new LoadStore(flowData, nodeScene);
 
-    undoRedoManager = UndoRedoManager::get();
-    undoRedoManager->setData(flow_ui->undoRedoWidget, nodeScene, loadStore);
+    undoRedoManager->setData(flowData, loadStore);
+
 
     flow_ui->graphicsView->setScene(nodeScene);
 
@@ -32,13 +34,15 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 FlowWidget::~FlowWidget()
 {
     delete UiUpdatetimer;
-    delete flow_ui;
-    delete nodeScene;
+
     delete itemsList;
-    delete windowManager;
     delete propertyWidgetManager;
     delete flowData;
     delete loadStore;
+
+    delete nodeScene;
+    delete windowManager;
+    delete flow_ui;
 }
 void FlowWidget::updateUI()
 {

@@ -35,13 +35,11 @@ void MainWindow::saveFlow()
     qDebug("[debug][MainWindow] saveFlow()");
     QJsonObject* serializedFlow = activeFlow->save();
 
-    QJsonDocument doc(*serializedFlow);
-    QString strJson(doc.toJson(QJsonDocument::Indented));
-    qDebug(strJson.toStdString().c_str());
-
+    //Utils::printJson(serializedFlow);
 
     delete activeFlow;
     activeFlow = nullptr;
+
     newFlow();
     activeFlow->open(*serializedFlow);
 

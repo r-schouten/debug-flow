@@ -12,13 +12,14 @@
 #define JSON_BASE_CENTERY "centerY"
 #define JSON_BASE_NAME "name"
 #define JSON_NODE_TYPE "type"
-#define JSON_BASE_UNIQUE_ID "uniquedId"
+#define JSON_BASE_UNIQUE_ID "UID"
 
 // connections
 #define JSON_CONNECTION_CONNECTOR1_NODE_ID "connector1NodeId"
 #define JSON_CONNECTION_CONNECTOR2_NODE_ID "connector2NodeId"
 #define JSON_CONNECTION_CONNECTOR1_NAME "connector1Name"
 #define JSON_CONNECTION_CONNECTOR2_NAME "connector2Name"
+#define JSON_CONNECTION_UNIQUE_ID "UID"
 //filtered console
 #define JSON_FILTEREDCONSOLE_ANSIENABLED "ANSIEnabled"
 #define JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED "LineNumbersEnabled"

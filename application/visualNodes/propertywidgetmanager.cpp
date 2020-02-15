@@ -25,7 +25,7 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
 
     currentShownNode = node;
 
-    tabWidget->setCurrentWidget(propertyWidget);
+    //tabWidget->setCurrentWidget(propertyWidget);
     QWidget * nodePropertiesWidget = node->loadPropertiesWidget(nullptr);
     if(nodePropertiesWidget == nullptr)
     {

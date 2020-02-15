@@ -18,11 +18,9 @@ VisualContextFilter::VisualContextFilter()
 }
 VisualContextFilter::~VisualContextFilter()
 {
-    if(node)
-    {
-        delete node;
-        baseNode = nullptr;
-    }
+    delete node;
+    node = nullptr;
+    baseNode = nullptr;
 }
 PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {

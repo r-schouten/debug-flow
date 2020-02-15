@@ -9,6 +9,7 @@ class FlowData
 {
 public:
     FlowData(WindowManager* _windowManager);
+    ~FlowData();
 
     WindowManager* windowManager = nullptr;
 
@@ -17,5 +18,7 @@ public:
 
     //hold all connections, they are not graphics items
     QList<VisualConnection*> connections;
+
+    VisualConnection *findConnection(uint64_t uniqueId);
 };
 

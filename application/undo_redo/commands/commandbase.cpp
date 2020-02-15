@@ -1,8 +1,12 @@
 #include "commandbase.h"
 
 
-void CommandBase::setUtils(NodeScene *_scene, LoadStore *_loadStore)
+int CommandBase::getId() const
 {
-    loadStore = _loadStore;
-    nodeScene = _scene;
+    return id;
+}
+
+void CommandBase::setId(int value)
+{
+    id = value;
 }

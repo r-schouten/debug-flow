@@ -1,36 +1,33 @@
 #pragma once
 #include <QEvent>
 #include <QScrollArea>
-#include <QUndoStack>
-#include <QUndoView>
 #include <QWidget>
-#include <QAction>
+#include <QListWidget>
 
 #include "commandbase.h"
-//#include "loadstore.h"
-//#include "nodescene.h"
 
-class NodeScene;
+class FlowData;
 class LoadStore;
 class UndoRedoManager: public QObject
 {
     Q_OBJECT
 private:
-    UndoRedoManager();
-    static UndoRedoManager *undoRedoManager;
     int eventCounter = 0;
-    QUndoView *undoView;
 
-    NodeScene* nodeScene = nullptr;
+    QListWidget *undoView;
+    QList<CommandBase*> undoStack;
+    int cursorPosition = 0;
+    FlowData* flowData = nullptr;
     LoadStore* loadStore = nullptr;
-public:
-    QUndoStack undoStack;
 
-    static UndoRedoManager *get();
+public:
+    UndoRedoManager(QScrollArea *scrollArea);
+    ~UndoRedoManager();
+    void setData(FlowData* _flowData, LoadStore* _loadStore);
+
     void registerEvent(QEvent& event);
     void pushChange(CommandBase *command);
     void undo();
     void redo();
-    void setData(QScrollArea *scrollArea, NodeScene* _scene, LoadStore* _loadStore);
 };
 

@@ -21,24 +21,22 @@
 #include "serializable.h"
 
 #include "undoredomanager.h"
-#include "deleteconnectioncommand.h"
 #include "movecommand.h"
 #include "createconnectioncommand.h"
-class DeleteConnectionCommand;
-class CreateConnectionCommand;
 class FlowData;
 class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    NodeScene(FlowData* _flowData);
+    FlowData* flowData = nullptr;
+
+    NodeScene(FlowData* _flowData, UndoRedoManager *_undoRedoManager);
 
     //function to insert items from the resource list
     void insertNode(VisualNodeBase* node);
     void addNode(VisualNodeBase *item);
     void addConnection(VisualConnection *newConnection);
 private:
-    FlowData* flowData = nullptr;
 
     //flag for adding connections
     bool anyConnectorPressed = false;
