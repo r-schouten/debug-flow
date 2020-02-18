@@ -27,6 +27,7 @@ VisualNodeBase::~VisualNodeBase()
         delete iterator.next();
     }
 
+
     if(propertyWidget != nullptr)
     {
         delete propertyWidget;
@@ -433,6 +434,7 @@ int64_t VisualNodeBase::getUniqueId()
 {
     return uniqueId;
 }
+
 void VisualNodeBase::deserializeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     name = handler.findStringSafe(CLASSNAME, JSON_BASE_NAME, jsonObject);

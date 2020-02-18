@@ -10,6 +10,7 @@ NodeScene::NodeScene(FlowData *_flowData, UndoRedoManager* _undoRedoManager)
 
     selectionManager->currentTrackingConnection = &currentTrackingConnection;
 
+    //no indexing but faster drawing
     setItemIndexMethod(NoIndex);
 
 }
@@ -75,6 +76,14 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 }
 void NodeScene::onConnectionDelete(VisualConnection* connection)
 {
+    if(connection->deleteReason == VisualConnection::DeleteReason::NORMAL)
+    {
+        if(connection->connection1Set && connection->connection2Set)
+        {
+            undoRedoManager->pushChange(new ConnectionCommand(connection,ConnectionCommand::DELETE));
+        }
+    }
+
     if(flowData->connections.removeOne(connection))
     {
 
@@ -320,15 +329,6 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         moveSelected = false;
     }
 
-
-//    if(currentTrackingConnection)
-//    {
-//        QListIterator<VisualNodeBase*>iterator(flowData->nodes);
-//        while(iterator.hasNext())
-//        {
-//            VisualNodeBase* node = iterator.next();
-//        }
-//    }
     QGraphicsScene::mouseReleaseEvent(event);
 }
 
@@ -345,10 +345,6 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
             VisualConnection* connection = iterator.next();
             //connection will delete notify its dependend objects
 
-            if(connection->connection1Set && connection->connection2Set)
-            {
-                undoRedoManager->pushChange(new ConnectionCommand(connection,ConnectionCommand::DELETE));
-            }
             delete connection;
         }
         QListIterator<VisualNodeBase*>iterator2(selectionManager->selectedNodes);
@@ -357,9 +353,12 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
             VisualNodeBase* node = iterator2.next();
             //node will notify depended objects(include nodeScene)
 
-            undoRedoManager->pushChange(new NodeCommand(node, NodeCommand::DELETE));
+            CommandBase* command = new NodeCommand(node, NodeCommand::DELETE);
 
             delete node;
+
+            //when deleting a node the connected connection will also be deleted. first the connection need to be added to the undo stack and after that the node should be added, therefore this order.
+            undoRedoManager->pushChange(command);
         }
         selectionManager->clearSelected();
     }

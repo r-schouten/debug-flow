@@ -46,6 +46,7 @@ void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
         });
         connectionJson = connectionToDelete->serialize(handler);
 
+        connectionToDelete->setDeleteReason(VisualConnection::DeleteReason::UNDO_REDO);
         delete connectionToDelete;
         state = DELETE;
         setText("DELETE connection");

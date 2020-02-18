@@ -47,6 +47,13 @@ public:
     uint64_t getUniqueId() const;
     void setUniqueId(const uint64_t &value);
 
+    enum DeleteReason
+    {
+        NORMAL,
+        UNDO_REDO
+    }deleteReason = NORMAL;
+
+    void setDeleteReason(DeleteReason deleteReason);
 private:
     //begin point and end point
     QPointF point1,point2;

@@ -20,6 +20,8 @@ VisualConnection::VisualConnection(Connector *connector1, Connector *_connector2
 
 VisualConnection::~VisualConnection()
 {
+    emit onDelete(this);
+
     //delete the double links
     if(connection1Set)
     {
@@ -31,8 +33,6 @@ VisualConnection::~VisualConnection()
         connector2->disconnect(this);
         connection2Set = false;
     }
-    emit onDelete(this);
-
 }
 
 void VisualConnection::draw(QPainter* painter)
@@ -345,5 +345,10 @@ uint64_t VisualConnection::getUniqueId() const
 void VisualConnection::setUniqueId(const uint64_t &value)
 {
     uniqueId = value;
+}
+
+void VisualConnection::setDeleteReason(VisualConnection::DeleteReason _deleteReason)
+{
+    deleteReason = _deleteReason;
 }
 

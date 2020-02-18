@@ -109,6 +109,7 @@ protected:
 
 private:
     bool pressedOnConnection = false;
+
 signals:
     void connectorPressed(VisualNodeBase* node,Connector* connector);
     void connectorReleased(VisualNodeBase* node,Connector* connector);

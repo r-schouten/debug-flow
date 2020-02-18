@@ -18,7 +18,7 @@
 #include "deserialization_handler.h"
 
 #include "undoredomanager.h"
-class FilteredConsole;
+
 class FlowWidget : public QWidget
 {
     Q_OBJECT
