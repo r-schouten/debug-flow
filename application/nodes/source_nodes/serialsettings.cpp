@@ -37,7 +37,12 @@ QJsonObject *SerialSettings::serialize(SerializationHandler &handler)
     return jsonObject;
 }
 
-void SerialSettings::deserialize(QJsonObject &jsonObject)
+void SerialSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
-
+    nodeSettings.name = handler.findStringSafe(CLASSNAME, JSON_SERIAL_NAME, jsonObject);
+    nodeSettings.baudRate = handler.findIntSafe(CLASSNAME, JSON_SERIAL_BAUDRATE, jsonObject);
+    nodeSettings.dataBits = (QSerialPort::DataBits)handler.findIntSafe(CLASSNAME, JSON_SERIAL_DATABITS, jsonObject);
+    nodeSettings.parity = (QSerialPort::Parity)handler.findIntSafe(CLASSNAME, JSON_SERIAL_PARITY, jsonObject);
+    nodeSettings.stopBits = (QSerialPort::StopBits)handler.findIntSafe(CLASSNAME, JSON_SERIAL_STOPBITS, jsonObject);
+    nodeSettings.flowControl = (QSerialPort::FlowControl)handler.findIntSafe(CLASSNAME, JSON_SERIAL_FLOWCONTROL, jsonObject);
 }

@@ -24,6 +24,7 @@
 #include "movecommand.h"
 #include "createconnectioncommand.h"
 #include "createnodecommand.h"
+#include "propertychangedcommand.h"
 class FlowData;
 class NodeScene : public QGraphicsScene
 {
@@ -80,8 +81,10 @@ public slots:
     void connectorPressed(VisualNodeBase *node, Connector *connector);
     void connectorReleased(VisualNodeBase *node, Connector *connector);
 
-    //slot for visualConnector communication
+    //slot for visualConnector communication and undo redo
     void onConnectionDelete(VisualConnection *connection);
     void onNodeDelete(VisualNodeBase *node);
+    void onNodeSettingsChanged(NodeSettingsBase *settings);
+
 };
 

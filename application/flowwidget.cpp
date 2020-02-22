@@ -65,11 +65,6 @@ void FlowWidget::open(QJsonObject &jsonObject)
 
     }
 
-
-//    if(handler.errorOccured())
-//    {
-//        handler.printMessages(true);
-//    }
 }
 QJsonObject* FlowWidget::save()
 {

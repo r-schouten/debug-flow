@@ -93,9 +93,7 @@ void FilteredConsole::loadTags()
         newTagComboBox->loadTag();
         verticalLayout->addWidget(newTagComboBox);
     }
-
 }
-
 void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
 {
     TagComboBox* destinationComboBox = nullptr;

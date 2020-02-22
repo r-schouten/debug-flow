@@ -10,6 +10,7 @@ VisualSerialNode::VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJs
 {
     Q_UNUSED(derivedJson);
     construct();
+    node->settings->deserialize(settingsJson, handler);
 }
 void VisualSerialNode::construct()
 {

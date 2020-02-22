@@ -33,6 +33,6 @@ public:
     void print();
 
     QJsonObject *serialize(SerializationHandler &handler);
-    void deserialize(QJsonObject &jsonObject);
+    void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
 };
 
