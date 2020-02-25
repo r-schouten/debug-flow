@@ -39,7 +39,6 @@ void NodeScene::addNode(VisualNodeBase *item)
     connect(item,SIGNAL(connectorReleased(VisualNodeBase*,Connector*)),this,SLOT(connectorReleased(VisualNodeBase*,Connector*)));
     connect(item,SIGNAL(onDelete(VisualNodeBase*)),this,SLOT(onNodeDelete(VisualNodeBase*)));
 
-    connect(item->getNode()->getNodeSettings(), SIGNAL(settingsChanged(NodeSettingsBase*)), this, SLOT(onNodeSettingsChanged(NodeSettingsBase*)));
     if(dynamic_cast<VisualOutputNodeBase*>(item))
     {
         dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(flowData->windowManager);
@@ -96,10 +95,6 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
     {
         currentTrackingConnection = nullptr;
     }
-}
-void NodeScene::onNodeSettingsChanged(NodeSettingsBase* settings)
-{
-    undoRedoManager->pushChange(new PropertyChangedCommand(settings));
 }
 
 void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)

@@ -15,7 +15,6 @@ void FilteredNodeSettings::setHorizontalScroll(const HorizontalScrollOptions &va
 {
     horizontalScroll = value;
     emit scrollSettingsChanged();
-    emit settingsChanged(this);
 }
 
 HorizontalScrollOptions FilteredNodeSettings::getHorizontalScroll() const
@@ -32,7 +31,6 @@ void FilteredNodeSettings::setMaxLinesComboBox(int value)
 {
     maxLines = value;
     emit maxLinesChanged();
-    emit settingsChanged(this);
 
 }
 
@@ -45,7 +43,6 @@ void FilteredNodeSettings::setFilterOnWindow(bool value)
 {
     filterOnWindow = value;
     emit filterOnWindowChanged();
-    emit settingsChanged(this);
 
 }
 

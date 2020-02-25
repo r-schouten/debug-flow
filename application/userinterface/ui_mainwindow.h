@@ -24,18 +24,6 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QWidget *centralWidget = nullptr;
-    QVBoxLayout *verticalLayout = nullptr;
-    QSplitter *splitter = nullptr;
-    GraphicsView *graphicsView = nullptr;
-    QMdiArea *mdiArea = nullptr;
-    QToolBar *mainToolBar = nullptr;
-    QTreeWidget *resourceList = nullptr;
-    QSplitter *sceneSplitter = nullptr;
-    QTabWidget* rightTabWidget = nullptr;
-    QScrollArea* propertiesWidget = nullptr;
-    QWidget* secondTab = nullptr;
-
     QMenu *windowMenu = nullptr;
     QAction *newAction = nullptr;
     QAction *openAction = nullptr;
