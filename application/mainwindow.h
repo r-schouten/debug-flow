@@ -26,8 +26,9 @@ public:
 
 private slots:
     void newFlow();
-    void openFlow();
-    void saveFlow();
+    void open();
+    void save();
+    void saveAs();
     void closeFlow();
     void pauseFlow();
     void resumeFlow();
@@ -38,4 +39,5 @@ private:
     Ui::MainWindow *m_ui = nullptr;
     FlowWidget* activeFlow = nullptr;
 
+    void makeFlow();
 };

@@ -28,6 +28,7 @@ public:
     QAction *newAction = nullptr;
     QAction *openAction = nullptr;
     QAction *saveAction = nullptr;
+    QAction *saveAsAction = nullptr;
     QAction *pauseAction = nullptr;
     QAction *resetAction = nullptr;
     QAction *resumeAction = nullptr;
@@ -86,6 +87,12 @@ public:
         saveAction->setShortcuts(QKeySequence::Save);
         fileToolBar->addAction(saveAction);
         fileMenu->addAction(saveAction);
+        //save flow action
+        const QIcon saveAsIcon = QIcon::fromTheme("save", MainWindow->style()->standardIcon(QStyle::SP_DialogSaveButton));
+        saveAsAction = new QAction(saveAsIcon,"save as", MainWindow);
+        saveAsAction->setShortcuts(QKeySequence::SaveAs);
+        fileToolBar->addAction(saveAsAction);
+        fileMenu->addAction(saveAsAction);
 
         fileToolBar->addSeparator();
 

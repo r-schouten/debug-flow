@@ -11,6 +11,7 @@ SOURCES += \
     flowdata.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
+    loadstore/filesystem.cpp \
     loadstore/loadstore.cpp \
     loadstore/serialization_handler.cpp \
     main.cpp \
@@ -71,6 +72,7 @@ HEADERS += \
     globalconfig.h \
     loadstore/deserialistationexception.h \
     loadstore/deserialization_handler.h \
+    loadstore/filesystem.h \
     loadstore/json_defs.h \
     loadstore/loadstore.h \
     loadstore/serialistationexception.h \

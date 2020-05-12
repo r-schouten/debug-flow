@@ -18,7 +18,7 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
     nodeScene = new NodeScene(flowData, undoRedoManager);
 
     loadStore = new LoadStore(flowData, nodeScene);
-
+    fileSystem = new FileSystem();
     undoRedoManager->setData(flowData, loadStore);
 
 
@@ -48,8 +48,10 @@ void FlowWidget::updateUI()
 {
     nodeScene->update();
 }
-void FlowWidget::open(QJsonObject &jsonObject)
+void FlowWidget::open(FileSystem* _fileSystem, QJsonObject &jsonObject)
 {
+    delete fileSystem;//replace the filesystem object
+    fileSystem = _fileSystem;
     DeserializationHandler handler(
     {
        .restoreContext = true,
@@ -66,23 +68,26 @@ void FlowWidget::open(QJsonObject &jsonObject)
     }
 
 }
-QJsonObject* FlowWidget::save()
+bool FlowWidget::save(bool saveAs)
 {
-   SerializationHandler handler(
-   {
+    SerializationHandler handler(
+    {
       .saveContext = true,
       .saveData = false,
       .saveTempData = false,
       .exceptionOnError = true,
       .exceptionOnFatal = true
-  });
-   QJsonObject* completeJson = loadStore->serialize(handler);
-
-   if(handler.errorOccured())
-   {
+    });
+    QJsonObject* completeJson = loadStore->serialize(handler);
+    if(handler.errorOccured())
+    {
        handler.printMessages();
-   }
-   return completeJson;
+       return false;
+    }
+    fileSystem->saveFile(this,completeJson, saveAs);
+    delete completeJson;
+    return true;
+
 }
 
 void FlowWidget::undo()

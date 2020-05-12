@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <mdiwindow.cpp>
 #include <QTimer>
+#include <filesystem.h>
 
 #include "itemlist.h"
 #include "visualnodeconfig.h"
@@ -26,8 +27,9 @@ public:
     explicit FlowWidget(QWidget *parent = nullptr);
     ~FlowWidget();
 
-    void open(QJsonObject &jsonObject);
-    QJsonObject *save();
+    void open(FileSystem *_fileSystem, QJsonObject &jsonObject);
+    bool save(bool saveAs);
+
     void undo();
     void redo();
 private:
@@ -40,6 +42,7 @@ private:
     PropertyWidgetManager* propertyWidgetManager = nullptr;
     FlowData* flowData = nullptr;
     LoadStore* loadStore = nullptr;
+    FileSystem* fileSystem = nullptr;
     UndoRedoManager* undoRedoManager = nullptr;
 public slots:
     void updateUI();
