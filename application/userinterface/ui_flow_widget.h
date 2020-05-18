@@ -15,7 +15,7 @@
 #include "graphicsview.h"
 #include "globalconfig.h"
 #include "nodescene.h"
-
+#include "selectionmanager.h"
 
 class Ui_flowWidget
 {
@@ -32,7 +32,7 @@ public:
     QScrollArea* undoRedoWidget = nullptr;
     QWidget* secondTab = nullptr;
 
-    void setupUi(QWidget* flowWidget)
+    void setupUi(QWidget* flowWidget, SelectionManager* selectionManager)
     {
 
         QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -74,7 +74,7 @@ public:
         resourceList->setMinimumSize(QSize(125,100));
 
         //nodescene
-        graphicsView = new GraphicsView(sceneSplitter);
+        graphicsView = new GraphicsView(sceneSplitter, selectionManager);
         graphicsView->setObjectName("nodesScene");
         sizePolicy1.setHeightForWidth(graphicsView->sizePolicy().hasHeightForWidth());
         graphicsView->setSizePolicy(sizePolicy1);

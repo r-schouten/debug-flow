@@ -1,6 +1,7 @@
 #include "visualsimpleconsole.h"
 
-VisualSimpleConsole::VisualSimpleConsole()
+VisualSimpleConsole::VisualSimpleConsole(FlowObjects *_flowObjects)
+    :VisualOutputNodeBase(_flowObjects)
 {
     name = "simple console";
     shortDiscription = "this node provides a simple console";
@@ -64,7 +65,7 @@ void VisualSimpleConsole::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 VisualNodeBase *VisualSimpleConsole::clone()
 {
-    return new VisualSimpleConsole();
+    return new VisualSimpleConsole(flowObjects);
 }
 
 QJsonObject *VisualSimpleConsole::serialize(SerializationHandler &handler)

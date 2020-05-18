@@ -1,12 +1,13 @@
 #include "visualsourcenodebase.h"
 
-VisualSourceNodeBase::VisualSourceNodeBase()
+VisualSourceNodeBase::VisualSourceNodeBase(FlowObjects *_flowObjects)
+    :VisualNodeBase(_flowObjects)
 {
 
 }
 
-VisualSourceNodeBase::VisualSourceNodeBase(QJsonObject &baseJson, DeserializationHandler &handler)
-    :VisualNodeBase(baseJson, handler)
+VisualSourceNodeBase::VisualSourceNodeBase(FlowObjects *_flowObjects, QJsonObject &baseJson, DeserializationHandler &handler)
+    :VisualNodeBase(_flowObjects, baseJson, handler)
 {
 
 }

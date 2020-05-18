@@ -1,12 +1,13 @@
 #include "visualserialnode.h"
 
-VisualSerialNode::VisualSerialNode()
+VisualSerialNode::VisualSerialNode(FlowObjects *_flowObjects)
+    :VisualSourceNodeBase(_flowObjects)
 {
     construct();
 }
 
-VisualSerialNode::VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
-    :VisualSourceNodeBase(baseJson, handler)
+VisualSerialNode::VisualSerialNode(FlowObjects *_flowObjects,QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
+    :VisualSourceNodeBase(_flowObjects, baseJson, handler)
 {
     Q_UNUSED(derivedJson);
     construct();
@@ -45,7 +46,7 @@ void VisualSerialNode::openPort()
 
 VisualNodeBase* VisualSerialNode::clone()
 {
-    return new VisualSerialNode();
+    return new VisualSerialNode(flowObjects);
 }
 void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

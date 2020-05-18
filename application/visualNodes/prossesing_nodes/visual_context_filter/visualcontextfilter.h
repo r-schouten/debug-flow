@@ -8,7 +8,7 @@ class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 {
     Q_OBJECT
 public:
-    VisualContextFilter();
+    VisualContextFilter(FlowObjects *_flowObjects);
     ~VisualContextFilter();
 
     QJsonObject* serialize(SerializationHandler &handler);

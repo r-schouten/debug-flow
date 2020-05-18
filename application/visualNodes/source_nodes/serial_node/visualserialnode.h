@@ -18,8 +18,8 @@ class VisualSerialNode : public VisualSourceNodeBase
     Q_OBJECT
     void construct();
 public:
-    VisualSerialNode();
-    VisualSerialNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
+    VisualSerialNode(FlowObjects *_flowObjects);
+    VisualSerialNode(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
     VisualNodeBase *clone();
 
     ~VisualSerialNode();

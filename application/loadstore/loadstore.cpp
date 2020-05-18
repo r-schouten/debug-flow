@@ -1,7 +1,7 @@
 #include "loadstore.h"
 
-LoadStore::LoadStore(FlowData* flowData, NodeScene* scene)
-    :flowData(flowData),scene(scene)
+LoadStore::LoadStore(FlowData* flowData,FlowObjects *flowObjects, NodeScene* scene)
+    :flowData(flowData),flowObjects(flowObjects),scene(scene)
 {
 
 }
@@ -112,11 +112,11 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
 
     if(VisualFilteredConsole::classNameEquals(type))
     {
-        newNode = new VisualFilteredConsole(baseJson, derivedJson, settingsJson, handler);
+        newNode = new VisualFilteredConsole(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
     if(VisualSerialNode::classNameEquals(type))
     {
-        newNode = new VisualSerialNode(baseJson, derivedJson, settingsJson, handler);
+        newNode = new VisualSerialNode(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
     return newNode;
 }
@@ -151,7 +151,7 @@ VisualConnection* LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, 
     }
     if(connector1 && connector2)
     {
-        VisualConnection* newConnection = new VisualConnection(connector1, connector2);
+        VisualConnection* newConnection = new VisualConnection(flowObjects, connector1, connector2);
         newConnection->setUniqueId(uniqueId);
         scene->addConnection(newConnection);
         return newConnection;

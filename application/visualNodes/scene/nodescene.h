@@ -24,14 +24,17 @@
 #include "movecommand.h"
 #include "createconnectioncommand.h"
 #include "createnodecommand.h"
+#include "flowobjects.h"
+
+class FlowObjects;
 class FlowData;
 class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
     FlowData* flowData = nullptr;
-
-    NodeScene(FlowData* _flowData, UndoRedoManager *_undoRedoManager);
+    FlowObjects* flowObjects = nullptr;
+    NodeScene(FlowData* _flowData,  FlowObjects* _flowObjects);
 
     //function to insert items from the resource list
     void insertNode(VisualNodeBase* node);

@@ -1,8 +1,9 @@
 #include "visualnodebase.h"
 
-VisualNodeBase::VisualNodeBase()
+VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects)
 {
-    selectionManager = SelectionManager::getInstance();
+    flowObjects = _flowObjects;
+    selectionManager = flowObjects->getSelectionManager();
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
@@ -11,8 +12,8 @@ VisualNodeBase::VisualNodeBase()
     qDebug("[debug][VisualNodeBase] got new id %lu", uniqueId);
 }
 
-VisualNodeBase::VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &handler)
-    :VisualNodeBase()
+VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects, QJsonObject &jsonObject, DeserializationHandler &handler)
+    :VisualNodeBase(_flowObjects)
 {
     deserializeBase(jsonObject, handler);
 }

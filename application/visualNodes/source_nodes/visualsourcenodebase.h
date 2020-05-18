@@ -9,8 +9,8 @@ class VisualSourceNodeBase : public VisualNodeBase, public SourceStyle
 {
     Q_OBJECT
 public:
-    VisualSourceNodeBase();
-    VisualSourceNodeBase(QJsonObject &baseJson, DeserializationHandler &handler);
+    VisualSourceNodeBase(FlowObjects *_flowObjects);
+    VisualSourceNodeBase(FlowObjects *_flowObjects, QJsonObject &baseJson, DeserializationHandler &handler);
 protected:
     void drawStartStop(QPainter *painter, bool running);
     bool startStopClicked(QPointF mousepos);

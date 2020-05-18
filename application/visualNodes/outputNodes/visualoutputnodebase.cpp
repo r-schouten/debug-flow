@@ -1,12 +1,13 @@
 #include "visualoutputnodebase.h"
 
-VisualOutputNodeBase::VisualOutputNodeBase()
+VisualOutputNodeBase::VisualOutputNodeBase(FlowObjects *_flowObjects)
+    :VisualNodeBase(_flowObjects)
 {
 
 }
 
-VisualOutputNodeBase::VisualOutputNodeBase(QJsonObject &baseJson, DeserializationHandler &handler)
-    :VisualNodeBase(baseJson, handler)
+VisualOutputNodeBase::VisualOutputNodeBase(FlowObjects *_flowObjects, QJsonObject &baseJson, DeserializationHandler &handler)
+    :VisualNodeBase(_flowObjects, baseJson, handler)
 {
 
 }

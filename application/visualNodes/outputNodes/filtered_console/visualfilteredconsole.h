@@ -15,8 +15,8 @@ class VisualFilteredConsole : public VisualOutputNodeBase, public OutputStyle
 {
     Q_OBJECT
 public:
-    VisualFilteredConsole();
-    VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
+    VisualFilteredConsole(FlowObjects *_flowObjects);
+    VisualFilteredConsole(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
     //calling an other constructor in C++ 11 compiles but doesn't work as expected, therefore a construct method
     void construct();
     ~VisualFilteredConsole();

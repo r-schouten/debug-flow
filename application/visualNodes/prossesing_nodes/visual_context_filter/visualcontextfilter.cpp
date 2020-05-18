@@ -1,6 +1,7 @@
 #include "visualcontextfilter.h"
 
-VisualContextFilter::VisualContextFilter()
+VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects)
+    :VisualNodeBase(_flowObjects)
 {
     node = new ContextFilterNode();
     baseNode = node;
@@ -38,7 +39,7 @@ void VisualContextFilter::activate()
 }
 VisualNodeBase *VisualContextFilter::clone()
 {
-    return new VisualContextFilter();
+    return new VisualContextFilter(flowObjects);
 }
 
 void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -19,6 +19,7 @@
 #include "deserialization_handler.h"
 
 #include "undoredomanager.h"
+#include "flowobjects.h"
 
 class FlowWidget : public QWidget
 {
@@ -44,6 +45,8 @@ private:
     LoadStore* loadStore = nullptr;
     FileSystem* fileSystem = nullptr;
     UndoRedoManager* undoRedoManager = nullptr;
+    FlowObjects* flowObjects = nullptr;
+    SelectionManager* selectionManager = nullptr;
 public slots:
     void updateUI();
 

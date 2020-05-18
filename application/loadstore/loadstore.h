@@ -18,7 +18,7 @@ class LoadStore : public QObject
 {
     Q_OBJECT
 public:
-    LoadStore(FlowData* flowData, NodeScene* scene);
+    LoadStore(FlowData* flowData, FlowObjects *flowObjects, NodeScene* scene);
     QJsonObject* serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
     VisualNodeBase *deserializeNode(QJsonObject &jsonNodeObject, DeserializationHandler &handler);
@@ -26,6 +26,7 @@ public:
     static QJsonObject *serializeNode(VisualNodeBase *node, SerializationHandler &handler);
 private:
     FlowData* flowData = nullptr;
+    FlowObjects* flowObjects = nullptr;
     NodeScene* scene = nullptr;
 
     VisualNodeBase *constructNode(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);

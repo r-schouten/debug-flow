@@ -1,10 +1,8 @@
 #include "nodescene.h"
 
-NodeScene::NodeScene(FlowData *_flowData, UndoRedoManager* _undoRedoManager)
-    :flowData(_flowData), undoRedoManager(_undoRedoManager)
+NodeScene::NodeScene(FlowData* _flowData,  FlowObjects* _flowObjects)
+    :flowData(_flowData), flowObjects(_flowObjects), undoRedoManager(_flowObjects->getUndoRedoManager()), selectionManager(_flowObjects->getSelectionManager())
 {
-    selectionManager = SelectionManager::getInstance();
-
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
 
@@ -158,7 +156,7 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
         }
     }
     selectionManager->clearSelected();
-    VisualConnection* newConnection = new VisualConnection(connector);
+    VisualConnection* newConnection = new VisualConnection(flowObjects,connector);
     addConnection(newConnection);
     currentTrackingConnection = newConnection;
     currentTrackingConnection->setMousePos(lastMousePosition.toPoint());

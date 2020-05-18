@@ -5,18 +5,15 @@ class Connector;
 class VisualNodeBase;
 class VisualConnection;
 class PropertyWidgetManager;
-//note this class is a singleton!
-class   SelectionManager
+
+class SelectionManager
 {
 private:
-    SelectionManager(){}
-    static SelectionManager singletonSelectionManger;
-
     bool hadUpdate = false;
 
     PropertyWidgetManager* propertyWidgetManager = nullptr;
 public:
-    static SelectionManager* getInstance();
+    SelectionManager();
     bool isSelected(VisualNodeBase *node);
     bool isSelected(VisualConnection *connection);
 

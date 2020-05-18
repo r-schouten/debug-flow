@@ -1,18 +1,18 @@
 #include "visualconnection.h"
 
-VisualConnection::VisualConnection(Connector *connector1)
+VisualConnection::VisualConnection(FlowObjects *_flowObjects, Connector *connector1)
     :connector1(connector1)
 {
     setConnector1(connector1);
-    selectionManager = selectionManager->getInstance();
+    selectionManager = _flowObjects->getSelectionManager();
     style = new ConnectionStyle();
 
     uniqueId = Utils::getRandom();
 
 }
 
-VisualConnection::VisualConnection(Connector *connector1, Connector *_connector2)
-    :VisualConnection(connector1)
+VisualConnection::VisualConnection(FlowObjects *_flowObjects, Connector *connector1, Connector *_connector2)
+    :VisualConnection(_flowObjects, connector1)
 {
     connector2 = _connector2;
     setConnector2(connector2);

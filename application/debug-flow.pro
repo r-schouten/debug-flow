@@ -37,6 +37,7 @@ SOURCES += \
     undo_redo/undoredomanager.cpp \
     utils/ansiescapereader.cpp \
     utils/contextfilter.cpp \
+    utils/flowobjects.cpp \
     utils/utils.cpp \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
@@ -104,6 +105,7 @@ HEADERS += \
     utils/ansi_types.h \
     utils/ansiescapereader.h \
     utils/contextfilter.h \
+    utils/flowobjects.h \
     utils/utils.h \
     visualNodes/connection/connectionstyle.h \
     visualNodes/connection/connector.h \

@@ -4,6 +4,7 @@
 #include <QAbstractItemView>
 #include <QStandardItemModel>
 
+#include "flowobjects.h"
 #include "mytreewidgetitem.h"
 
 #include <visual_context_filter/visualcontextfilter.h>
@@ -21,10 +22,11 @@ class ItemList :public QObject
 {
     Q_OBJECT
 public:
-    ItemList(QTreeWidget *resourceList, NodeScene *nodeScene);
+    ItemList(QTreeWidget *resourceList, FlowObjects *_flowObjects, NodeScene *nodeScene);
     ~ItemList();
 private:
     QTreeWidget *resourceList = nullptr;
+    FlowObjects *flowObjects = nullptr;
     NodeScene* nodeScene = nullptr;
     QList<VisualNodeBase*> nodes;
     bool lastItemPressed = false;

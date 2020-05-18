@@ -4,12 +4,13 @@
 #include <QTimeLine>
 
 #include "selectionmanager.h"
+#include "flowobjects.h"
 #include "nodebase.h"
 class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit GraphicsView(QWidget *parent = 0);
+    explicit GraphicsView(QWidget *parent, SelectionManager* _selectionManager);
 
     // QWidget interface
 protected:

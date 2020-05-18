@@ -1,12 +1,13 @@
 #include "visualfilteredconsole.h"
 
-VisualFilteredConsole::VisualFilteredConsole()
+VisualFilteredConsole::VisualFilteredConsole(FlowObjects *_flowObjects)
+    :VisualOutputNodeBase(_flowObjects)
 {
     construct();
 }
 
-VisualFilteredConsole::VisualFilteredConsole(QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
-    :VisualOutputNodeBase(baseJson, handler)
+VisualFilteredConsole::VisualFilteredConsole(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
+    :VisualOutputNodeBase(_flowObjects, baseJson, handler)
 {
     Q_UNUSED(derivedJson);
     construct();
@@ -87,7 +88,7 @@ void VisualFilteredConsole::paint(QPainter *painter, const QStyleOptionGraphicsI
 
 VisualNodeBase *VisualFilteredConsole::clone()
 {
-    return new VisualFilteredConsole();
+    return new VisualFilteredConsole(flowObjects);
 }
 
 QJsonObject *VisualFilteredConsole::serialize(SerializationHandler &handler)

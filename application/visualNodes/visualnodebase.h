@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 
+#include "flowobjects.h"
 #include "outputnode.h"
 #include "visualnodeconfig.h"
 #include "nodebase.h"
@@ -21,13 +22,14 @@
 #include "movecommand.h"
 
 class SelectionManager;
+class FlowObjects;
 class Connector;
 class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
 {
     Q_OBJECT
 public:
-    VisualNodeBase();
-    VisualNodeBase(QJsonObject &jsonObject, DeserializationHandler &handler);
+    VisualNodeBase(FlowObjects *_flowObjects);
+    VisualNodeBase(FlowObjects *_flowObjects, QJsonObject &jsonObject, DeserializationHandler &handler);
     ~VisualNodeBase();
 
     //will be filled in by the derived class
@@ -88,7 +90,8 @@ protected:
     NodeBase* baseNode = nullptr;
 
     QList<Connector*> connectors;
-    //note that selection manager is a singleton
+
+    FlowObjects* flowObjects = nullptr;
     SelectionManager* selectionManager = nullptr;
 
     //the unique id is used to connect nodes and connectors when deserializing
@@ -108,6 +111,7 @@ protected:
     bool isSelected();
 
 private:
+
     bool pressedOnConnection = false;
 
 signals:

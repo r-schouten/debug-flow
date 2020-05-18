@@ -1,17 +1,13 @@
 #include "selectionmanager.h"
 
-SelectionManager SelectionManager::singletonSelectionManger;
+SelectionManager::SelectionManager()
+{
 
+}
 void SelectionManager::setPropertyWidgetManager(PropertyWidgetManager *value)
 {
     propertyWidgetManager = value;
 }
-
-SelectionManager *SelectionManager::getInstance()
-{
-    return &singletonSelectionManger;
-}
-
 bool SelectionManager::isSelected(VisualNodeBase* node)
 {
     return selectedNodes.contains(node);

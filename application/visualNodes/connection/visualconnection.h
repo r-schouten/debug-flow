@@ -6,6 +6,7 @@
 #include "selectionmanager.h"
 #include "connectionstyle.h"
 #include "utils.h"
+#include "flowobjects.h"
 
 #include "serializable.h"
 
@@ -13,12 +14,13 @@
 class SelectionManager;
 class Connector;
 class VisualNodeBase;
+class FlowObjects;
 class VisualConnection: public QObject, public Serializable
 {
     Q_OBJECT
 public:
-    explicit VisualConnection(Connector* connector1);
-    explicit VisualConnection(Connector* connector1, Connector* connector2);
+    explicit VisualConnection(FlowObjects *_flowObjects, Connector* connector1);
+    explicit VisualConnection(FlowObjects *_flowObjects, Connector* connector1, Connector* connector2);
     ~VisualConnection();
     void draw(QPainter *painter);
     bool intersect(QPointF position);
