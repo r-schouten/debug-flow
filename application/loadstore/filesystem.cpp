@@ -4,9 +4,10 @@ FileSystem::FileSystem()
 {
 }
 
-bool FileSystem::openFile(QWidget *widget, QJsonObject &json)
+bool FileSystem::openFile(QWidget *widget, QJsonObject &json, QString& fileName)
 {
     QUrl openFilePath = QFileDialog::getOpenFileUrl(widget, "open flow", QUrl(""), "Debug Flow(*.dflow)");
+    fileName = openFilePath.fileName();
 
     if(openFilePath.isEmpty())
     {

@@ -48,6 +48,7 @@ FlowWidget::~FlowWidget()
     delete nodeScene;
     delete windowManager;
     delete flow_ui;
+    delete fileSystem;
 }
 void FlowWidget::updateUI()
 {

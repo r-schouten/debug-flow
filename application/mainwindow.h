@@ -37,7 +37,9 @@ private slots:
     void redo();
 private:
     Ui::MainWindow *m_ui = nullptr;
-    FlowWidget* activeFlow = nullptr;
 
-    void makeFlow();
+    FlowWidget *makeFlow(QString name);
+    void setCurrentFlow(FlowWidget *flowWidget);
+    FlowWidget *getCurrentFlow();
+    bool anyFlowOpen();
 };

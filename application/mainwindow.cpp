@@ -6,13 +6,15 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui(new Ui::MainWindow)
 {
      m_ui->setupUi(this);
-     connect(m_ui->newAction,&QAction::triggered,this,&newFlow);
-     connect(m_ui->openAction,&QAction::triggered,this,&open);
-     connect(m_ui->saveAction,&QAction::triggered,this,&save);
-     connect(m_ui->saveAsAction,&QAction::triggered,this,&saveAs);
+     setCentralWidget(m_ui->flowTabWidget);
+     connect(m_ui->newAction,SIGNAL(triggered()),this,SLOT(newFlow()));
+     connect(m_ui->openAction,SIGNAL(triggered()),this,SLOT(open()));
+     connect(m_ui->saveAction,SIGNAL(triggered()),this,SLOT(save()));
+     connect(m_ui->saveAsAction,SIGNAL(triggered()),this,SLOT(saveAs()));
 
-     connect(m_ui->undoAction,&QAction::triggered,this,&undo);
-     connect(m_ui->redoAction,&QAction::triggered,this,&redo);
+     connect(m_ui->undoAction,SIGNAL(triggered()),this,SLOT(undo()));
+     connect(m_ui->redoAction,SIGNAL(triggered()),this,SLOT(redo()));
+
 
      newFlow();
 }
@@ -22,40 +24,50 @@ MainWindow::~MainWindow()
     delete m_ui;
 }
 
-
-void MainWindow::makeFlow()
+void MainWindow::setCurrentFlow(FlowWidget* flowWidget)
+{
+    m_ui->flowTabWidget->setCurrentWidget(flowWidget);
+}
+FlowWidget* MainWindow::getCurrentFlow()
+{
+    return (FlowWidget*)m_ui->flowTabWidget->currentWidget();
+}
+bool MainWindow::anyFlowOpen()
+{
+    return (m_ui->flowTabWidget->count() !=0);
+}
+FlowWidget* MainWindow::makeFlow(QString name)
 {
     FlowWidget* flowWidget = new FlowWidget();
-    activeFlow = flowWidget;
-    setCentralWidget(flowWidget);
+    m_ui->flowTabWidget->addTab(flowWidget, name);
+    setCurrentFlow(flowWidget);
+    return flowWidget;
 }
 void MainWindow::newFlow()
 {
-    if(activeFlow)delete activeFlow;
-
-    makeFlow();
+    makeFlow("new flow");
 }
 void MainWindow::open()
 {
-    if(!activeFlow)return;
     qDebug("[debug][MainWindow] openFlow()");
 
     FileSystem* fileSystem = new FileSystem;
     QJsonObject jsonObject;
-    if(fileSystem->openFile(this, jsonObject))
+    QString fileName;
+    if(fileSystem->openFile(this, jsonObject, fileName))
     {
-        if(activeFlow)delete activeFlow;
-        makeFlow();
-        activeFlow->open(fileSystem, jsonObject);
+        FlowWidget* newFlow = makeFlow(fileName);
+        newFlow->open(fileSystem, jsonObject);//hand the ownership of filesystem over to the flow
     }
-
 }
 
 void MainWindow::save()
 {
-    if(!activeFlow)return;
     qDebug("[debug][MainWindow] saveFlow()");
-    activeFlow->save(false);
+    if(anyFlowOpen())
+    {
+        getCurrentFlow()->save(false);
+    }
 
     //Utils::printJson(serializedFlow);
 
@@ -68,17 +80,18 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-    if(!activeFlow)return;
     qDebug("[debug][MainWindow] saveFlow()");
-    activeFlow->save(true);
+    if(anyFlowOpen())
+    {
+        getCurrentFlow()->save(true);
+    }
 
 }
 void MainWindow::closeFlow()
 {
-    if(activeFlow)
+    if(anyFlowOpen())
     {
-
-        delete activeFlow;
+        delete getCurrentFlow();
     }
 }
 
@@ -99,11 +112,17 @@ void MainWindow::clearFlow()
 
 void MainWindow::undo()
 {
-    activeFlow->undo();
+    if(anyFlowOpen())
+    {
+        getCurrentFlow()->undo();
+    }
 }
 
 void MainWindow::redo()
 {
-    activeFlow->redo();
+    if(anyFlowOpen())
+    {
+        getCurrentFlow()->redo();
+    }
 }
 

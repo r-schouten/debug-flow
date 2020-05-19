@@ -16,7 +16,7 @@ public:
     bool hasFileLocation = false;
 
     FileSystem();
-    bool openFile(QWidget *widget, QJsonObject &qjsonObject);
+    bool openFile(QWidget *widget, QJsonObject &qjsonObject, QString &fileName);
 
     void saveFile(QWidget *widget, QJsonObject *json, bool saveAs);
 private:

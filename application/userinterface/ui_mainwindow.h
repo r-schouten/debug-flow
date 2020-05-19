@@ -34,6 +34,7 @@ public:
     QAction *resumeAction = nullptr;
     QAction *undoAction = nullptr;
     QAction *redoAction = nullptr;
+    QTabWidget* flowTabWidget = nullptr;
     void setupUi(QMainWindow *MainWindow)
     {
         //mainwindow
@@ -52,6 +53,12 @@ public:
         retranslateUi(MainWindow);
 
         QMetaObject::connectSlotsByName(MainWindow);
+
+        flowTabWidget = new QTabWidget(MainWindow);
+        flowTabWidget->setObjectName("flowTabWidget");
+        flowTabWidget->setSizePolicy(sizePolicy);
+
+
     }
 
     void retranslateUi(QMainWindow *MainWindow)
