@@ -20,10 +20,13 @@ QT_END_NAMESPACE
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void changeTabName(QWidget *widget, QString tabName);
 private slots:
     void newFlow();
     void open();
@@ -35,6 +38,7 @@ private slots:
     void clearFlow();
     void undo();
     void redo();
+    QEvent tabClose(int index);
 private:
     Ui::MainWindow *m_ui = nullptr;
 
@@ -42,4 +46,8 @@ private:
     void setCurrentFlow(FlowWidget *flowWidget);
     FlowWidget *getCurrentFlow();
     bool anyFlowOpen();
+
+    // QWidget interface
+protected:
+    void closeEvent(QCloseEvent *event);
 };

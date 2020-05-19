@@ -38,6 +38,8 @@ void UndoRedoManager::pushChange(CommandBase *command)
     undoView->insertItem(cursorPosition, command);
     undoView->setCurrentRow(cursorPosition);
     cursorPosition++;
+
+    emit anythingChanged();
 }
 
 void UndoRedoManager::undo()

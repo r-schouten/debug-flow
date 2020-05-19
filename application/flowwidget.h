@@ -25,14 +25,16 @@ class FlowWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FlowWidget(QWidget *parent = nullptr);
+    explicit FlowWidget(QWidget *parent = nullptr, FileSystem* _fileSystem = nullptr);
     ~FlowWidget();
 
-    void open(FileSystem *_fileSystem, QJsonObject &jsonObject);
+    void open(QJsonObject &jsonObject);
     bool save(bool saveAs);
 
     void undo();
     void redo();
+    bool getchangesSaved();
+    QString getFileName();
 private:
     Ui_flowWidget *flow_ui = nullptr;
 
@@ -47,10 +49,13 @@ private:
     UndoRedoManager* undoRedoManager = nullptr;
     FlowObjects* flowObjects = nullptr;
     SelectionManager* selectionManager = nullptr;
+
+    bool changesSaved = false;
 public slots:
     void updateUI();
 
+    void anythingChanged();
 signals:
-
+    void setTabName(QWidget* tabe, QString tabName);
 };
 

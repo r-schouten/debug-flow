@@ -57,6 +57,7 @@ public:
         flowTabWidget = new QTabWidget(MainWindow);
         flowTabWidget->setObjectName("flowTabWidget");
         flowTabWidget->setSizePolicy(sizePolicy);
+        flowTabWidget->setTabsClosable(true);
 
 
     }

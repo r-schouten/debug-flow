@@ -29,5 +29,8 @@ public:
     void pushChange(CommandBase *command);
     void undo();
     void redo();
+
+signals:
+    void anythingChanged();
 };
 

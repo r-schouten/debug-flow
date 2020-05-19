@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
      connect(m_ui->undoAction,SIGNAL(triggered()),this,SLOT(undo()));
      connect(m_ui->redoAction,SIGNAL(triggered()),this,SLOT(redo()));
 
-
+     connect(m_ui->flowTabWidget,SIGNAL(tabCloseRequested(int)),this,SLOT(tabClose(int)));
      newFlow();
 }
 
@@ -36,12 +36,89 @@ bool MainWindow::anyFlowOpen()
 {
     return (m_ui->flowTabWidget->count() !=0);
 }
+void MainWindow::changeTabName(QWidget* widget, QString tabName)
+{
+    int index = m_ui->flowTabWidget->indexOf(widget);
+    m_ui->flowTabWidget->setTabText(index, tabName);
+}
+
+QEvent MainWindow::tabClose(int index)
+{
+    QEvent event(QEvent::Close);
+    FlowWidget* flowToDelete = (FlowWidget*)m_ui->flowTabWidget->widget(index);
+    if(flowToDelete == nullptr)
+    {
+        qFatal("[fatal][MainWindow] flowToDelete is nullptr");
+    }
+
+    if(flowToDelete->getchangesSaved() == false)
+    {
+        QMessageBox msgBox;
+        QString messageFileName;
+        if(flowToDelete->getFileName().isEmpty())
+        {
+            messageFileName = m_ui->flowTabWidget->tabText(index);
+        }
+        else
+        {
+            messageFileName = flowToDelete->getFileName();
+        }
+        msgBox.setWindowTitle("Save changes");
+        msgBox.setText(QString("%1 is not saved").arg(messageFileName));
+        msgBox.setInformativeText("Do you want to save your changes?");
+        msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+        switch (ret) {
+        case QMessageBox::Save:
+        {
+            bool succes = flowToDelete->save(false);
+            if(succes)
+            {
+                event.accept();
+            }
+            else
+            {
+                event.ignore();
+                return event;
+            }
+            break;
+        }
+        case QMessageBox::Discard:
+            event.accept();
+            break;
+        case QMessageBox::Cancel:
+            event.ignore();
+            return event;
+            break;
+        default:
+            event.ignore();
+            return event;
+            break;
+        }
+    }
+    delete flowToDelete;
+    return event;
+}
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    while(m_ui->flowTabWidget->count() > 0)
+    {
+        QEvent tabCloseEvent = tabClose(0);
+        if(tabCloseEvent.isAccepted() == false)
+        {
+            event->ignore();
+            return;
+        }
+    }
+}
 FlowWidget* MainWindow::makeFlow(QString name)
 {
-    FlowWidget* flowWidget = new FlowWidget();
-    m_ui->flowTabWidget->addTab(flowWidget, name);
-    setCurrentFlow(flowWidget);
-    return flowWidget;
+    FlowWidget* newFlow = new FlowWidget();
+    m_ui->flowTabWidget->addTab(newFlow, name);
+    setCurrentFlow(newFlow);
+    connect(newFlow, SIGNAL(setTabName(QWidget*, QString)), this, SLOT(changeTabName(QWidget*, QString)));
+    return newFlow;
 }
 void MainWindow::newFlow()
 {
@@ -56,8 +133,11 @@ void MainWindow::open()
     QString fileName;
     if(fileSystem->openFile(this, jsonObject, fileName))
     {
-        FlowWidget* newFlow = makeFlow(fileName);
-        newFlow->open(fileSystem, jsonObject);//hand the ownership of filesystem over to the flow
+        FlowWidget* newFlow = new FlowWidget(nullptr, fileSystem);
+        m_ui->flowTabWidget->addTab(newFlow, fileName);
+        setCurrentFlow(newFlow);
+        connect(newFlow, SIGNAL(setTabName(QWidget*, QString)), this, SLOT(changeTabName(QWidget*, QString)));
+        newFlow->open(jsonObject);
     }
 }
 
@@ -68,14 +148,6 @@ void MainWindow::save()
     {
         getCurrentFlow()->save(false);
     }
-
-    //Utils::printJson(serializedFlow);
-
-    //delete activeFlow;
-    //activeFlow = nullptr;
-
-    //makeFlow();
-    //activeFlow->open(*serializedFlow);
 }
 
 void MainWindow::saveAs()
@@ -89,10 +161,7 @@ void MainWindow::saveAs()
 }
 void MainWindow::closeFlow()
 {
-    if(anyFlowOpen())
-    {
-        delete getCurrentFlow();
-    }
+
 }
 
 void MainWindow::pauseFlow()

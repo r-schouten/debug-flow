@@ -4,6 +4,11 @@ FileSystem::FileSystem()
 {
 }
 
+QString FileSystem::getFileName()
+{
+    return filePath.fileName();
+}
+
 bool FileSystem::openFile(QWidget *widget, QJsonObject &json, QString& fileName)
 {
     QUrl openFilePath = QFileDialog::getOpenFileUrl(widget, "open flow", QUrl(""), "Debug Flow(*.dflow)");
@@ -72,7 +77,7 @@ void FileSystem::saveFile(QJsonObject *json)
      out << rawData;
      file.close();
 }
-void FileSystem::saveFile(QWidget *widget, QJsonObject *json, bool saveAs)
+bool FileSystem::saveFile(QWidget *widget, QJsonObject *json, bool saveAs)
 {
     if((hasFileLocation) && (!saveAs))
     {
@@ -85,7 +90,7 @@ void FileSystem::saveFile(QWidget *widget, QJsonObject *json, bool saveAs)
         if(saveFilePath.isEmpty())
         {
             //user pressed cancel
-            return;
+            return false;
         }
         else
         {
@@ -96,4 +101,5 @@ void FileSystem::saveFile(QWidget *widget, QJsonObject *json, bool saveAs)
 
         }
     }
+    return true;
 }

@@ -1,6 +1,6 @@
 #include "flowwidget.h"
 
-FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
+FlowWidget::FlowWidget(QWidget *parent, FileSystem* _fileSystem) : QWidget(parent)
 {
     selectionManager = new SelectionManager();
 
@@ -27,15 +27,28 @@ FlowWidget::FlowWidget(QWidget *parent) : QWidget(parent)
 
     undoRedoManager->setData(flowData, loadStore);
 
-    fileSystem = new FileSystem();
+    if(_fileSystem == nullptr)
+    {
+        fileSystem = new FileSystem();
+    }
+    else
+    {
+        //used to open a file
+        fileSystem = _fileSystem;
+    }
 
     itemsList = new ItemList(flow_ui->resourceList,flowObjects, nodeScene);
 
     UiUpdatetimer = new QTimer(this);
     connect(UiUpdatetimer, &QTimer::timeout, this, &FlowWidget::updateUI);
     UiUpdatetimer->start(30);
+
     flow_ui->graphicsView->setSceneRect(0, 0, graphicsViewWidth, graphicsViewHeight);
+
+    connect(undoRedoManager, SIGNAL(anythingChanged()), this, SLOT(anythingChanged()));
 }
+
+
 FlowWidget::~FlowWidget()
 {
     delete UiUpdatetimer;
@@ -54,10 +67,31 @@ void FlowWidget::updateUI()
 {
     nodeScene->update();
 }
-void FlowWidget::open(FileSystem* _fileSystem, QJsonObject &jsonObject)
+QString FlowWidget::getFileName()
 {
-    delete fileSystem;//replace the filesystem object
-    fileSystem = _fileSystem;
+    if(fileSystem->hasFileLocation)
+    {
+        return fileSystem->getFileName();
+    }
+    else
+    {
+        return "";
+    }
+}
+void FlowWidget::anythingChanged()
+{
+    if(changesSaved)
+    {
+        changesSaved = false;
+        emit setTabName(this, "*"+getFileName());
+    }
+}
+bool FlowWidget::getchangesSaved()
+{
+    return changesSaved;
+}
+void FlowWidget::open(QJsonObject &jsonObject)
+{
     DeserializationHandler handler(
     {
        .restoreContext = true,
@@ -72,7 +106,7 @@ void FlowWidget::open(FileSystem* _fileSystem, QJsonObject &jsonObject)
         handler.printMessages(true);
 
     }
-
+    changesSaved = true;
 }
 bool FlowWidget::save(bool saveAs)
 {
@@ -90,10 +124,15 @@ bool FlowWidget::save(bool saveAs)
        handler.printMessages();
        return false;
     }
-    fileSystem->saveFile(this,completeJson, saveAs);
+    bool succes = fileSystem->saveFile(this,completeJson, saveAs);
     delete completeJson;
-    return true;
 
+    if(succes)
+    {
+        changesSaved = true;
+        emit setTabName(this,getFileName());
+    }
+    return succes;
 }
 
 void FlowWidget::undo()
