@@ -9,12 +9,28 @@ void FilteredNodeSettings::addOption(Tag *tag, TagOption *option)
 {
     tag->options.append(option);
     emit optionAdded(tag, option);
+    emit settingsChanged();
 }
 
+void FilteredNodeSettings::clearConsoleClicked()
+{
+    emit clearConsole();
+}
+
+void FilteredNodeSettings::clearContextClicked()
+{
+    while(tags.size() > 0)
+    {
+        delete tags.takeAt(0);
+    }
+    emit tagsChanged();
+    emit settingsChanged();
+}
 void FilteredNodeSettings::setHorizontalScroll(const HorizontalScrollOptions &value)
 {
     horizontalScroll = value;
     emit scrollSettingsChanged();
+    emit settingsChanged();
 }
 
 HorizontalScrollOptions FilteredNodeSettings::getHorizontalScroll() const
@@ -31,7 +47,7 @@ void FilteredNodeSettings::setMaxLinesComboBox(int value)
 {
     maxLines = value;
     emit maxLinesChanged();
-
+    emit settingsChanged();
 }
 
 bool FilteredNodeSettings::getFilterOnWindow() const
@@ -43,23 +59,52 @@ void FilteredNodeSettings::setFilterOnWindow(bool value)
 {
     filterOnWindow = value;
     emit filterOnWindowChanged();
-
+    emit settingsChanged();
 }
-
-void FilteredNodeSettings::clearConsoleClicked()
+bool FilteredNodeSettings::getHideContext() const
 {
-    emit clearConsole();
-
+    return hideContext;
 }
 
-void FilteredNodeSettings::clearContextClicked()
+void FilteredNodeSettings::setHideContext(bool value)
 {
-    while(tags.size() > 0)
-    {
-        delete tags.takeAt(0);
-    }
-    emit tagsChanged();
+    hideContext = value;
+    emit settingsChanged();
 }
+
+bool FilteredNodeSettings::getANSIEnabled() const
+{
+    return ANSIEnabled;
+}
+
+void FilteredNodeSettings::setANSIEnabled(bool value)
+{
+    ANSIEnabled = value;
+    emit settingsChanged();
+}
+
+bool FilteredNodeSettings::getLineNumbersEnabled() const
+{
+    return LineNumbersEnabled;
+}
+
+void FilteredNodeSettings::setLineNumbersEnabled(bool value)
+{
+    LineNumbersEnabled = value;
+    emit settingsChanged();
+}
+
+void FilteredNodeSettings::setAutoScrollEnabled(bool value)
+{
+    autoScrollEnabled = value;
+    emit settingsChanged();
+}
+
+bool FilteredNodeSettings::getAutoScrollEnabled() const
+{
+    return autoScrollEnabled;
+}
+
 
 QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 {
@@ -125,4 +170,3 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
         tags.append(new Tag(tagJson, handler));
     }
 }
-

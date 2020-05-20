@@ -57,7 +57,7 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     QTextCharFormat oldFormat = currentCharFormat;
     bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
 
-    if(nodeSettings->autoScrollEnabled)
+    if(nodeSettings->getAutoScrollEnabled())
     {
         console->moveCursor(QTextCursor::End);
         console->setCurrentCharFormat(oldFormat);

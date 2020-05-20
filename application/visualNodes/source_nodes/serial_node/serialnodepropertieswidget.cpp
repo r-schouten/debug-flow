@@ -325,8 +325,7 @@ void SerialNodePropertiesWidget::connectClicked()
     updateButtonStates();
     serialSettings->print();
 
-    emit serialSettings->settingsChanged(serialSettings);
-
+    emit serialSettings->settingsChanged();
 }
 void SerialNodePropertiesWidget::disconnectClicked()
 {
@@ -341,7 +340,7 @@ void SerialNodePropertiesWidget::settingsChanged()
     qDebug("[debug][SerialNodePropertiesWidget] settingsChanged");
     settingChanged = true;
     updateButtonStates();
-
+    emit serialSettings->settingsChanged();
 }
 void SerialNodePropertiesWidget::updateButtonStates()
 {

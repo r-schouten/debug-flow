@@ -12,6 +12,6 @@ public:
     NodeSettingsBase();
     virtual void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler) = 0;
 signals:
-    void settingsChanged(NodeSettingsBase* nodeSettings);
+    void settingsChanged();
 };
 

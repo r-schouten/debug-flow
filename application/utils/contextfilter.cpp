@@ -40,7 +40,7 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
             if(character == ']')
             {
                 processContext(bufferReader,contextBeginIndex,i);
-                if((!settings->hideContext)&&(showCurrentContext))
+                if((!settings->getHideContext())&&(showCurrentContext))
                 {
                     for(int j=contextBeginIndex;j<=i;j++)
                     {
@@ -68,7 +68,7 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
                 readingInContext = true;
                 contextBeginIndex = i;
             }
-            else if((character == '\033')&&(settings->ANSIEnabled))
+            else if((character == '\033')&&(settings->getANSIEnabled()))
             {
                 readingANSIEscape = true;
                 ANSIBeginIndex = i;

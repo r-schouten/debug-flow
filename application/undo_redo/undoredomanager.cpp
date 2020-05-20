@@ -92,3 +92,8 @@ void UndoRedoManager::redo()
         }
     }
 }
+
+void UndoRedoManager::notifySettingsChanged()
+{
+    emit anythingChanged();
+}

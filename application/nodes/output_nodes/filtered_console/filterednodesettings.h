@@ -23,10 +23,6 @@ class FilteredNodeSettings : public NodeSettingsBase
     Q_OBJECT
 public:
     QList<Tag*> tags;
-    bool LineNumbersEnabled = false;
-    bool ANSIEnabled = true;
-    bool autoScrollEnabled = true;
-    bool hideContext = false;
 
     FilteredNodeSettings();
 
@@ -39,13 +35,30 @@ public:
     bool getFilterOnWindow() const;
     void setFilterOnWindow(bool value);
 
+    bool getAutoScrollEnabled() const;
+    void setAutoScrollEnabled(bool value);
+
+    bool getHideContext() const;
+    void setHideContext(bool value);
+
+    bool getANSIEnabled() const;
+    void setANSIEnabled(bool value);
+
+    bool getLineNumbersEnabled() const;
+    void setLineNumbersEnabled(bool value);
+
     QJsonObject *serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
+
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;
     bool filterOnWindow = true;
 
+    bool LineNumbersEnabled = false;
+    bool ANSIEnabled = true;
+    bool autoScrollEnabled = true;
+    bool hideContext = false;
 signals:
     void optionAdded(Tag* tag,TagOption* option);
     void clearConsole();

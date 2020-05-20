@@ -17,6 +17,9 @@ void VisualSerialNode::construct()
 {
     node = new SerialNode();
     baseNode = node;
+
+    connect(node->getNodeSettings(), SIGNAL(settingsChanged()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
+
     name = "Serial node";
     shortDiscription = "this node provide access to serial ports";
     if(node->hasInput)

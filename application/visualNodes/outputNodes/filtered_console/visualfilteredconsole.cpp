@@ -21,6 +21,7 @@ void VisualFilteredConsole::construct()
     shortDiscription = QString("this node provides a console with configurable filters for %1 context").arg(CONTEXT_STYLE_NAME);
 
     node = new FilteredConsole();
+    connect(node->getNodeSettings(), SIGNAL(settingsChanged()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
     baseNode = node;
     if(node->hasInput)
     {

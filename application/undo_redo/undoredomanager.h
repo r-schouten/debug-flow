@@ -29,7 +29,8 @@ public:
     void pushChange(CommandBase *command);
     void undo();
     void redo();
-
+public slots:
+    void notifySettingsChanged();
 signals:
     void anythingChanged();
 };

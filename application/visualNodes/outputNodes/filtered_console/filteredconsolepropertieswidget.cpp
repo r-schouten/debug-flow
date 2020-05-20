@@ -21,19 +21,19 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
     containerLayout->addRow("show filter",filterOnWindowCheckbox);
 
     lineNumbersCheckbox = new QCheckBox(this);
-    lineNumbersCheckbox->setChecked(settings->LineNumbersEnabled);
+    lineNumbersCheckbox->setChecked(settings->getLineNumbersEnabled());
     containerLayout->addRow("show line numbers",lineNumbersCheckbox);
 
     hideContextCheckbox = new QCheckBox(this);
-    hideContextCheckbox->setChecked(settings->hideContext);
+    hideContextCheckbox->setChecked(settings->getHideContext());
     containerLayout->addRow("hide context",hideContextCheckbox);
 
     ANSICheckbox = new QCheckBox(this);
-    ANSICheckbox->setChecked(settings->ANSIEnabled);
+    ANSICheckbox->setChecked(settings->getANSIEnabled());
     containerLayout->addRow("use ANSI color codes",ANSICheckbox);
 
     autoScrollCheckbox = new QCheckBox(this);
-    autoScrollCheckbox->setChecked(settings->autoScrollEnabled);
+    autoScrollCheckbox->setChecked(settings->getAutoScrollEnabled());
     containerLayout->addRow("auto scroll",autoScrollCheckbox);
 
     horizontalScrollComboBox = new QComboBox(this);
@@ -139,7 +139,7 @@ void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption
 //---public slots
 void FilteredConsolePropertiesWidget::hideContextStateChanged()
 {
-    settings->hideContext = hideContextCheckbox->checkState();
+    settings->setHideContext(hideContextCheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::horizontalScrollIndexChanged(int index)
 {
@@ -157,13 +157,13 @@ void FilteredConsolePropertiesWidget::filterOnWindowStateChanged()
 }
 void FilteredConsolePropertiesWidget::lineNumbersStateChanged()
 {
-    settings->LineNumbersEnabled = lineNumbersCheckbox->checkState();
+    settings->setLineNumbersEnabled(lineNumbersCheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::ANSIStateChanged()
 {
-    settings->ANSIEnabled = ANSICheckbox->checkState();
+    settings->setANSIEnabled(ANSICheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::autoScrollStateChanged()
 {
-    settings->autoScrollEnabled = autoScrollCheckbox->checkState();
+    settings->setAutoScrollEnabled(autoScrollCheckbox->checkState());
 }
