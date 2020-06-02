@@ -21,7 +21,7 @@ class VisualConnection: public QObject, public Serializable
 public:
     explicit VisualConnection(FlowObjects *_flowObjects, Connector* connector1);
     explicit VisualConnection(FlowObjects *_flowObjects, Connector* connector1, Connector* connector2);
-    ~VisualConnection();
+    virtual ~VisualConnection();
     void draw(QPainter *painter);
     bool intersect(QPointF position);
     bool connection1Set = false;

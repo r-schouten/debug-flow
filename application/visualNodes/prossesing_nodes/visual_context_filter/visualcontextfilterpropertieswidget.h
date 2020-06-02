@@ -17,7 +17,7 @@ class VisualContextFilterPropertiesWidget : public PropertyWidgetBase
 {
 public:
     VisualContextFilterPropertiesWidget(QWidget *parent, ContextFilterSettings* _settings);
-    ~VisualContextFilterPropertiesWidget();
+    virtual ~VisualContextFilterPropertiesWidget();
 protected:
     ContextFilterSettings* settings = nullptr;
     QList<TagGroupbox*> tagGroupboxes;

@@ -12,7 +12,11 @@ OutputNode::~OutputNode()
     {
         iterator.next()->remove();
     }
-    delete circularBuffer;
+    if(circularBuffer != nullptr)
+    {
+        delete circularBuffer;
+        circularBuffer = nullptr;
+    }
 }
 
 Subscription* OutputNode::subscribe(InputNode *inputNode)

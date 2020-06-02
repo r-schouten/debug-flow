@@ -13,7 +13,7 @@ class InputNode:public virtual NodeBase
 
 public:
     InputNode();
-    ~InputNode();
+    virtual ~InputNode();
     virtual void NotifyBufferUpdate(Subscription* source) = 0;
     void notifyUnsubscribe(Subscription* subscription);
 

@@ -28,12 +28,14 @@ VisualNodeBase::~VisualNodeBase()
         delete iterator.next();
     }
 
-
     if(propertyWidget != nullptr)
     {
         delete propertyWidget;
         propertyWidget = nullptr;
     }
+
+    delete baseNode;
+    baseNode = nullptr;
 
 };
 QRectF VisualNodeBase::boundingRect() const

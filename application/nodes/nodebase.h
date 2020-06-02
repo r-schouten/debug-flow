@@ -7,7 +7,6 @@ class NodeBase
 public:
     NodeBase();
     virtual ~NodeBase();
-    virtual void activate(){};
     bool hasInput = false;
     bool hasOutput = false;
 

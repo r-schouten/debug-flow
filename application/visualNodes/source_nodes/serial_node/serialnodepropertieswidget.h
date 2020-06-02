@@ -18,7 +18,7 @@ public slots:
     void loadAvailablePorts();
 
     void connectClicked();
-    void handleSerialPortError(QSerialPort::SerialPortError error);
+    void handleSerialPortError();
     void disconnectClicked();
     void settingsChanged();
 private:

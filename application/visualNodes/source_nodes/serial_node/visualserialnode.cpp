@@ -36,9 +36,10 @@ void VisualSerialNode::construct()
 }
 VisualSerialNode::~VisualSerialNode()
 {
-    delete node;
+    //VisualNodeBase decontructor will be called afterwards
+    //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
     node = nullptr;
-    baseNode = nullptr;
+
 }
 void VisualSerialNode::activate()
 {

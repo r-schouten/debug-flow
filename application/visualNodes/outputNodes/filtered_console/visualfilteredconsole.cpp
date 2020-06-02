@@ -50,6 +50,7 @@ VisualFilteredConsole::~VisualFilteredConsole()
     //node is already deleted with deleteMdiWindow(window);
     node = nullptr;
     baseNode = nullptr;
+
 }
 
 void VisualFilteredConsole::activate()

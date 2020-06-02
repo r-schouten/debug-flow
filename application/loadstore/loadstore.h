@@ -9,6 +9,7 @@
 
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
+#include "visualcontextfilter.h"
 
 #include "json_defs.h"
 #include "serialization_handler.h"

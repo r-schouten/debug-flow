@@ -8,7 +8,7 @@ class VisualSimpleConsole : public VisualOutputNodeBase, public OutputStyle
 {
 public:
     VisualSimpleConsole(FlowObjects *_flowObjects);
-    ~VisualSimpleConsole();
+    virtual ~VisualSimpleConsole();
     void setWindowManager(WindowManager* _windowManager);
     void activate();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

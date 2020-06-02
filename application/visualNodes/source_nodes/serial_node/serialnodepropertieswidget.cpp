@@ -155,7 +155,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     hideDeviceInfo();
 
     connect(availablePortsComboBox,SIGNAL(onShowPopup(ComboBox*)),this,SLOT(loadAvailablePorts()));
-    connect(serialNode,SIGNAL(SerialPortError(QSerialPort::SerialPortError)),this,SLOT(handleSerialPortError(QSerialPort::SerialPortError)));
+    connect(serialSettings,SIGNAL(SerialErrorOccured()),this,SLOT(handleSerialPortError()));
     connect(connectButton,SIGNAL(clicked()),this,SLOT(connectClicked()));
     connect(disconnectButton,SIGNAL(clicked()),this,SLOT(disconnectClicked()));
 
@@ -287,9 +287,8 @@ bool SerialNodePropertiesWidget::IsPortAvailable()
     }
     return false;
 }
-void SerialNodePropertiesWidget::handleSerialPortError(QSerialPort::SerialPortError error)
+void SerialNodePropertiesWidget::handleSerialPortError()
 {
-    Q_UNUSED(error)
     updateButtonStates();
 }
 void SerialNodePropertiesWidget::connectClicked()

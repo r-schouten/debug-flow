@@ -71,5 +71,6 @@ void SerialNode::handleError(QSerialPort::SerialPortError error)
         settings->errorOccured = true;
         settings->errorString = m_serial->errorString();
         closeSerialPort();
+        emit settings->SerialErrorOccured();
     }
 }

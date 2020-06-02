@@ -118,6 +118,10 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     {
         newNode = new VisualSerialNode(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
+    if(VisualContextFilter::classNameEquals(type))
+    {
+        newNode = new VisualContextFilter(flowObjects, baseJson, derivedJson, settingsJson, handler);
+    }
     return newNode;
 }
 

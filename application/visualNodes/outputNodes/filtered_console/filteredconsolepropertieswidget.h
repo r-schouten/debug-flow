@@ -18,7 +18,7 @@ class FilteredConsolePropertiesWidget : public PropertyWidgetBase
     Q_OBJECT
 public:
     FilteredConsolePropertiesWidget(QWidget *parent, FilteredNodeSettings *settings);
-    ~FilteredConsolePropertiesWidget();
+    virtual ~FilteredConsolePropertiesWidget();
 
 public slots:
     void hideContextStateChanged();

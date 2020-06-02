@@ -18,14 +18,13 @@ class ContextFilterEngine: public QObject
 
 public:
     ContextFilterEngine(TagAndOptionsSettings* settings);
-    bool filterData(QString *destination, CircularBufferReader *bufferReader, QTextCharFormat* format = nullptr);
-    //QList<Property*> context;
+    bool filterDataWithStyle(const std::function<void (char)> &addChar, const std::function<bool ()> &deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat* format);
 
+    bool filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader);
 private:
     TagAndOptionsSettings* settings = nullptr;
     bool showCurrentContext = false;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
-    bool filterData(const std::function<void (char)> &addChar, const std::function<bool ()> &deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat* format);
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);
     void applyANSICode(QTextCharFormat *format, ANSICode ansiCode);
     void processContext(CircularBufferReader *bufferReader, int begin, int end);

@@ -37,14 +37,32 @@ FilteredConsole::FilteredConsole()
 FilteredConsole::~FilteredConsole()
 {
     delete contextFilter;
-    delete nodeSettings;
-    delete layout;
-    delete console;
+    contextFilter = nullptr;
+
+    //VisualNodeBase decontructor will be called afterwards
+    //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
+    nodeSettings = nullptr;
 }
 
 NodeSettingsBase *FilteredConsole::getNodeSettings()
 {
     return nodeSettings;
+}
+bool FilteredConsole::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
+{
+    auto lambda = [&](char character) mutable {destination->append(character);};
+    auto cargeReturnLambda = [&]() mutable {
+        if(destination->length() > 0)
+        {
+            if(destination->at(destination->length()-1) == QChar('\r')){
+                destination->chop(1);
+                return true;
+            }
+        }
+        return false;
+    };
+    ANSICodes ansiCodes;
+    return contextFilter->filterDataWithStyle(lambda, cargeReturnLambda, bufferReader, format);
 }
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {
@@ -55,7 +73,7 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     result.reserve(source->bufferReader->availableSize());
 
     QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = contextFilter->filterData(&result, source->bufferReader, &currentCharFormat);
+    bool styleChanged = filterData(&result, source->bufferReader, &currentCharFormat);
 
     if(nodeSettings->getAutoScrollEnabled())
     {

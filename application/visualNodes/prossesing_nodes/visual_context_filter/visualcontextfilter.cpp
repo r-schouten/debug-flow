@@ -6,10 +6,11 @@ VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects)
     construct();
 }
 
-VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
-    :VisualNodeBase(_flowObjects)
+VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &deserializationHandler)
+    :VisualNodeBase(_flowObjects, baseJson, deserializationHandler)
 {
     construct();
+    settings->deserialize(settingsJson, deserializationHandler);
 }
 void VisualContextFilter::construct()
 {
@@ -33,9 +34,10 @@ void VisualContextFilter::construct()
 }
 VisualContextFilter::~VisualContextFilter()
 {
-    delete node;
+    //VisualNodeBase decontructor will be called afterwards
+    //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
     node = nullptr;
-    baseNode = nullptr;
+
 }
 PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {
@@ -44,7 +46,7 @@ PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
         propertyWidget = new VisualContextFilterPropertiesWidget(parent, settings);
     }
     else {
-        qDebug("[warn][VisualSerialNode] propertywidget already exist");
+        qDebug("[warning][VisualContextFilter] propertywidget already exist");
     }
     return propertyWidget;
 }
@@ -77,6 +79,16 @@ void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 QJsonObject *VisualContextFilter::serialize(SerializationHandler &handler)
 {
-    return nullptr;
+    QJsonObject *jsonObject = new QJsonObject();
+    jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);
+    return jsonObject;
+}
+bool VisualContextFilter::classNameEquals(QString name)
+{
+    if(name.compare(staticMetaObject.className(),Qt::CaseInsensitive) == 0)
+    {
+        return true;
+    }
+    return false;
 }
 

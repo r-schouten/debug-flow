@@ -14,7 +14,7 @@ class Connector
 {
 public:
     Connector(VisualNodeBase* parent, int x,int y, ConnectorType type, int diameter, double angle, QString name);
-    ~Connector();
+    virtual ~Connector();
 
     QRectF getRect(int margins);
     QPoint getPoint();

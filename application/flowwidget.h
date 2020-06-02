@@ -26,7 +26,7 @@ class FlowWidget : public QWidget
     Q_OBJECT
 public:
     explicit FlowWidget(QWidget *parent = nullptr, FileSystem* _fileSystem = nullptr);
-    ~FlowWidget();
+    virtual ~FlowWidget();
 
     void open(QJsonObject &jsonObject);
     bool save(bool saveAs);

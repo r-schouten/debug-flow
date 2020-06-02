@@ -11,7 +11,7 @@ class OutputNode: public virtual NodeBase
 {
 public:
     OutputNode();
-    ~OutputNode();
+    virtual ~OutputNode();
     void notifyUnsubscribe(Subscription* subscription);
 protected:
     void NotifyAllSubscriptions();

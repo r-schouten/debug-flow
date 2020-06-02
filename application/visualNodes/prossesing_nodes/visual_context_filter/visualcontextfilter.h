@@ -11,10 +11,11 @@ class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
 public:
     VisualContextFilter(FlowObjects *_flowObjects);
     VisualContextFilter(FlowObjects *_flowObjects,QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
-    ~VisualContextFilter();
+    virtual ~VisualContextFilter();
 
     QJsonObject* serialize(SerializationHandler &handler);
 
+    static bool classNameEquals(QString name);
 protected:
     PropertyWidgetBase* loadPropertiesWidget(QWidget* parent);
     void releasePropertiesWidget();
@@ -27,6 +28,5 @@ protected:
 private:
     void construct();
     bool activated = false;
-    VisualContextFilterPropertiesWidget *propertyWidget = nullptr;
 };
 

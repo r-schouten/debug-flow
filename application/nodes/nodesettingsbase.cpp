@@ -4,3 +4,8 @@ NodeSettingsBase::NodeSettingsBase()
 {
 
 }
+
+NodeSettingsBase::~NodeSettingsBase()
+{
+
+}

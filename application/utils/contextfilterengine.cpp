@@ -5,23 +5,60 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings)
 {
 
 }
-bool ContextFilterEngine::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
+
+bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader)
 {
-    auto lambda = [&](char character) mutable {destination->append(character);};
-    auto cargeReturnLambda = [&]() mutable {
-        if(destination->length() > 0)
+    int contextBeginIndex = 0;
+    int ANSIBeginIndex = 0;
+    int releaseLength = 0;
+
+    bool readingInContext = false;
+    bool styleChanged = false;
+    int availableSize = bufferReader->availableSize();
+    for(int i=0;i<availableSize;i++)
+    {
+        const char character = (*bufferReader)[i];
+
+        if(readingInContext)
         {
-            if(destination->at(destination->length()-1) == QChar('\r')){
-                destination->chop(1);
-                return true;
+            if(character == ']')
+            {
+                processContext(bufferReader,contextBeginIndex,i);
+                if((!settings->getHideContext())&&(showCurrentContext))
+                {
+                    for(int j=contextBeginIndex;j<=i;j++)
+                    {
+                        addChar((*bufferReader)[j]);
+                    }
+                }
+                releaseLength += i - contextBeginIndex + 1;
+                readingInContext = false;
             }
         }
-        return false;
-    };
-    ANSICodes ansiCodes;
-    return filterData(lambda, cargeReturnLambda, bufferReader, format);
+        else {
+            if((character == '[')&&(i - ANSIBeginIndex != 1))//ansi codes also use [
+            {
+                readingInContext = true;
+                contextBeginIndex = i;
+            }
+            else
+            {
+                if(character == '\033')
+                {
+                    ANSIBeginIndex = i;
+                }
+                if(showCurrentContext)
+                {
+                    addChar(character);
+                }
+                releaseLength++;
+            }
+        }
+    }
+    bufferReader->release(releaseLength);
+    return styleChanged;
 }
-bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;

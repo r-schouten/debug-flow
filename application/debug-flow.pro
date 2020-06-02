@@ -165,6 +165,7 @@ INCLUDEPATH += \
     visualNodes/source_nodes/serial_node \
     visualNodes/scene \
     visualNodes/prossesing_nodes \
+    visualNodes/prossesing_nodes/visual_context_filter \
     visualNodes/resourceList \
     visualNodes/connection \
     visualNodes/outputNodes \

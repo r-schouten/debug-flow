@@ -11,7 +11,7 @@ class SerialNode :public QObject, public SerialNodeInterface
     Q_OBJECT
 public:
     SerialNode();
-    ~SerialNode();
+    virtual ~SerialNode();
 
     void openSerialPort();
     void closeSerialPort();
@@ -19,8 +19,9 @@ public:
 
 private:
     QSerialPort *m_serial = nullptr;
-private slots:
+public slots:
     void handleError(QSerialPort::SerialPortError error);
+private slots:
     void readData();
 };
 

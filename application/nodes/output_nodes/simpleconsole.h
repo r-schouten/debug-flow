@@ -17,7 +17,7 @@ public:
     void NotifyBufferUpdate(Subscription *source)override;
 
     SimpleConsole();
-    ~SimpleConsole();
+    virtual ~SimpleConsole();
     NodeSettingsBase *getNodeSettings();
 
 protected:

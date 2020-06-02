@@ -23,7 +23,7 @@ class ItemList :public QObject
     Q_OBJECT
 public:
     ItemList(QTreeWidget *resourceList, FlowObjects *_flowObjects, NodeScene *nodeScene);
-    ~ItemList();
+    virtual ~ItemList();
 private:
     QTreeWidget *resourceList = nullptr;
     FlowObjects *flowObjects = nullptr;

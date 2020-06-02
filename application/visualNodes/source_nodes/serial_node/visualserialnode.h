@@ -22,7 +22,7 @@ public:
     VisualSerialNode(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
     VisualNodeBase *clone();
 
-    ~VisualSerialNode();
+    virtual ~VisualSerialNode();
     void activate();
 
     void openPort();

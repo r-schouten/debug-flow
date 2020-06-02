@@ -19,7 +19,7 @@ public:
     VisualFilteredConsole(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler);
     //calling an other constructor in C++ 11 compiles but doesn't work as expected, therefore a construct method
     void construct();
-    ~VisualFilteredConsole();
+    virtual ~VisualFilteredConsole();
 
     void setWindowManager(WindowManager* _windowManager);
     void activate();

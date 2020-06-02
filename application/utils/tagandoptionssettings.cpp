@@ -30,14 +30,28 @@ void TagAndOptionsSettings::setANSIEnabled(bool value)
     ANSIEnabled = value;
     notifySettingsChanged(DATA_INVALID, SAVE, PROPERIES);
 }
-QJsonObject *TagAndOptionsSettings::serialize(SerializationHandler &handler)
+QJsonArray *TagAndOptionsSettings::serialize(SerializationHandler &handler)
 {
-    return nullptr;
+    QJsonArray *tagsJson = new QJsonArray();
+
+    QListIterator<Tag*>iterator(tags);
+    while(iterator.hasNext())
+    {
+        Tag* tag = iterator.next();
+        QJsonObject* tagJson = tag->serialize();
+        tagsJson->append(*tagJson);
+        delete tagJson;
+    }
+    return tagsJson;
 }
 
-void TagAndOptionsSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
+void TagAndOptionsSettings::deserialize(QJsonArray &jsonArray, DeserializationHandler &handler)
 {
-
+    QJsonArray::iterator it;
+    for (it = jsonArray.begin(); it != jsonArray.end(); it++) {
+        QJsonObject tagJson = it->toObject();
+        tags.append(new Tag(tagJson, handler));
+    }
 }
 
 void TagAndOptionsSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)

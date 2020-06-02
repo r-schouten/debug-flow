@@ -9,7 +9,7 @@ class SerialNodeInterface: public OutputNode
 {
 public:
     SerialNodeInterface();
-    ~SerialNodeInterface();
+    virtual ~SerialNodeInterface();
 
     virtual SerialSettings *getNodeSettings();
 

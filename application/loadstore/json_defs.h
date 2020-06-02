@@ -25,11 +25,9 @@
 #define JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED "LineNumbersEnabled"
 #define JSON_FILTEREDCONSOLE_AUTO_SCROLL "autoScrollEnabled"
 #define JSON_FILTEREDCONSOLE_FILTER_ON_WINDOW "filterOnWindow"
-#define JSON_FILTEREDCONSOLE_HIDE_CONTEXT "hideContext"
 #define JSON_FILTEREDCONSOLE_MAX_LINES "maxlines"
 #define JSON_FILTEREDCONSOLE_H_SCROLL "scrollOption"
 
-#define JSON_FILTEREDCONSOLE_TAGS "tags"
 #define JSON_FILTEREDCONSOLE_TAG_NAME "name"
 #define JSON_FILTEREDCONSOLE_TAG_VISIBLE "visible"
 #define JSON_FILTEREDCONSOLE_TAG_INDEX "index"
@@ -45,6 +43,8 @@
 #define JSON_SERIAL_STOPBITS "stopbits"
 #define JSON_SERIAL_FLOWCONTROL "flowcontrol"
 
+#define JSON_TAGS "tags"
+#define JSON_TAGS_HIDE_CONTEXT "hideContext"
 
 /*
 {

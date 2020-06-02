@@ -1,8 +1,10 @@
 #pragma once
 
+#include <QJsonObject>
+
 #include "nodesettingsbase.h"
 #include "filtertag.h"
-class TagAndOptionsSettings : public NodeSettingsBase
+class TagAndOptionsSettings: public QObject
 {
     Q_OBJECT
 public:
@@ -16,8 +18,8 @@ public:
     bool getANSIEnabled() const;
     void setANSIEnabled(bool value);
 
-    QJsonObject *serialize(SerializationHandler &handler);
-    void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
+    QJsonArray *serialize(SerializationHandler &handler);
+    void deserialize(QJsonArray &jsonArray, DeserializationHandler &handler);
     void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
 
     QList<Tag*> tags;

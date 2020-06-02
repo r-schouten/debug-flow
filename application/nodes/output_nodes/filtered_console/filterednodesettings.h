@@ -24,7 +24,7 @@ class FilteredNodeSettings: public NodeSettingsBase
 public:
     TagAndOptionsSettings* tagAndOptionSettings = nullptr;
     FilteredNodeSettings();
-
+    virtual ~FilteredNodeSettings();
     void setHorizontalScroll(const HorizontalScrollOptions &value);
     HorizontalScrollOptions getHorizontalScroll() const;
     int getMaxLines() const;

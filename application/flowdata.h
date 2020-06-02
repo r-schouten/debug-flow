@@ -9,7 +9,7 @@ class FlowData
 {
 public:
     FlowData(WindowManager* _windowManager);
-    ~FlowData();
+    virtual ~FlowData();
 
     WindowManager* windowManager = nullptr;
 

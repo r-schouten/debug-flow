@@ -5,6 +5,10 @@ FilteredNodeSettings::FilteredNodeSettings()
     tagAndOptionSettings = new TagAndOptionsSettings();
 }
 
+FilteredNodeSettings::~FilteredNodeSettings()
+{
+    delete tagAndOptionSettings;
+}
 
 
 void FilteredNodeSettings::clearConsoleClicked()
@@ -86,7 +90,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
     jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,LineNumbersEnabled);
     jsonObject->insert(JSON_FILTEREDCONSOLE_ANSIENABLED,tagAndOptionSettings->getANSIEnabled());
     jsonObject->insert(JSON_FILTEREDCONSOLE_AUTO_SCROLL,autoScrollEnabled);
-    jsonObject->insert(JSON_FILTEREDCONSOLE_HIDE_CONTEXT,tagAndOptionSettings->getHideContext());
+    jsonObject->insert(JSON_TAGS_HIDE_CONTEXT,tagAndOptionSettings->getHideContext());
 
     jsonObject->insert(JSON_FILTEREDCONSOLE_MAX_LINES,maxLines);
 
@@ -105,7 +109,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
             tagsJson.append(*tagJson);
             delete tagJson;
         }
-        jsonObject->insert(JSON_FILTEREDCONSOLE_TAGS,tagsJson);
+        jsonObject->insert(JSON_TAGS,tagsJson);
     }
     return jsonObject;
 }
@@ -115,7 +119,7 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
     LineNumbersEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED, jsonObject);
     tagAndOptionSettings->setANSIEnabled(handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_ANSIENABLED, jsonObject));
     autoScrollEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_AUTO_SCROLL, jsonObject);
-    tagAndOptionSettings->setHideContext(handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_HIDE_CONTEXT, jsonObject));
+    tagAndOptionSettings->setHideContext(handler.findBoolSafe(CLASSNAME, JSON_TAGS_HIDE_CONTEXT, jsonObject));
 
     maxLines = handler.findIntSafe(CLASSNAME, JSON_FILTEREDCONSOLE_MAX_LINES, jsonObject);
 
@@ -137,7 +141,7 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
     }
 
     //depending on to the SerializationSettings_t the JSON_FILTEREDCONSOLE_TAGS key is not in the json
-    QJsonArray tagsJson = handler.findArraySafe(CLASSNAME, JSON_FILTEREDCONSOLE_TAGS, jsonObject,ErrorLevel::WARNING);
+    QJsonArray tagsJson = handler.findArraySafe(CLASSNAME, JSON_TAGS, jsonObject,ErrorLevel::WARNING);
     QJsonArray::iterator it;
     for (it = tagsJson.begin(); it != tagsJson.end(); it++) {
         QJsonObject tagJson = it->toObject();

@@ -30,7 +30,7 @@ class VisualNodeBase : public QObject, public QGraphicsItem, public Serializable
 public:
     VisualNodeBase(FlowObjects *_flowObjects);
     VisualNodeBase(FlowObjects *_flowObjects, QJsonObject &jsonObject, DeserializationHandler &handler);
-    ~VisualNodeBase();
+    virtual ~VisualNodeBase();
 
     //will be filled in by the derived class
     QString name = "";

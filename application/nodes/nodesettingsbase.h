@@ -24,6 +24,7 @@ class NodeSettingsBase: public QObject, public Serializable
     Q_OBJECT
 public:
     NodeSettingsBase();
+    virtual ~NodeSettingsBase();
     virtual void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler) = 0;
     virtual void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0)=0;
 signals:

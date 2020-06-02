@@ -64,7 +64,7 @@ class FilteredConsole  : public QWidget, public InputNode
     Q_OBJECT
 public:
     FilteredConsole();
-    ~FilteredConsole();
+    virtual ~FilteredConsole();
 
     void clear();
     void NotifyBufferUpdate(Subscription *source)override;
@@ -89,6 +89,7 @@ private:
     QPlainTextEdit* console = nullptr;
     ContextFilterEngine *contextFilter = nullptr;
 
+    bool filterData(QString *destination, CircularBufferReader *bufferReader, QTextCharFormat *format);
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
     void clearConsole();
