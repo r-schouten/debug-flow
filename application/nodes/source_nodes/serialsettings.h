@@ -13,26 +13,26 @@ class SerialSettings : public NodeSettingsBase
     Q_OBJECT
 public:
     SerialSettings();
-    struct Settings
-    {
-        bool running = false;
-        bool errorOccured = false;
-        QString errorString;
-        QString name;
-        qint32 baudRate;
-        QSerialPort::DataBits dataBits;
-        QSerialPort::Parity parity;
-        QSerialPort::StopBits stopBits;
-        QSerialPort::FlowControl flowControl;
-    }nodeSettings;
 
-    Settings settings()
-    {
-        return nodeSettings;
-    }
+    bool running = false;
+    bool errorOccured = false;
+    QString errorString;
+    QString name;
+    qint32 baudRate;
+    QSerialPort::DataBits dataBits;
+    QSerialPort::Parity parity;
+    QSerialPort::StopBits stopBits;
+    QSerialPort::FlowControl flowControl;
+
     void print();
 
     QJsonObject *serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
+
+    void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
+signals:
+    void SerialErrorOccured();
+
+
 };
 

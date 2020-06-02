@@ -39,5 +39,6 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     bool activated = false;
 
+    SerialSettings* serialSettings = nullptr;
 };
 

@@ -2,15 +2,10 @@
 
 FilteredNodeSettings::FilteredNodeSettings()
 {
-
+    tagAndOptionSettings = new TagAndOptionsSettings();
 }
 
-void FilteredNodeSettings::addOption(Tag *tag, TagOption *option)
-{
-    tag->options.append(option);
-    emit optionAdded(tag, option);
-    emit settingsChanged();
-}
+
 
 void FilteredNodeSettings::clearConsoleClicked()
 {
@@ -19,18 +14,18 @@ void FilteredNodeSettings::clearConsoleClicked()
 
 void FilteredNodeSettings::clearContextClicked()
 {
-    while(tags.size() > 0)
+    while(tagAndOptionSettings->tags.size() > 0)
     {
-        delete tags.takeAt(0);
+        delete tagAndOptionSettings->tags.takeAt(0);
     }
-    emit tagsChanged();
-    emit settingsChanged();
+    emit tagAndOptionSettings->tagsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredNodeSettings::setHorizontalScroll(const HorizontalScrollOptions &value)
 {
     horizontalScroll = value;
     emit scrollSettingsChanged();
-    emit settingsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
 HorizontalScrollOptions FilteredNodeSettings::getHorizontalScroll() const
@@ -47,7 +42,7 @@ void FilteredNodeSettings::setMaxLinesComboBox(int value)
 {
     maxLines = value;
     emit maxLinesChanged();
-    emit settingsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
 bool FilteredNodeSettings::getFilterOnWindow() const
@@ -59,28 +54,7 @@ void FilteredNodeSettings::setFilterOnWindow(bool value)
 {
     filterOnWindow = value;
     emit filterOnWindowChanged();
-    emit settingsChanged();
-}
-bool FilteredNodeSettings::getHideContext() const
-{
-    return hideContext;
-}
-
-void FilteredNodeSettings::setHideContext(bool value)
-{
-    hideContext = value;
-    emit settingsChanged();
-}
-
-bool FilteredNodeSettings::getANSIEnabled() const
-{
-    return ANSIEnabled;
-}
-
-void FilteredNodeSettings::setANSIEnabled(bool value)
-{
-    ANSIEnabled = value;
-    emit settingsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
 bool FilteredNodeSettings::getLineNumbersEnabled() const
@@ -91,13 +65,13 @@ bool FilteredNodeSettings::getLineNumbersEnabled() const
 void FilteredNodeSettings::setLineNumbersEnabled(bool value)
 {
     LineNumbersEnabled = value;
-    emit settingsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
 void FilteredNodeSettings::setAutoScrollEnabled(bool value)
 {
     autoScrollEnabled = value;
-    emit settingsChanged();
+    notifySettingsChanged(DATA_VALID, SAVE,PROPERIES);
 }
 
 bool FilteredNodeSettings::getAutoScrollEnabled() const
@@ -110,9 +84,9 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,LineNumbersEnabled);
-    jsonObject->insert(JSON_FILTEREDCONSOLE_ANSIENABLED,ANSIEnabled);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_ANSIENABLED,tagAndOptionSettings->getANSIEnabled());
     jsonObject->insert(JSON_FILTEREDCONSOLE_AUTO_SCROLL,autoScrollEnabled);
-    jsonObject->insert(JSON_FILTEREDCONSOLE_HIDE_CONTEXT,hideContext);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_HIDE_CONTEXT,tagAndOptionSettings->getHideContext());
 
     jsonObject->insert(JSON_FILTEREDCONSOLE_MAX_LINES,maxLines);
 
@@ -123,7 +97,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
     {
         QJsonArray tagsJson;
 
-        QListIterator<Tag*>iterator(tags);
+        QListIterator<Tag*>iterator(tagAndOptionSettings->tags);
         while(iterator.hasNext())
         {
             Tag* tag = iterator.next();
@@ -139,9 +113,9 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
     LineNumbersEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED, jsonObject);
-    ANSIEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_ANSIENABLED, jsonObject);
+    tagAndOptionSettings->setANSIEnabled(handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_ANSIENABLED, jsonObject));
     autoScrollEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_AUTO_SCROLL, jsonObject);
-    hideContext = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_HIDE_CONTEXT, jsonObject);
+    tagAndOptionSettings->setHideContext(handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_HIDE_CONTEXT, jsonObject));
 
     maxLines = handler.findIntSafe(CLASSNAME, JSON_FILTEREDCONSOLE_MAX_LINES, jsonObject);
 
@@ -167,6 +141,16 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
     QJsonArray::iterator it;
     for (it = tagsJson.begin(); it != tagsJson.end(); it++) {
         QJsonObject tagJson = it->toObject();
-        tags.append(new Tag(tagJson, handler));
+        tagAndOptionSettings->tags.append(new Tag(tagJson, handler));
+    }
+}
+
+void FilteredNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
+{
+    qDebug("filtered node settings changed");
+    if(saveSettings == SAVE)
+    {    qDebug("filtered node settings changed save");
+
+        emit saveAbleChangeOccured();
     }
 }

@@ -3,11 +3,25 @@
 VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects)
     :VisualNodeBase(_flowObjects)
 {
+    construct();
+}
+
+VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &handler)
+    :VisualNodeBase(_flowObjects)
+{
+    construct();
+}
+void VisualContextFilter::construct()
+{
     node = new ContextFilterNode();
     baseNode = node;
 
     name = "Context filter";
     shortDiscription = QString("this node provides filtering for %1 context").arg(CONTEXT_STYLE_NAME);
+
+    settings = node->getNodeSettings();
+    connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
+
     if(node->hasInput)
     {
         addInputConnector();
@@ -25,17 +39,28 @@ VisualContextFilter::~VisualContextFilter()
 }
 PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {
-    return nullptr;
+    if(propertyWidget == nullptr)
+    {
+        propertyWidget = new VisualContextFilterPropertiesWidget(parent, settings);
+    }
+    else {
+        qDebug("[warn][VisualSerialNode] propertywidget already exist");
+    }
+    return propertyWidget;
 }
 
 void VisualContextFilter::releasePropertiesWidget()
 {
-
+    if(propertyWidget != nullptr)
+    {
+        delete propertyWidget;
+        propertyWidget = nullptr;
+    }
 }
 
 void VisualContextFilter::activate()
 {
-
+    activated = true;
 }
 VisualNodeBase *VisualContextFilter::clone()
 {

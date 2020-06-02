@@ -5,7 +5,7 @@
 
 #include "nodesettingsbase.h"
 #include "filtertag.h"
-
+#include "tagandoptionssettings.h"
 #include "json_defs.h"
 
 #define DEFAULT_CONSOLE_BLOCK_COUNT 10000
@@ -18,15 +18,13 @@ enum class HorizontalScrollOptions:int{
     newline=2
 };
 
-class FilteredNodeSettings : public NodeSettingsBase
+class FilteredNodeSettings: public NodeSettingsBase
 {
     Q_OBJECT
 public:
-    QList<Tag*> tags;
-
+    TagAndOptionsSettings* tagAndOptionSettings = nullptr;
     FilteredNodeSettings();
 
-    void addOption(Tag* tag,TagOption* option);
     void setHorizontalScroll(const HorizontalScrollOptions &value);
     HorizontalScrollOptions getHorizontalScroll() const;
     int getMaxLines() const;
@@ -38,17 +36,13 @@ public:
     bool getAutoScrollEnabled() const;
     void setAutoScrollEnabled(bool value);
 
-    bool getHideContext() const;
-    void setHideContext(bool value);
-
-    bool getANSIEnabled() const;
-    void setANSIEnabled(bool value);
-
     bool getLineNumbersEnabled() const;
     void setLineNumbersEnabled(bool value);
 
     QJsonObject *serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
+
+    void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
 
 private:
     int maxLines = DEFAULT_CONSOLE_BLOCK_COUNT;
@@ -56,18 +50,16 @@ private:
     bool filterOnWindow = true;
 
     bool LineNumbersEnabled = false;
-    bool ANSIEnabled = true;
     bool autoScrollEnabled = true;
-    bool hideContext = false;
 signals:
-    void optionAdded(Tag* tag,TagOption* option);
     void clearConsole();
-    void tagsChanged();
+
     void maxLinesChanged();
     void scrollSettingsChanged();
     void filterOnWindowChanged();
 public slots:
     void clearConsoleClicked();
     void clearContextClicked();
+
 };
 

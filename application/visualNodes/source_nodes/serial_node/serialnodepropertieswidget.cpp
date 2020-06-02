@@ -4,8 +4,10 @@
 #include <QLabel>
 
 SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNode *serialNode)
-    :PropertyWidgetBase (parent),serialSettings(serialNode->settings),serialNode(serialNode)
+    :PropertyWidgetBase (parent),serialNode(serialNode)
 {    
+    serialSettings = serialNode->getNodeSettings();
+
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizePolicy.setVerticalStretch(1);
     this->setSizePolicy(sizePolicy);
@@ -40,7 +42,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     for(int i = 0;i<baudratesOptions.size();i++)
     {
         baudRatesComboBox->addItem(QString::number(baudratesOptions[i]));
-        if(baudratesOptions[i] == serialSettings->nodeSettings.baudRate)
+        if(baudratesOptions[i] == serialSettings->baudRate)
         {
             baudRatesComboBox->setCurrentIndex(i);
             baudrateFound = true;
@@ -59,7 +61,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     {
         baudRatesComboBox->setCurrentIndex(baudRatesComboBox->count()-1);//set to custom
         customBaudRateEdit->show();
-        customBaudRateEdit->setText(QString::number(serialSettings->nodeSettings.baudRate));
+        customBaudRateEdit->setText(QString::number(serialSettings->baudRate));
     }
 
     //data bits
@@ -71,7 +73,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     bool found = false;
     for(int i=0;i<dataBitsBox->count();i++)
     {
-        if(dataBitsBox->itemData(i) == serialSettings->nodeSettings.dataBits)
+        if(dataBitsBox->itemData(i) == serialSettings->dataBits)
         {
             dataBitsBox->setCurrentIndex(i);
             found = true;
@@ -93,7 +95,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     found = false;
     for(int i=0;i<stopBitsBox->count();i++)
     {
-        if(stopBitsBox->itemData(i) == serialSettings->nodeSettings.stopBits)
+        if(stopBitsBox->itemData(i) == serialSettings->stopBits)
         {
             stopBitsBox->setCurrentIndex(i);
             found = true;
@@ -114,7 +116,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     found = false;
     for(int i=0;i<parityCombobox->count();i++)
     {
-        if(parityCombobox->itemData(i) == serialSettings->nodeSettings.parity)
+        if(parityCombobox->itemData(i) == serialSettings->parity)
         {
             parityCombobox->setCurrentIndex(i);
             found = true;
@@ -133,7 +135,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     found = false;
     for(int i=0;i<flowControlBox->count();i++)
     {
-        if(flowControlBox->itemData(i) == serialSettings->nodeSettings.flowControl)
+        if(flowControlBox->itemData(i) == serialSettings->flowControl)
         {
             flowControlBox->setCurrentIndex(i);
             found = true;
@@ -210,10 +212,10 @@ void SerialNodePropertiesWidget::updateDeviceInfo()
         }
 
     }
-    if(serialSettings->nodeSettings.errorOccured)
+    if(serialSettings->errorOccured)
     {
         errorLabel->show();
-        errorLabel->setText("ERROR: " + serialSettings->nodeSettings.errorString);
+        errorLabel->setText("ERROR: " + serialSettings->errorString);
     }
     else {
         errorLabel->hide();
@@ -229,10 +231,10 @@ void SerialNodePropertiesWidget::loadAvailablePorts()
     const auto infos = QSerialPortInfo::availablePorts();
     for (const QSerialPortInfo &info : infos) {
         QString text = info.portName();
-        if(info.portName() == serialSettings->nodeSettings.name)
+        if(info.portName() == serialSettings->name)
         {
             currentIndex = i;
-            if(serialSettings->nodeSettings.running)
+            if(serialSettings->running)
             {//show that the port is already open
                 text += "-current";
             }
@@ -269,7 +271,7 @@ bool SerialNodePropertiesWidget::IsPortAvailable()
         {
             if(info.isBusy() || info.isNull())
             {
-                if(info.portName() == serialSettings->nodeSettings.name)
+                if(info.portName() == serialSettings->name)
                 {
                     //port is currently busy because the current node is using it
                 }
@@ -297,25 +299,25 @@ void SerialNodePropertiesWidget::connectClicked()
         //don't connect if the port is not valid
         return;
     }
-    serialSettings->nodeSettings.name = availablePortsComboBox->currentData().toString();
-    serialSettings->nodeSettings.parity = static_cast<QSerialPort::Parity>(
+    serialSettings->name = availablePortsComboBox->currentData().toString();
+    serialSettings->parity = static_cast<QSerialPort::Parity>(
                 parityCombobox->itemData(parityCombobox->currentIndex()).toInt());
     if(baudRatesComboBox->currentIndex() == baudRatesComboBox->count()-1)//custom baud rate
     {
-        serialSettings->nodeSettings.baudRate = customBaudRateEdit->text().toInt();
+        serialSettings->baudRate = customBaudRateEdit->text().toInt();
     }
     else //standard baud rate
     {
-        serialSettings->nodeSettings.baudRate = baudRatesComboBox->currentText().toInt();
+        serialSettings->baudRate = baudRatesComboBox->currentText().toInt();
     }
-    serialSettings->nodeSettings.dataBits = static_cast<QSerialPort::DataBits>(
+    serialSettings->dataBits = static_cast<QSerialPort::DataBits>(
                 dataBitsBox->itemData(dataBitsBox->currentIndex()).toInt());
-    serialSettings->nodeSettings.stopBits = static_cast<QSerialPort::StopBits>(
+    serialSettings->stopBits = static_cast<QSerialPort::StopBits>(
                 stopBitsBox->itemData(stopBitsBox->currentIndex()).toInt());
-    serialSettings->nodeSettings.flowControl = static_cast<QSerialPort::FlowControl>(
+    serialSettings->flowControl = static_cast<QSerialPort::FlowControl>(
                 flowControlBox->itemData(flowControlBox->currentIndex()).toInt());
 
-    if(serialSettings->nodeSettings.running)
+    if(serialSettings->running)
     {
         serialNode->closeSerialPort();
     }
@@ -325,11 +327,11 @@ void SerialNodePropertiesWidget::connectClicked()
     updateButtonStates();
     serialSettings->print();
 
-    emit serialSettings->settingsChanged();
+    emit serialSettings->notifySettingsChanged();
 }
 void SerialNodePropertiesWidget::disconnectClicked()
 {
-    if(serialSettings->nodeSettings.running)
+    if(serialSettings->running)
     {
         serialNode->closeSerialPort();
     }
@@ -340,11 +342,11 @@ void SerialNodePropertiesWidget::settingsChanged()
     qDebug("[debug][SerialNodePropertiesWidget] settingsChanged");
     settingChanged = true;
     updateButtonStates();
-    emit serialSettings->settingsChanged();
+    emit serialSettings->notifySettingsChanged();
 }
 void SerialNodePropertiesWidget::updateButtonStates()
 {
-    if(serialSettings->nodeSettings.running)
+    if(serialSettings->running)
     {
         disconnectButton->setEnabled(true);
         connectButton->setText("apply");
@@ -356,7 +358,7 @@ void SerialNodePropertiesWidget::updateButtonStates()
     }
     if(IsPortAvailable())
     {
-        if((serialSettings->nodeSettings.running)&&(!settingChanged))//no setting is changed clicking the button would have no effect
+        if((serialSettings->running)&&(!settingChanged))//no setting is changed clicking the button would have no effect
         {
             connectButton->setEnabled(false);
         }

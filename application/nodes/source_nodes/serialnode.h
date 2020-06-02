@@ -3,29 +3,24 @@
 #include <QMessageBox>
 
 #include "outputnode.h"
+#include "serialnodeinterface.h"
 #include "serialsettings.h"
 
-class SerialNode : public QObject, public OutputNode
+class SerialNode :public QObject, public SerialNodeInterface
 {
     Q_OBJECT
 public:
     SerialNode();
     ~SerialNode();
 
-    NodeSettingsBase *getNodeSettings();
-
-    SerialSettings* settings = nullptr;
+    void openSerialPort();
+    void closeSerialPort();
+    void writeData(const char* data, const size_t length);
 
 private:
     QSerialPort *m_serial = nullptr;
-public slots:
-    void openSerialPort();
-    void closeSerialPort();
-    void writeData(const QByteArray &data);
-    void readData();
+private slots:
     void handleError(QSerialPort::SerialPortError error);
-signals:
-    void SerialPortError(QSerialPort::SerialPortError error);
-
+    void readData();
 };
 

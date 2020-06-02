@@ -3,23 +3,28 @@
 ContextFilterNode::ContextFilterNode()
 {
     circularBuffer = new CircularBuffer(500,1000);
+    settings = new ContextFilterSettings();
+
+    contextFilterEngine = new ContextFilterEngine(settings->tagAndOptionsSettings);
+
 }
 
-NodeSettingsBase *ContextFilterNode::getNodeSettings()
+ContextFilterSettings *ContextFilterNode::getNodeSettings()
 {
-    return nullptr;//todo add settings
+    return settings;
 }
 
 void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
 {
-    //qDebug("[verbose,ContextFilter] NotifyBufferUpdate");
-
-    int availableSize = source->bufferReader->availableSize();
-    for(int i=0;i<availableSize;i++)
-    {
-        circularBuffer->append(&source->bufferReader->at(i),1);
-
+    if(source->bufferReader == nullptr){
+        qFatal("ContextFilterNode::notifyBufferUpdate() : bufferReader == nullptr");
     }
-    source->bufferReader->release(availableSize);
+    QString result;
+    result.reserve(source->bufferReader->availableSize());
+
+    contextFilterEngine->filterData(&result, source->bufferReader, nullptr);
+
+    QByteArray bytes= result.toLatin1();
+    circularBuffer->append(&bytes);
     NotifyAllSubscriptions();
 }

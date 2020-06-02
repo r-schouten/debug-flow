@@ -12,16 +12,15 @@
 #include "propertywidgetbase.h"
 #include "filteredconsolewidgets.h"
 #include "taggroupbox.h"
-
+#include "tagsandoptionswidget.h"
 class FilteredConsolePropertiesWidget : public PropertyWidgetBase
 {
     Q_OBJECT
 public:
     FilteredConsolePropertiesWidget(QWidget *parent, FilteredNodeSettings *settings);
     ~FilteredConsolePropertiesWidget();
-    QList<TagGroupbox*> tagGroupboxes;
+
 public slots:
-    void optionAdded(Tag *tag, TagOption *option);
     void hideContextStateChanged();
     void horizontalScrollIndexChanged(int index);
     void maxLinesIndexChanged(int index);
@@ -29,15 +28,14 @@ public slots:
     void lineNumbersStateChanged();
     void ANSIStateChanged();
     void autoScrollStateChanged();
-private slots:
-    void loadTags();
 private:
 
     FilteredNodeSettings* settings = nullptr;
 
     QVBoxLayout* layout = nullptr;
-    QWidget* container = nullptr;
+    QWidget* formContainer = nullptr;
     QFormLayout* containerLayout = nullptr;
+    TagsAndOptionsWidget* tagContainer = nullptr;
 
     QCheckBox* filterOnWindowCheckbox = nullptr;
     QCheckBox* lineNumbersCheckbox = nullptr;

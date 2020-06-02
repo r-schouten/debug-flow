@@ -19,15 +19,15 @@ FilteredConsole::FilteredConsole()
     p.setColor(QPalette::Text, Qt::black);
     console->setPalette(p);
 
-    contextFilter = new ContextFilter(nodeSettings);
+    contextFilter = new ContextFilterEngine(nodeSettings->tagAndOptionSettings);
 
     loadScrollSettings();
     loadTags();
     filterOnWindowChanged();
-    connect(nodeSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
+    connect(nodeSettings->tagAndOptionSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
     connect(nodeSettings, SIGNAL(clearConsole()),this,SLOT(clearConsole()));
 
-    connect(nodeSettings, SIGNAL(tagsChanged()),this,SLOT(loadTags()));
+    connect(nodeSettings->tagAndOptionSettings, SIGNAL(tagsChanged()),this,SLOT(loadTags()));
     connect(nodeSettings,SIGNAL(maxLinesChanged()),this,SLOT(loadMaxLines()));
     connect(nodeSettings,SIGNAL(scrollSettingsChanged()),this,SLOT(loadScrollSettings()));
     connect(nodeSettings,SIGNAL(filterOnWindowChanged()),this,SLOT(filterOnWindowChanged()));
@@ -84,7 +84,7 @@ void FilteredConsole::loadTags()
 {
     while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
 
-    QListIterator<Tag*> tagIterator(nodeSettings->tags);
+    QListIterator<Tag*> tagIterator(nodeSettings->tagAndOptionSettings->tags);
     while(tagIterator.hasNext())
     {
         Tag* currentTag = tagIterator.next();

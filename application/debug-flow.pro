@@ -26,7 +26,9 @@ SOURCES += \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
+    nodes/processing_nodes/contextfiltersettings.cpp \
     nodes/source_nodes/serialnode.cpp \
+    nodes/source_nodes/serialnodeinterface.cpp \
     nodes/source_nodes/serialsettings.cpp \
     nodes/subscription.cpp \
     test/circularbuffertest.cpp \
@@ -36,9 +38,11 @@ SOURCES += \
     undo_redo/commands/movecommand.cpp \
     undo_redo/undoredomanager.cpp \
     utils/ansiescapereader.cpp \
-    utils/contextfilter.cpp \
+    utils/contextfilterengine.cpp \
     utils/flowobjects.cpp \
+    utils/tagandoptionssettings.cpp \
     utils/utils.cpp \
+    visualNodes/components/tagsandoptionswidget.cpp \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
     visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.cpp \
@@ -91,7 +95,9 @@ HEADERS += \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
+    nodes/processing_nodes/contextfiltersettings.h \
     nodes/source_nodes/serialnode.h \
+    nodes/source_nodes/serialnodeinterface.h \
     nodes/source_nodes/serialsettings.h \
     nodes/subscription.h \
     test/circularbuffertest.h \
@@ -104,9 +110,11 @@ HEADERS += \
     userinterface/ui_mainwindow.h \
     utils/ansi_types.h \
     utils/ansiescapereader.h \
-    utils/contextfilter.h \
+    utils/contextfilterengine.h \
     utils/flowobjects.h \
+    utils/tagandoptionssettings.h \
     utils/utils.h \
+    visualNodes/components/tagsandoptionswidget.h \
     visualNodes/connection/connectionstyle.h \
     visualNodes/connection/connector.h \
     visualNodes/connection/visualconnection.h \
@@ -152,6 +160,7 @@ INCLUDEPATH += \
     windows \
     visualNodes \
     sourceNodes \
+    visualNodes/components \
     visualNodes/source_nodes \
     visualNodes/source_nodes/serial_node \
     visualNodes/scene \

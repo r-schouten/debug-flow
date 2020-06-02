@@ -1,11 +1,11 @@
-#include "contextfilter.h"
+#include "contextfilterengine.h"
 
-ContextFilter::ContextFilter(FilteredNodeSettings *settings)
+ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings)
     :settings(settings)
 {
 
 }
-bool ContextFilter::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilterEngine::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     auto lambda = [&](char character) mutable {destination->append(character);};
     auto cargeReturnLambda = [&]() mutable {
@@ -21,8 +21,7 @@ bool ContextFilter::filterData(QString* destination, CircularBufferReader *buffe
     ANSICodes ansiCodes;
     return filterData(lambda, cargeReturnLambda, bufferReader, format);
 }
-
-bool ContextFilter::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -68,7 +67,7 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
                 readingInContext = true;
                 contextBeginIndex = i;
             }
-            else if((character == '\033')&&(settings->getANSIEnabled()))
+            else if((character == '\033') && (settings->getANSIEnabled()))
             {
                 readingANSIEscape = true;
                 ANSIBeginIndex = i;
@@ -93,7 +92,8 @@ bool ContextFilter::filterData(const std::function<void(char)>& addChar, const s
     bufferReader->release(releaseLength);
     return styleChanged;
 }
-void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin, int end)
+
+void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int begin, int end)
 {
     showCurrentContext = true;
     int beginOfProperty = begin+1;
@@ -117,7 +117,7 @@ void ContextFilter::processContext(CircularBufferReader *bufferReader, int begin
     }
     processOption(property,propertyIndex);
 }
-void ContextFilter::processOption(QString& optionName, int tagIndex)
+void ContextFilterEngine::processOption(QString& optionName, int tagIndex)
 {
 
     if(settings->tags.size() <= tagIndex)
@@ -140,7 +140,7 @@ void ContextFilter::processOption(QString& optionName, int tagIndex)
 
 //only supports SGR parameters
 //https://en.wikipedia.org/wiki/ANSI_escape_code
-bool ContextFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat* format,int beginIndex, int endIndex)
+bool ContextFilterEngine::processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat* format,int beginIndex, int endIndex)
 {
     //there is no code with less than 3 chars
     if(endIndex - beginIndex + 1 < 3)return false;
@@ -194,8 +194,9 @@ bool ContextFilter::processANSIEscape(CircularBufferReader *bufferReader, QTextC
     }
     return false;
 }
-void ContextFilter::applyANSICode(QTextCharFormat* format, ANSICode ansiCode)
+void ContextFilterEngine::applyANSICode(QTextCharFormat* format, ANSICode ansiCode)
 {
+    if(!format)return;
     if(ansiCode.type == ANSIType::FORMATTING)
     {
         if(ansiCode.value == 0)//reset code

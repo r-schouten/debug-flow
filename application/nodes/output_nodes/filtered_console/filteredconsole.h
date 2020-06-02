@@ -11,7 +11,7 @@
 
 
 #include "outputnode.h"
-#include "contextfilter.h"
+#include "contextfilterengine.h"
 #include "filterednodesettings.h"
 #include "filteredconsolewidgets.h"
 
@@ -87,7 +87,7 @@ private:
 
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
-    ContextFilter *contextFilter = nullptr;
+    ContextFilterEngine *contextFilter = nullptr;
 
 public slots:
     void optionAdded(Tag *tag, TagOption *option);

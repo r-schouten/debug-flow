@@ -9,27 +9,29 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
     layout->setAlignment(Qt::AlignTop);
     this->setLayout(layout);
 
-    container = new QWidget();
-    layout->addWidget(container);
+    formContainer = new QWidget();
+    layout->addWidget(formContainer);
     containerLayout = new QFormLayout;
     containerLayout->setMargin(0);
-    container->setLayout(containerLayout);
+    formContainer->setLayout(containerLayout);
 
+    tagContainer = new TagsAndOptionsWidget(nullptr, &settings->tagAndOptionSettings->tags);
+    layout->addWidget(tagContainer);
 
     filterOnWindowCheckbox = new QCheckBox(this);
     filterOnWindowCheckbox->setChecked(settings->getFilterOnWindow());
     containerLayout->addRow("show filter",filterOnWindowCheckbox);
 
     lineNumbersCheckbox = new QCheckBox(this);
-    lineNumbersCheckbox->setChecked(settings->getLineNumbersEnabled());
+    lineNumbersCheckbox->setChecked(settings->getLineNumbersEnabled ());
     containerLayout->addRow("show line numbers",lineNumbersCheckbox);
 
     hideContextCheckbox = new QCheckBox(this);
-    hideContextCheckbox->setChecked(settings->getHideContext());
+    hideContextCheckbox->setChecked(settings->tagAndOptionSettings->getHideContext());
     containerLayout->addRow("hide context",hideContextCheckbox);
 
     ANSICheckbox = new QCheckBox(this);
-    ANSICheckbox->setChecked(settings->getANSIEnabled());
+    ANSICheckbox->setChecked(settings->tagAndOptionSettings->getANSIEnabled());
     containerLayout->addRow("use ANSI color codes",ANSICheckbox);
 
     autoScrollCheckbox = new QCheckBox(this);
@@ -88,58 +90,20 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent
     connect(clearButton,SIGNAL(clicked(bool)),settings,SLOT(clearConsoleClicked()));
     connect(clearContextButton,SIGNAL(clicked(bool)),settings,SLOT(clearContextClicked()));
 
-    connect(settings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
-    connect(settings,SIGNAL(tagsChanged()),this,SLOT(loadTags()));
+    connect(settings->tagAndOptionSettings, SIGNAL(optionAdded(Tag*,TagOption*)),tagContainer,SLOT(optionAdded(Tag*,TagOption*)));
+    connect(settings->tagAndOptionSettings,SIGNAL(tagsChanged()),tagContainer,SLOT(loadTags()));
 
-    loadTags();
+    tagContainer->loadTags();
 }
 
 FilteredConsolePropertiesWidget::~FilteredConsolePropertiesWidget()
 {
-    while(tagGroupboxes.size() > 0) delete tagGroupboxes.takeAt(0);
 
-}
-void FilteredConsolePropertiesWidget::loadTags()
-{
-    while(tagGroupboxes.size() > 0) delete tagGroupboxes.takeAt(0);
-
-
-    QListIterator<Tag*> tagIterator(settings->tags);
-    while(tagIterator.hasNext())
-    {
-        Tag* currentTag = tagIterator.next();
-        TagGroupbox* newGroupBox = new TagGroupbox(currentTag);
-        tagGroupboxes.append(newGroupBox);
-        newGroupBox->loadTag();
-        layout->addWidget(newGroupBox);
-        this->update();
-    }
-}
-void FilteredConsolePropertiesWidget::optionAdded(Tag* destinationTag, TagOption* option)
-{
-
-    TagGroupbox* destinationGroupbox = nullptr;
-    if(tagGroupboxes.size() <= destinationTag->tagIndex)
-    {
-        destinationGroupbox = new TagGroupbox(destinationTag);
-        tagGroupboxes.append(destinationGroupbox);
-        layout->addWidget(destinationGroupbox);
-    }
-    else {
-        destinationGroupbox = tagGroupboxes.at(destinationTag->tagIndex);
-    }
-
-    TagOptionItem* item = new TagOptionItem(option);
-    item->setText(option->name);
-    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
-
-    destinationGroupbox->itemModel->appendRow(item);
 }
 //---public slots
 void FilteredConsolePropertiesWidget::hideContextStateChanged()
 {
-    settings->setHideContext(hideContextCheckbox->checkState());
+    settings->tagAndOptionSettings->setHideContext(hideContextCheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::horizontalScrollIndexChanged(int index)
 {
@@ -161,7 +125,7 @@ void FilteredConsolePropertiesWidget::lineNumbersStateChanged()
 }
 void FilteredConsolePropertiesWidget::ANSIStateChanged()
 {
-    settings->setANSIEnabled(ANSICheckbox->checkState());
+    settings->tagAndOptionSettings->setANSIEnabled(ANSICheckbox->checkState());
 }
 void FilteredConsolePropertiesWidget::autoScrollStateChanged()
 {
