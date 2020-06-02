@@ -26,6 +26,7 @@ void VisualSimpleConsole::activate()
 
 PropertyWidgetBase *VisualSimpleConsole::loadPropertiesWidget(QWidget* parent)
 {
+    Q_UNUSED(parent);
     return nullptr;
 }
 
@@ -70,6 +71,7 @@ VisualNodeBase *VisualSimpleConsole::clone()
 
 QJsonObject *VisualSimpleConsole::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     return nullptr;
 }
 

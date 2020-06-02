@@ -151,6 +151,9 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
 
 void FilteredNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
+    Q_UNUSED(dataValid);
+    Q_UNUSED(source);
+    Q_UNUSED(event);
     qDebug("filtered node settings changed");
     if(saveSettings == SAVE)
     {    qDebug("filtered node settings changed save");

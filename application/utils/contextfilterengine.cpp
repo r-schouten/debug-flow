@@ -133,7 +133,6 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
 void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int begin, int end)
 {
     showCurrentContext = true;
-    int beginOfProperty = begin+1;
     int propertyIndex = 0;
     QString property;
     property.reserve(end - begin);
@@ -144,7 +143,6 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         if((character == ',')||(character == ' '))
         {
             processOption(property,propertyIndex);
-            beginOfProperty = i + 1;
             propertyIndex++;
             property.clear();
         }

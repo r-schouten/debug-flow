@@ -7,11 +7,12 @@ MoveCommand::MoveCommand(VisualNodeBase *affectedNode, QPoint previousPosition, 
 
     setText(QString("move node %1").arg(affectedNode->name));
 
-    qDebug("[debug][MoveCommand] affectedNodeId %lu", affectedNodeId);
+    qDebug("[debug][MoveCommand] affectedNodeId %lld", affectedNodeId);
 
 }
 void MoveCommand::undo(FlowData *_flowData, LoadStore *loadStore)
 {
+    Q_UNUSED(loadStore);
     VisualNodeBase* affectedNode = _flowData->findnode(affectedNodeId);
     if(affectedNode == nullptr)
     {

@@ -9,6 +9,7 @@ VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects)
 VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &deserializationHandler)
     :VisualNodeBase(_flowObjects, baseJson, deserializationHandler)
 {
+    Q_UNUSED(derivedJson);
     construct();
     settings->deserialize(settingsJson, deserializationHandler);
 }
@@ -79,6 +80,7 @@ void VisualContextFilter::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 QJsonObject *VisualContextFilter::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler)
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);
     return jsonObject;

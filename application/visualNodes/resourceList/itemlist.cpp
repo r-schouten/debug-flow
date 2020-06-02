@@ -90,10 +90,7 @@ void ItemList::generateCategory(QList<VisualNodeBase*>& nodes, QString name, QSt
     }
 
 }
-void ItemList::itemPressed(QTreeWidgetItem *item, int column)
-{
 
-}
 void ItemList::itemClicked(QTreeWidgetItem *item, int column)
 {
     qDebug("[verbose,ItemList] item clicked %d",column);

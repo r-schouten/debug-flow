@@ -95,6 +95,7 @@ VisualNodeBase *VisualFilteredConsole::clone()
 
 QJsonObject *VisualFilteredConsole::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     QJsonObject *jsonObject = new QJsonObject();
 
     jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);

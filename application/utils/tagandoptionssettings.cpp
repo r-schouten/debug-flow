@@ -32,6 +32,7 @@ void TagAndOptionsSettings::setANSIEnabled(bool value)
 }
 QJsonArray *TagAndOptionsSettings::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     QJsonArray *tagsJson = new QJsonArray();
 
     QListIterator<Tag*>iterator(tags);
@@ -56,5 +57,8 @@ void TagAndOptionsSettings::deserialize(QJsonArray &jsonArray, DeserializationHa
 
 void TagAndOptionsSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
-
+    Q_UNUSED(dataValid);
+    Q_UNUSED(saveSettings);
+    Q_UNUSED(source);
+    Q_UNUSED(event);
 }

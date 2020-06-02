@@ -41,6 +41,9 @@ void ContextFilterSettings::deserialize(QJsonObject &jsonObject, Deserialization
 
 void ContextFilterSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
+    Q_UNUSED(dataValid);
+    Q_UNUSED(source);
+    Q_UNUSED(event);
     qDebug("contextfilter node settings changed");
     if(saveSettings == SAVE)
     {
@@ -50,6 +53,8 @@ void ContextFilterSettings::notifySettingsChanged(DataValid dataValid, SaveSetti
 
 void ContextFilterSettings::optionAdded(Tag *tag, TagOption *option)
 {
+    Q_UNUSED(tag);
+    Q_UNUSED(option);
     notifySettingsChanged(DATA_VALID, SAVE, NODE, 0);
 }
 

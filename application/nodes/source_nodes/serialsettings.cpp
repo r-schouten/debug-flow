@@ -21,6 +21,7 @@ void SerialSettings::print()
 
 QJsonObject *SerialSettings::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     QJsonObject *jsonObject = new QJsonObject();
 
     jsonObject->insert(JSON_SERIAL_RUNNING,running);
@@ -46,6 +47,9 @@ void SerialSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler
 
 void SerialSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
+    Q_UNUSED(dataValid);
+    Q_UNUSED(source);
+    Q_UNUSED(event);
     qDebug("serial settings changed ");
     if(saveSettings == SAVE)
     {

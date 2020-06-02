@@ -136,7 +136,7 @@ VisualConnection* LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, 
     QString connector1Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR1_NAME, jsonNodeObject);
     QString connector2Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR2_NAME, jsonNodeObject);
     int64_t uniqueId = handler.findInt64Safe(CLASSNAME, JSON_CONNECTION_UNIQUE_ID, jsonNodeObject);
-    qDebug("[debug][LoadStore] unique id loaded %lu", uniqueId);
+    qDebug("[debug][LoadStore] unique id loaded %lld", uniqueId);
     //search in the node list to find the connected node
     QListIterator<VisualNodeBase*>iterator2(flowData->nodes);
     while(iterator2.hasNext())

@@ -38,7 +38,6 @@ private:
 
 public slots:
     void itemClicked(QTreeWidgetItem *item, int column);
-    void itemPressed(QTreeWidgetItem *item, int column);
 };
 
 

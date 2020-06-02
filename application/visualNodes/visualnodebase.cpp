@@ -9,7 +9,7 @@ VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects)
     setAcceptHoverEvents(true);
 
     uniqueId = Utils::getRandom();
-    qDebug("[debug][VisualNodeBase] got new id %lu", uniqueId);
+    qDebug("[debug][VisualNodeBase] got new id %lld", uniqueId);
 }
 
 VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects, QJsonObject &jsonObject, DeserializationHandler &handler)
@@ -425,6 +425,7 @@ void VisualNodeBase::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 QJsonObject *VisualNodeBase::serializeBase(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     QJsonObject *jsonObject = new QJsonObject();
     jsonObject->insert(JSON_BASE_NAME,name);
     jsonObject->insert(JSON_BASE_CENTERX,nodePosition.x());

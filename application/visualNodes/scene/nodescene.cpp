@@ -98,7 +98,8 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
 void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     Q_UNUSED(rect);
-    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+    painter->setRenderHints(QPainter::Antialiasing, true);
+    painter->setRenderHints(QPainter::TextAntialiasing, true);
 
     QListIterator<VisualConnection*>iterator(flowData->connections);
     while(iterator.hasNext())

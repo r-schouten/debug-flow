@@ -58,7 +58,8 @@ void VisualSerialNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-    painter->setRenderHints(QPainter::Antialiasing,QPainter::TextAntialiasing);
+    painter->setRenderHints(QPainter::Antialiasing, true);
+    painter->setRenderHints(QPainter::TextAntialiasing, true);
 
     paintBase(painter,this,"Serial");
     drawConnectors(painter, this);
@@ -138,6 +139,7 @@ void VisualSerialNode::releasePropertiesWidget()
 }
 QJsonObject *VisualSerialNode::serialize(SerializationHandler &handler)
 {
+    Q_UNUSED(handler);
     QJsonObject *jsonObject = new QJsonObject();
 
     jsonObject->insert(JSON_NODE_TYPE, CLASSNAME);

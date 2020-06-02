@@ -8,7 +8,7 @@ ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
         setText("CREATE connection");
         state = CREATE;
         connectionUniqueId = connection->getUniqueId();
-        qDebug("[debug][ConnectionCommand] constructor unique %lu", connectionUniqueId);
+        qDebug("[debug][ConnectionCommand] constructor unique %lld", connectionUniqueId);
     }
     else
     {

@@ -30,6 +30,7 @@ bool FileSystem::openFile(QWidget *widget, QJsonObject &json, QString& fileName)
         filePath = openFilePath;
         hasFileLocation = true;
     }
+    return true;
 }
 bool FileSystem::openFile(QUrl &path, QJsonObject &json)
 {

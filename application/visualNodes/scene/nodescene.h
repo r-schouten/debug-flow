@@ -48,10 +48,8 @@ private:
     //connection that is tracked by the mouse, set back to nullptr
     VisualConnection* currentTrackingConnection = nullptr;
 
-    //selectionmanager singleton
-    SelectionManager* selectionManager = nullptr;
-    //mementomanager (undo redo) singleton
     UndoRedoManager* undoRedoManager = nullptr;
+    SelectionManager* selectionManager = nullptr;
 
     //if true selected nodes will follow the mouse movement
     bool moveSelected = false;

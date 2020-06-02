@@ -60,6 +60,7 @@ qreal maxScale = 2;
 
 void GraphicsView::scalingTime(qreal x)
 {
+    Q_UNUSED(x);
     QTransform matrix = transform();
     if((matrix.m11() < maxScale || _numScheduledScalings < 0) && (matrix.m11() > minScale || _numScheduledScalings > 0))
     {
