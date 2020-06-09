@@ -10,9 +10,8 @@ class GraphicsView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit GraphicsView(QWidget *parent, SelectionManager* _selectionManager);
-
-    // QWidget interface
+    explicit GraphicsView(QWidget *parent);
+    void setSelectionManager(SelectionManager *_selectionManager);
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);

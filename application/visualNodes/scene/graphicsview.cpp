@@ -2,8 +2,8 @@
 
 #include <visualnodebase.h>
 #include <QScrollBar>
-GraphicsView::GraphicsView(QWidget *parent, SelectionManager* _selectionManager)
-    :QGraphicsView(parent), selectionManager(_selectionManager)
+GraphicsView::GraphicsView(QWidget *parent)
+    :QGraphicsView(parent)
 {
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setMouseTracking(true);
@@ -13,6 +13,10 @@ GraphicsView::GraphicsView(QWidget *parent, SelectionManager* _selectionManager)
     setDragMode(QGraphicsView::RubberBandDrag);
 
     centerOn(graphicsViewOriginX,graphicsViewOriginY);
+}
+void GraphicsView::setSelectionManager(SelectionManager* _selectionManager)
+{
+    selectionManager = _selectionManager;
     connect(this,SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)),this,SLOT(selectionUpdate(QRect, QPointF, QPointF)));
 }
 void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
