@@ -1,7 +1,7 @@
 #include "nodescene.h"
 
-NodeScene::NodeScene(FlowData* _flowData,  FlowObjects* _flowObjects)
-    :flowData(_flowData), flowObjects(_flowObjects), undoRedoManager(_flowObjects->getUndoRedoManager()), selectionManager(_flowObjects->getSelectionManager())
+NodeScene::NodeScene(FlowObjects* _flowObjects)
+    :flowObjects(_flowObjects), undoRedoManager(_flowObjects->getUndoRedoManager()), selectionManager(_flowObjects->getSelectionManager())
 {
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
@@ -39,15 +39,15 @@ void NodeScene::addNode(VisualNodeBase *item)
 
     if(dynamic_cast<VisualOutputNodeBase*>(item))
     {
-        dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(flowData->windowManager);
+        dynamic_cast<VisualOutputNodeBase*>(item)->setWindowManager(flowObjects->getWindowManager());
     }
     item->activate();
-    flowData->nodes.append(item);
+    flowObjects->nodes.append(item);
     QGraphicsScene::addItem(item);
 }
 void NodeScene::addConnection(VisualConnection* newConnection)
 {
-    flowData->connections.append(newConnection);
+    flowObjects->connections.append(newConnection);
     connect(newConnection,SIGNAL(onDelete(VisualConnection*)),this,SLOT(onConnectionDelete(VisualConnection*)));
     if((newConnection->connection1Set) && (newConnection->connection2Set))
     {
@@ -59,7 +59,7 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 {
     removeItem(node);
     selectionManager->removeOne(node);
-    if(flowData->nodes.removeOne(node))
+    if(flowObjects->nodes.removeOne(node))
     {
 
     }
@@ -82,7 +82,7 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
         }
     }
 
-    if(flowData->connections.removeOne(connection))
+    if(flowObjects->connections.removeOne(connection))
     {
 
     }
@@ -101,7 +101,7 @@ void NodeScene::drawForeground(QPainter *painter, const QRectF &rect)
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->setRenderHints(QPainter::TextAntialiasing, true);
 
-    QListIterator<VisualConnection*>iterator(flowData->connections);
+    QListIterator<VisualConnection*>iterator(flowObjects->connections);
     while(iterator.hasNext())
     {
         VisualConnection* connection = iterator.next();
@@ -273,7 +273,7 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
         if(currentTrackingConnection == nullptr)
         {
-            QListIterator<VisualConnection*>iterator(flowData->connections);
+            QListIterator<VisualConnection*>iterator(flowObjects->connections);
             while(iterator.hasNext())
             {
                 VisualConnection* currentConnection = iterator.next();

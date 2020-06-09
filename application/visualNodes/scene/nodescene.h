@@ -17,7 +17,6 @@
 #include "selectionmanager.h"
 #include "outputstyle.h"
 
-#include "flowdata.h"
 #include "serializable.h"
 
 #include "undoredomanager.h"
@@ -32,9 +31,8 @@ class NodeScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    FlowData* flowData = nullptr;
     FlowObjects* flowObjects = nullptr;
-    NodeScene(FlowData* _flowData,  FlowObjects* _flowObjects);
+    NodeScene(FlowObjects* _flowObjects);
 
     //function to insert items from the resource list
     void insertNode(VisualNodeBase* node);
