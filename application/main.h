@@ -3,4 +3,4 @@
 #include "qtest.h"
 #include "test/circularbuffertest.h"
 
-//#define IS_TESTING
+#define IS_TESTING

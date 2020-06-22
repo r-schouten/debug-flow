@@ -80,7 +80,7 @@ bool CircularBufferTest::testContinousAppendRead(CircularBuffer* buffer,int iter
 }
 void CircularBufferTest::testContinousAppendRead()
 {
-    CircularBuffer* circularBuffer = new CircularBuffer(1000,1000);
+    CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),1000,1000);
     QVERIFY(testContinousAppendRead(circularBuffer,1000, true));
     //QVERIFY(testContinousAppendRead(circularBuffer,10000, true, false));
 
@@ -89,7 +89,7 @@ void CircularBufferTest::testContinousAppendRead()
 }
 void CircularBufferTest::testContinousAppendRead2()
 {
-    CircularBuffer* circularBuffer = new CircularBuffer(1000,1000);
+    CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),1000,1000);
     QVERIFY(testContinousAppendRead(circularBuffer,1000, false));
 
     delete circularBuffer;
@@ -98,7 +98,7 @@ void CircularBufferTest::testContinousAppendRead2()
 
 void CircularBufferTest::testContinousAppend()
 {
-    CircularBuffer* circularBuffer = new CircularBuffer(100,100);
+    CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),100,100);
     for(int iteration = 0;iteration<10000;iteration++)
     {
         QString testString = GetRandomString(qrand() % 50,true);
@@ -111,7 +111,7 @@ void CircularBufferTest::testContinousAppend()
 
 void CircularBufferTest::testContionousRead()
 {
-    CircularBuffer* circularBuffer = new CircularBuffer(100,100);
+    CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),100,100);
     CircularBufferReader* reader = circularBuffer->requestNewReader();
 
     QString testString = GetRandomString(qrand() % 50,true);

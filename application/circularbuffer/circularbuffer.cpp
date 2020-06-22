@@ -61,6 +61,11 @@ void CircularBuffer::checkSize(int neededSize)
 }
 void CircularBuffer::append(const QByteArray *byteArray)
 {
+    //take the raw data out of the byte array
+    const char* data = static_cast<const char*>(*byteArray);
+    append(const_cast<char*>(data), byteArray->length());
+
+    /*
     checkSize(byteArray->size());
     int noSplitAvailable = capacity - head;
     int firstLength = std::min(noSplitAvailable, byteArray->size());
@@ -81,6 +86,7 @@ void CircularBuffer::append(const QByteArray *byteArray)
             head++;
         }
     }
+    */
 }
 
 void CircularBuffer::append(char *inputData, int size)

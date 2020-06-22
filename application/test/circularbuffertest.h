@@ -8,6 +8,7 @@
 #include <QtTest/QtTest>
 
 #include <QObject>
+#include "dbglogger.h"
 #include <circularbuffer.h>
 
 class CircularBufferTest: public QObject
