@@ -48,6 +48,7 @@ private:
 
     UndoRedoManager* undoRedoManager = nullptr;
     SelectionManager* selectionManager = nullptr;
+    DbgLogger* dbglogger = nullptr;
 
     //if true selected nodes will follow the mouse movement
     bool moveSelected = false;

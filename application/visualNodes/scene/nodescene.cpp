@@ -3,6 +3,8 @@
 NodeScene::NodeScene(FlowObjects* _flowObjects)
     :flowObjects(_flowObjects), undoRedoManager(_flowObjects->getUndoRedoManager()), selectionManager(_flowObjects->getSelectionManager())
 {
+    dbglogger = flowObjects->getDbgLogger();
+
     QBrush brush(QColor::fromRgb(100, 100, 100));
     setBackgroundBrush(brush);
 
@@ -28,7 +30,7 @@ void NodeScene::insertNode(VisualNodeBase *node)
 
     //make a undo redo event
     undoRedoManager->registerEvent();
-    undoRedoManager->pushChange(new NodeCommand(node, NodeCommand::CREATE));
+    undoRedoManager->pushChange(new NodeCommand(flowObjects, node, NodeCommand::CREATE));
 }
 
 void NodeScene::addNode(VisualNodeBase *item)
@@ -64,7 +66,7 @@ void NodeScene::onNodeDelete(VisualNodeBase* node)
 
     }
     else {
-        qDebug("[error,NodeScene] failed to remove node");
+        dbglogger->error(CLASSNAME,__FUNCTION__,"failed to remove node");
     }
     if(nodeToPlace == node)
     {
@@ -78,7 +80,7 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
     {
         if(connection->connection1Set && connection->connection2Set)
         {
-            undoRedoManager->pushChange(new ConnectionCommand(connection,ConnectionCommand::DELETE));
+            undoRedoManager->pushChange(new ConnectionCommand(flowObjects, connection,ConnectionCommand::DELETE));
         }
     }
 
@@ -87,7 +89,7 @@ void NodeScene::onConnectionDelete(VisualConnection* connection)
 
     }
     else {
-        qDebug("[error,NodeScene] failed to remove connection");
+        dbglogger->error(CLASSNAME,__FUNCTION__,"failed to remove connection");
     }
     if(currentTrackingConnection == connection)
     {
@@ -140,19 +142,17 @@ void NodeScene::drawGrid(QPainter * painter, const QRectF &rect, int gridSize, Q
 void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 {
     Q_UNUSED(node);
-    //qDebug("[debug][NodeScene] connectorPressed");
     anyConnectorPressed = true;
 
     if(currentTrackingConnection)
     {
         return;
     }
-    //qDebug("[debug][NodeScene] connector clicked");
     if(connector->type == ConnectorType::INPUT)
     {
         if(!connector->requestConnector())
         {
-            qDebug("[debug][NodeScene] type = input, request not accepted");
+            dbglogger->debug(CLASSNAME,__FUNCTION__,"type = input, request not accepted");
             return;
         }
     }
@@ -164,7 +164,6 @@ void NodeScene::connectorPressed(VisualNodeBase* node,Connector* connector)
 }
 void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
 {
-    //qDebug("[debug][NodeScene] connectorReleased");
 
     if(currentTrackingConnection == nullptr)
     {
@@ -176,11 +175,11 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
     }
     if(currentTrackingConnection->getConnector1() == connector)
     {
-        qDebug("[debug][NodeScene] connector1 == connector");
+        dbglogger->debug(CLASSNAME,__FUNCTION__,"connector1 == connector");
     }
     else if(currentTrackingConnection->getConnector2() == connector)
     {
-        qDebug("[debug][NodeScene] connector2 == connector");
+        dbglogger->debug(CLASSNAME,__FUNCTION__,"connector2 == connector");
     }
     else {
         if(!currentTrackingConnection->connection1Set)
@@ -191,7 +190,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             node->makeConnection(currentTrackingConnection);
 
             //push undo point
-            ConnectionCommand* connectionCommand = new ConnectionCommand(currentTrackingConnection, ConnectionCommand::CREATE);
+            ConnectionCommand* connectionCommand = new ConnectionCommand(flowObjects, currentTrackingConnection, ConnectionCommand::CREATE);
             undoRedoManager->pushChange(connectionCommand);
 
             //don't track anymore
@@ -205,7 +204,7 @@ void NodeScene::connectorReleased(VisualNodeBase* node,Connector* connector)
             node->makeConnection(currentTrackingConnection);
 
             //push undo point
-            ConnectionCommand* connectionCommand = new ConnectionCommand(currentTrackingConnection, ConnectionCommand::CREATE);
+            ConnectionCommand* connectionCommand = new ConnectionCommand(flowObjects, currentTrackingConnection, ConnectionCommand::CREATE);
             undoRedoManager->pushChange(connectionCommand);
 
             //don't track anymore
@@ -254,12 +253,10 @@ void NodeScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     //make a undo redo event
     undoRedoManager->registerEvent();
-    //qDebug("[debug][NodeScene] mousepress");
 
     QGraphicsScene::mousePressEvent(event);
     //after the super class call all the childeren are checked
 
-    //qDebug("[debug][NodeScene] mousepress done");
 
     //for connecting a connector to a node
 
@@ -321,7 +318,7 @@ void NodeScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             if(node->oldPosition != node->nodePosition)
             {
                 //save this change to the undo stack
-                undoRedoManager->pushChange(new MoveCommand(node,node->oldPosition, node->nodePosition));
+                undoRedoManager->pushChange(new MoveCommand(flowObjects, node,node->oldPosition, node->nodePosition));
             }
         }
         moveSelected = false;
@@ -351,7 +348,7 @@ void NodeScene::keyPressEvent(QKeyEvent *event)
             VisualNodeBase* node = iterator2.next();
             //node will notify depended objects(include nodeScene)
 
-            CommandBase* command = new NodeCommand(node, NodeCommand::DELETE);
+            CommandBase* command = new NodeCommand(flowObjects, node, NodeCommand::DELETE);
 
             delete node;
 

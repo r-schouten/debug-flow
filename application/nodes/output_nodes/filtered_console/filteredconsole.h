@@ -63,7 +63,7 @@ class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
 public:
-    FilteredConsole();
+    FilteredConsole(DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
     void clear();

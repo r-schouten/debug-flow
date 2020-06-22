@@ -2,30 +2,23 @@
 
 FlowWidget::FlowWidget(QWidget *parent, FileSystem* _fileSystem) : QWidget(parent)
 {
-    selectionManager = new SelectionManager();
-
     flow_ui = new Ui_flowWidget();
-    flow_ui->setupUi(this, selectionManager);
+    flow_ui->setupUi(this);
 
-
-    //when a node in a scene is clicked its property's will been shown in the right tab bar, to give the nodes acces to the tab bar the selectionmanager have a propertyWidgetManager to open the property's on a node is selected
-    propertyWidgetManager = new PropertyWidgetManager(flow_ui->propertiesWidget,flow_ui->rightTabWidget);
-    selectionManager->setPropertyWidgetManager(propertyWidgetManager);
-
+    dbgLogger = new DbgLogger();
+    propertyWidgetManager = new PropertyWidgetManager(flow_ui->propertiesWidget,flow_ui->rightTabWidget, dbgLogger);
+    selectionManager = new SelectionManager(propertyWidgetManager, dbgLogger);    //when a node in a scene is clicked its property's will been shown in the right tab bar, to give the nodes acces to the tab bar the selectionmanager have a propertyWidgetManager to open the property's on a node is selected
     windowManager = new WindowManager(flow_ui->mdiArea);
-
     undoRedoManager = new UndoRedoManager(flow_ui->undoRedoWidget);
 
-    flowData = new FlowData(windowManager);
+    flowObjects = new FlowObjects(selectionManager, undoRedoManager, dbgLogger, windowManager);
 
-    flowObjects = new FlowObjects(selectionManager, undoRedoManager);
+    nodeScene = new NodeScene(flowObjects);
+    flow_ui->graphicsView->setData(flowObjects, nodeScene);
 
-    nodeScene = new NodeScene(flowData, flowObjects);
-    flow_ui->graphicsView->setScene(nodeScene);
+    loadStore = new LoadStore(flowObjects, nodeScene);
 
-    loadStore = new LoadStore(flowData, flowObjects, nodeScene);
-
-    undoRedoManager->setData(flowData, loadStore);
+    undoRedoManager->setData(flowObjects, loadStore);
 
     if(_fileSystem == nullptr)
     {
@@ -55,13 +48,14 @@ FlowWidget::~FlowWidget()
 
     delete itemsList;
     delete propertyWidgetManager;
-    delete flowData;
+    delete flowObjects;
     delete loadStore;
 
     delete nodeScene;
     delete windowManager;
     delete flow_ui;
     delete fileSystem;
+    delete dbgLogger;
 }
 void FlowWidget::updateUI()
 {
@@ -98,7 +92,7 @@ void FlowWidget::open(QJsonObject &jsonObject)
        .restoreData = false,
        .exceptionOnError = true,
        .exceptionOnFatal = true,
-   });
+   }, dbgLogger);
 
     try {
         loadStore->deserialize(jsonObject, handler);
@@ -117,7 +111,7 @@ bool FlowWidget::save(bool saveAs)
       .saveTempData = false,
       .exceptionOnError = true,
       .exceptionOnFatal = true
-    });
+    },dbgLogger);
     QJsonObject* completeJson = loadStore->serialize(handler);
     if(handler.errorOccured())
     {

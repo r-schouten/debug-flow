@@ -1,12 +1,12 @@
 #include "circularbuffer.h"
 
-CircularBuffer::CircularBuffer()
+CircularBuffer::CircularBuffer(DbgLogger *dbgLogger)
 {
-    CircularBuffer(100, 1000);
+    CircularBuffer(dbgLogger, 100, 1000);
 }
 
-CircularBuffer::CircularBuffer(const int _capacity, const  int _maxCapacity)
-    :capacity(_capacity),maxCapacity(_maxCapacity)
+CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity)
+    :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity)
 {
     data = (char*) malloc(capacity * sizeof(char));
     head = 0;
@@ -32,7 +32,7 @@ int CircularBuffer::usedSize(CircularBufferReader* reader)
 #ifdef QT_DEBUG
         if(reader->iteration != iterations)
         {
-            qDebug("error CircularBuffer::usedSize() : iteration != buffer->iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != buffer->iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
         }
 #endif
         return head - reader->tail;
@@ -41,7 +41,7 @@ int CircularBuffer::usedSize(CircularBufferReader* reader)
 #ifdef QT_DEBUG
         if(reader->iteration + 1 != iterations)
         {
-            qDebug("error CircularBuffer::usedSize() : iteration + 1 != iterations");
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration + 1 != iterations");
         }
 #endif
         return (capacity - reader->tail) + head;
@@ -56,7 +56,7 @@ void CircularBuffer::checkSize(int neededSize)
 {
     if(neededSize >= capacity)
     {
-        qDebug("CircularBuffer::checkSize(): if(neededSize >= capacity) %d",neededSize);
+        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= capacity) %d",neededSize);
     }
 }
 void CircularBuffer::append(const QByteArray *byteArray)

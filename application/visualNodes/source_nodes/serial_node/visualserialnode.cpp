@@ -15,7 +15,7 @@ VisualSerialNode::VisualSerialNode(FlowObjects *_flowObjects,QJsonObject &baseJs
 }
 void VisualSerialNode::construct()
 {
-    node = new SerialNode();
+    node = new SerialNode(flowObjects->getDbgLogger());
     baseNode = node;
 
     serialSettings = node->getNodeSettings();
@@ -121,10 +121,10 @@ PropertyWidgetBase *VisualSerialNode::loadPropertiesWidget(QWidget* parent)
 {
     if(propertyWidget == nullptr)
     {
-        propertyWidget = new SerialNodePropertiesWidget(parent, node);
+        propertyWidget = new SerialNodePropertiesWidget(parent, dbgLogger, node);
     }
     else {
-        qDebug("[warn][VisualSerialNode] propertywidget already exist");
+        dbgLogger->warning(CLASSNAME,__FUNCTION__,"propertywidget already exist");
     }
     return propertyWidget;
 }

@@ -10,7 +10,7 @@ class SerialNode :public QObject, public SerialNodeInterface
 {
     Q_OBJECT
 public:
-    SerialNode();
+    SerialNode(DbgLogger *dbgLogger);
     virtual ~SerialNode();
 
     void openSerialPort();

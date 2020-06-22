@@ -1,10 +1,11 @@
 #pragma once
 
 #include <QWidget>
-#include <mdiwindow.cpp>
 #include <QTimer>
-#include <filesystem.h>
 
+#include "mdiwindow.cpp"
+#include "filesystem.h"
+#include "dbglogger.h"
 #include "itemlist.h"
 #include "visualnodeconfig.h"
 #include "windowmanager.h"
@@ -12,7 +13,6 @@
 #include "nodescene.h"
 #include "ui_flow_widget.h"
 
-#include "flowdata.h"
 #include "loadstore.h"
 
 #include "serialization_handler.h"
@@ -38,12 +38,12 @@ public:
 private:
     Ui_flowWidget *flow_ui = nullptr;
 
+    DbgLogger *dbgLogger = nullptr;
     NodeScene *nodeScene = nullptr;
     ItemList* itemsList = nullptr;
     QTimer *UiUpdatetimer = nullptr;
     WindowManager* windowManager = nullptr;
     PropertyWidgetManager* propertyWidgetManager = nullptr;
-    FlowData* flowData = nullptr;
     LoadStore* loadStore = nullptr;
     FileSystem* fileSystem = nullptr;
     UndoRedoManager* undoRedoManager = nullptr;

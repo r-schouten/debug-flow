@@ -1,6 +1,7 @@
 #include "serialsettings.h"
 
-SerialSettings::SerialSettings()
+SerialSettings::SerialSettings(DbgLogger *dbgLogger)
+    :NodeSettingsBase(dbgLogger)
 {
     running = false;
     baudRate = 9600;
@@ -13,10 +14,8 @@ SerialSettings::SerialSettings()
 
 void SerialSettings::print()
 {
-    qDebug() << "--Serial settings--";
-    qDebug() << "port :" << name;
-    qDebug() << "baudrate :" << baudRate;
-    qDebug() << "parity : " << parity;
+    //not tested after change
+    dbgLogger->debug(CLASSNAME, __FUNCTION__, "--Serial settings--\nport :%s\nbaudrate: %d\nparity: %d",name.toStdString().c_str(),baudRate,parity);
 }
 
 QJsonObject *SerialSettings::serialize(SerializationHandler &handler)
@@ -50,7 +49,7 @@ void SerialSettings::notifySettingsChanged(DataValid dataValid, SaveSettings sav
     Q_UNUSED(dataValid);
     Q_UNUSED(source);
     Q_UNUSED(event);
-    qDebug("serial settings changed ");
+    dbgLogger->debug(CLASSNAME, __FUNCTION__,"serial settings changed");
     if(saveSettings == SAVE)
     {
         emit saveAbleChangeOccured();

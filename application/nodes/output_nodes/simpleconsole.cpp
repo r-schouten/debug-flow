@@ -1,6 +1,7 @@
 #include "simpleconsole.h"
 
-SimpleConsole::SimpleConsole()
+SimpleConsole::SimpleConsole(DbgLogger *dbgLogger)
+    :NodeBase(dbgLogger)
 {
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
@@ -40,8 +41,7 @@ void SimpleConsole::NotifyBufferUpdate(Subscription *source)
     QTextCharFormat oldFormat = currentCharFormat;
     bool styleChanged = ansiReader->filterData(&result, source->bufferReader, &currentCharFormat);
 
-    //qDebug("result: %s",destination.toStdString().c_str());
-    //qDebug() << source->bufferReader->availableSize();
+
     console->moveCursor(QTextCursor::End);
     console->setCurrentCharFormat(oldFormat);
     console->insertPlainText(result);

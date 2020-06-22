@@ -1,7 +1,7 @@
 #include "contextfilterengine.h"
 
-ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings)
-    :settings(settings)
+ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLogger* dbgLogger)
+    :settings(settings),dbgLogger(dbgLogger)
 {
 
 }
@@ -184,7 +184,7 @@ bool ContextFilterEngine::processANSIEscape(CircularBufferReader *bufferReader, 
     int index = beginIndex;
     if((*bufferReader)[index] != '\033')//first character is/should the esc code
     {
-        qDebug("error TagFilter::processANSIEscape() :(*bufferReader)[index] != '\033' %c",(*bufferReader)[index]);
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"(*bufferReader)[index] != '\033' %c",(*bufferReader)[index]);
         return true;
     }
     index++;
@@ -193,7 +193,7 @@ bool ContextFilterEngine::processANSIEscape(CircularBufferReader *bufferReader, 
     //-----second char-----
     if((*bufferReader)[index] != '[')//first character is/should be [, others are not supported yet
     {
-        qDebug("error TagFilter::processANSIEscape() :(*bufferReader)[index] != '[' %c",(*bufferReader)[index]);
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"(*bufferReader)[index] != '[' %c",(*bufferReader)[index]);
         return true;
     }
     index++;
@@ -224,7 +224,7 @@ bool ContextFilterEngine::processANSIEscape(CircularBufferReader *bufferReader, 
     }
     if(endIndex - beginIndex > 20)// todo magic number
     {
-        qDebug("[Error][tagFilter] ansi escape code to long");
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"ansi escape code to long");
         return true;
     }
     return false;

@@ -21,8 +21,7 @@ bool FileSystem::openFile(QWidget *widget, QJsonObject &json, QString& fileName)
     }
     else
     {
-        qDebug("open directory %s",openFilePath.toString().toStdString().c_str());
-
+        DbgLogger::getStaticLogger()->debug("FileSystem",__FUNCTION__,"open directory %s",openFilePath.toString().toStdString().c_str());
         if(!openFile(openFilePath, json))
         {
             return false;
@@ -61,7 +60,7 @@ bool FileSystem::openFile(QUrl &path, QJsonObject &json)
 }
 void FileSystem::saveFile(QJsonObject *json)
 {
-     if(!hasFileLocation)qFatal("[fatal][FileSystem]no file location set");
+     if(!hasFileLocation)DbgLogger::getStaticLogger()->fatal("FileSystem",__FUNCTION__,"no file location set");
 
      QFile file(filePath.toLocalFile());
 
@@ -95,7 +94,7 @@ bool FileSystem::saveFile(QWidget *widget, QJsonObject *json, bool saveAs)
         }
         else
         {
-            qDebug("save directory %s",saveFilePath.toString().toStdString().c_str());
+            DbgLogger::getStaticLogger()->debug("FileSystem",__FUNCTION__,"save directory %s",saveFilePath.toString().toStdString().c_str());
             filePath = saveFilePath;
             hasFileLocation = true;
             saveFile(json);

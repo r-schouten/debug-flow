@@ -16,7 +16,7 @@
 class VisualContextFilterPropertiesWidget : public PropertyWidgetBase
 {
 public:
-    VisualContextFilterPropertiesWidget(QWidget *parent, ContextFilterSettings* _settings);
+    VisualContextFilterPropertiesWidget(QWidget *parent, DbgLogger *dbgLogger, ContextFilterSettings* _settings);
     virtual ~VisualContextFilterPropertiesWidget();
 protected:
     ContextFilterSettings* settings = nullptr;

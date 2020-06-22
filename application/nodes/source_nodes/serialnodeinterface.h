@@ -8,7 +8,7 @@
 class SerialNodeInterface: public OutputNode
 {
 public:
-    SerialNodeInterface();
+    SerialNodeInterface(DbgLogger *dbgLogger);
     virtual ~SerialNodeInterface();
 
     virtual SerialSettings *getNodeSettings();

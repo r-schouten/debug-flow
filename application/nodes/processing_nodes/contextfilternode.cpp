@@ -1,17 +1,19 @@
 #include "contextfilternode.h"
 
-ContextFilterNode::ContextFilterNode()
+ContextFilterNode::ContextFilterNode(DbgLogger *dbgLogger)
+    :NodeBase(dbgLogger)
 {
-    circularBuffer = new CircularBuffer(500,1000);
-    settings = new ContextFilterSettings();
+    circularBuffer = new CircularBuffer(dbgLogger);
+    settings = new ContextFilterSettings(dbgLogger);
 
-    contextFilterEngine = new ContextFilterEngine(settings->tagAndOptionsSettings);
+    contextFilterEngine = new ContextFilterEngine(settings->tagAndOptionsSettings,dbgLogger);
 }
 
 ContextFilterNode::~ContextFilterNode()
 {
     delete settings;
     settings = nullptr;
+    delete contextFilterEngine;
 }
 ContextFilterSettings *ContextFilterNode::getNodeSettings()
 {

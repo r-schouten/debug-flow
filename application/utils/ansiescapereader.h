@@ -1,6 +1,5 @@
 #pragma once
 #include <QTextCharFormat>
-#include <qdebug.h>
 #include "circularbufferreader.h"
 #include "ansi_types.h"
 

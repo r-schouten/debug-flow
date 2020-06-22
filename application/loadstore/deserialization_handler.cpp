@@ -1,7 +1,7 @@
 #include "deserialization_handler.h"
 
-DeserializationHandler::DeserializationHandler(DeserializationSettings_t settings)
-    :settings(settings)
+DeserializationHandler::DeserializationHandler(DeserializationSettings_t settings, DbgLogger* _dbgLogger)
+    :settings(settings),dbgLogger(_dbgLogger)
 {
 }
 
@@ -36,15 +36,15 @@ void DeserializationHandler::logFatal(QString callingClass, QString message, QJs
 
 void DeserializationHandler::printMessages(bool printJson)
 {
-    qDebug("---deserialisation error log---");
+    dbgLogger->error("DeserializationHandler","printMessages","---deserialisation error log---");
     QListIterator<DeserialistationException> it(occuredErrors);
     while(it.hasNext())
     {
         DeserialistationException exception = it.next();
-        qDebug(exception.what());
+        dbgLogger->printf(exception.what());
         if(printJson)
         {
-            exception.printJson();
+            exception.printJson(dbgLogger);
         }
     }
 }

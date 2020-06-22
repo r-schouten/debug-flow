@@ -60,7 +60,7 @@ void Connector::disconnect(VisualConnection *connection)
             }
             else
             {
-                qDebug("[error][Connector] can't cast to input node or ouput node");
+                parent->dbgLogger->error("Connector", __FUNCTION__,"can't cast to input node or ouput node");
             }
         }
         if(connections.removeOne(connection))
@@ -68,11 +68,11 @@ void Connector::disconnect(VisualConnection *connection)
 
         }
         else {
-            qDebug("[error][Connector] remove connection failed");
+            parent->dbgLogger->error("Connector", __FUNCTION__,"remove connection failed");
         }
     }
     else {
-        qDebug("[error][Connector] disconnect failed connection not in connections");
+        parent->dbgLogger->error("Connector", __FUNCTION__,"disconnect failed connection not in connections");
     }
 }
 
@@ -81,7 +81,7 @@ VisualNodeBase *Connector::getParent()
 #ifdef QT_DEBUG
     if(parent == nullptr)
     {
-        qFatal("[fatal][VisualNodeBase] parent is nullptr");
+        parent->dbgLogger->fatal("Connector", __FUNCTION__,"parent is nullptr");
     }
 #endif
     return parent;

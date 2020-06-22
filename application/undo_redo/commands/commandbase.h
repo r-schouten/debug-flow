@@ -1,19 +1,23 @@
 #pragma once
-#include <QUndoCommand>
 
 //#include "nodescene.h"
 //#include "loadstore.h"
 
 #include <QListWidgetItem>
-class FlowData;
+#include "flowobjects.h"
+
+class FlowObjects;
 class LoadStore;
 class NodeScene;
 class CommandBase : public QListWidgetItem
 {
 private:
     int id = 0;
+protected:
+    FlowObjects* flowObjects = nullptr;
 public:
-    virtual void undo(FlowData* _flowData, LoadStore* loadStore)=0;
+    CommandBase(FlowObjects* _flowObjects);
+    virtual void undo( LoadStore* loadStore)=0;
     //virtual CommandBase* createRedo() = 0;
     int getId() const;
     void setId(int value);

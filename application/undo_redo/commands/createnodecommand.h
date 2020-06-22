@@ -14,9 +14,9 @@ public:
         DELETE,
         CREATE
     }state;
-    NodeCommand(VisualNodeBase *node, State _state);
+    NodeCommand(FlowObjects* _flowObjects, VisualNodeBase *node, State _state);
 
-    void undo(FlowData *_flowData, LoadStore *loadStore);
+    void undo(LoadStore *loadStore);
 
 private:
     int64_t nodeUniqueId;

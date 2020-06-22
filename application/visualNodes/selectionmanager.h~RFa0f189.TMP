@@ -11,8 +11,8 @@ class SelectionManager
 private:
     bool hadUpdate = false;
 
-    PropertyWidgetManager* propertyWidgetManager = nullptr;
     DbgLogger* dbgLogger = nullptr;
+    PropertyWidgetManager* propertyWidgetManager = nullptr;
 public:
     SelectionManager(PropertyWidgetManager *_propertyWidgetManager, DbgLogger* dbgLogger);
     bool isSelected(VisualNodeBase *node);

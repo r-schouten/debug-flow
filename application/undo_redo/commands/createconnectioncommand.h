@@ -14,9 +14,9 @@ public:
         DELETE,
         CREATE
     }state;
-    ConnectionCommand(VisualConnection *object, State _state);
+    ConnectionCommand(FlowObjects* _flowObjects, VisualConnection *object, State _state);
 
-    void undo(FlowData *_flowData, LoadStore *loadStore);
+    void undo(LoadStore *loadStore);
 
 private:
     int64_t connectionUniqueId;

@@ -1,7 +1,7 @@
 #include "serialization_handler.h"
 
-SerializationHandler::SerializationHandler(SerializationSettings_t settings)
-    :settings(settings)
+SerializationHandler::SerializationHandler(SerializationSettings_t settings, DbgLogger* _dbgLogger)
+    :settings(settings), dbgLogger(_dbgLogger)
 {
 }
 
@@ -36,12 +36,12 @@ void SerializationHandler::logFatal(QString callingClass, QString message)
 
 void SerializationHandler::printMessages()
 {
-    qDebug("---serialisation error log---");
+    dbgLogger->error("SerializationHandler",__FUNCTION__,"---serialisation error log---");
     QListIterator<SerialistationException> it(occuredErrors);
     while(it.hasNext())
     {
         SerialistationException exception = it.next();
-        qDebug(exception.what());
+        dbgLogger->printf(exception.what());
     }
 }
 

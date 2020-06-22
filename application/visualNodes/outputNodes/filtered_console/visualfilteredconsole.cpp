@@ -20,7 +20,7 @@ void VisualFilteredConsole::construct()
     name = "filtered console";
     shortDiscription = QString("this node provides a console with configurable filters for %1 context").arg(CONTEXT_STYLE_NAME);
 
-    node = new FilteredConsole();
+    node = new FilteredConsole(dbgLogger);
     connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
     baseNode = node;
     if(node->hasInput)
@@ -62,10 +62,10 @@ PropertyWidgetBase *VisualFilteredConsole::loadPropertiesWidget(QWidget *parent)
 {
     if(propertyWidget == nullptr)
     {
-        propertyWidget = new FilteredConsolePropertiesWidget(parent,node->nodeSettings);
+        propertyWidget = new FilteredConsolePropertiesWidget(parent, dbgLogger, node->nodeSettings);
     }
     else {
-        qDebug("[warn][VisualFilteredConsole::loadPropertiesWidget] propertywidget already exist");
+        dbgLogger->warning(CLASSNAME,__FUNCTION__,"propertywidget already exist");
     }
     return propertyWidget;
 }
@@ -74,7 +74,7 @@ void VisualFilteredConsole::releasePropertiesWidget()
 {
     if(propertyWidget)
     {
-        qDebug("[debug][VisualFilteredConsole::releasePropertiesWidget]");
+        dbgLogger->debug(CLASSNAME,__FUNCTION__,"called");
         delete propertyWidget;
         propertyWidget = nullptr;
     }

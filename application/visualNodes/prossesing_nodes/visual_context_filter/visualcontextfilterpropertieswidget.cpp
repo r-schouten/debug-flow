@@ -1,8 +1,8 @@
 #include "visualcontextfilterpropertieswidget.h"
 
 
-VisualContextFilterPropertiesWidget::VisualContextFilterPropertiesWidget(QWidget *parent, ContextFilterSettings *_settings)
-    :PropertyWidgetBase(parent), settings(_settings)
+VisualContextFilterPropertiesWidget::VisualContextFilterPropertiesWidget(QWidget *parent, DbgLogger* dbgLogger, ContextFilterSettings *_settings)
+    :PropertyWidgetBase(parent,dbgLogger), settings(_settings)
 {
     layout = new QVBoxLayout;
     layout->setMargin(5);

@@ -5,6 +5,8 @@
 ItemList::ItemList(QTreeWidget *resourceList, FlowObjects *_flowObjects, NodeScene *nodeScene)
     :resourceList(resourceList),flowObjects(_flowObjects),nodeScene(nodeScene)
 {
+    dbgLogger = flowObjects->getDbgLogger();
+
     resourceList->setIconSize(QSize(100,800));
     resourceList->setColumnCount(1);
     resourceList->setHeaderLabel("");
@@ -12,7 +14,6 @@ ItemList::ItemList(QTreeWidget *resourceList, FlowObjects *_flowObjects, NodeSce
     resourceList->setFocusPolicy(Qt::NoFocus);
     resourceList->setIndentation(10);
     connect(resourceList,SIGNAL(itemClicked(QTreeWidgetItem*, int)),this,SLOT(itemClicked(QTreeWidgetItem*, int)));
-    connect(resourceList,SIGNAL(itemPressed(QTreeWidgetItem*, int)),this,SLOT(itemPressed(QTreeWidgetItem*, int)));
 
     generateList();
 }
@@ -93,8 +94,7 @@ void ItemList::generateCategory(QList<VisualNodeBase*>& nodes, QString name, QSt
 
 void ItemList::itemClicked(QTreeWidgetItem *item, int column)
 {
-    qDebug("[verbose,ItemList] item clicked %d",column);
-
+    dbgLogger->verbose(CLASSNAME,__FUNCTION__,"item clicked %d",column);
     if(item->childCount() != 0)
     {
         resourceList->collapseAll();
@@ -107,7 +107,7 @@ void ItemList::itemClicked(QTreeWidgetItem *item, int column)
             nodeScene->insertNode(myItem->getNodeCopy());
         }
         else {
-            qDebug("[verbose,ItemList] not inherited from MyTreeWidgetItem");
+            dbgLogger->verbose(CLASSNAME,__FUNCTION__,"not inherited from MyTreeWidgetItem");
         }
     }
 

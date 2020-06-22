@@ -6,7 +6,8 @@
 
 #include "commandbase.h"
 
-class FlowData;
+class CommandBase;
+class FlowObjects;
 class LoadStore;
 class UndoRedoManager: public QObject
 {
@@ -17,13 +18,13 @@ private:
     QListWidget *undoView;
     QList<CommandBase*> undoStack;
     int cursorPosition = 0;
-    FlowData* flowData = nullptr;
+    FlowObjects* flowObjects = nullptr;
     LoadStore* loadStore = nullptr;
 
 public:
     UndoRedoManager(QScrollArea *scrollArea);
     ~UndoRedoManager();
-    void setData(FlowData* _flowData, LoadStore* _loadStore);
+    void setData(FlowObjects *_flowObjects, LoadStore* _loadStore);
 
     void registerEvent();
     void pushChange(CommandBase *command);

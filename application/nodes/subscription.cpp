@@ -18,6 +18,5 @@ void Subscription::remove()//use a function instead of a deconstructor so the ca
 }
 void Subscription::notifyBufferUpdate()
 {
-    //qDebug("notifyBufferUpdate");
     inputNode->NotifyBufferUpdate(this);
 }

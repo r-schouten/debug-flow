@@ -1,9 +1,10 @@
 #include "serialnodeinterface.h"
 
-SerialNodeInterface::SerialNodeInterface()
+SerialNodeInterface::SerialNodeInterface(DbgLogger *dbgLogger)
+    :NodeBase(dbgLogger)
 {
-    settings = new SerialSettings();
-    circularBuffer = new CircularBuffer(SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE);
+    settings = new SerialSettings(dbgLogger);
+    circularBuffer = new CircularBuffer(dbgLogger, SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE);
 }
 
 SerialNodeInterface::~SerialNodeInterface()

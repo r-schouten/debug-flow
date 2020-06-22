@@ -1,5 +1,7 @@
 #pragma once
 
+#include "dbglogger.h"
+
 #include <QJsonDocument>
 #include <QLineF>
 #include <QPoint>
@@ -52,10 +54,10 @@ public:
         //json supports no unsigned 32 bits, therefore 31 bits
         return randomGenerator.bounded(pow(2,31));
     }
-    static void printJson(QJsonObject* object)
+    static void printJson(QJsonObject* object, DbgLogger* dbglogger)
     {
         QJsonDocument doc(*object);
         QString strJson(doc.toJson(QJsonDocument::Indented));
-        qDebug(strJson.toStdString().c_str());
+        dbglogger->debug("utils",__FUNCTION__,strJson.toStdString().c_str());
     }
 };

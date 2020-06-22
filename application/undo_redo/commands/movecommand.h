@@ -1,16 +1,15 @@
 #pragma once
 #include <QPoint>
 #include "commandbase.h"
+
 #include "visualnodebase.h"
-
-#include "flowdata.h"
-
-class VisualNodeBase;
+#include "nodescene.h"
+#include "loadstore.h"
 class MoveCommand: public CommandBase
 {
 public:
-    MoveCommand(VisualNodeBase* affectedNode,QPoint previousPosition, QPoint newPosition);
-    void undo(FlowData *_flowData, LoadStore *loadStore);
+    MoveCommand(FlowObjects* _flowObjects, VisualNodeBase* affectedNode,QPoint previousPosition, QPoint newPosition);
+    void undo(LoadStore *loadStore);
 
 private:
     QPoint previousPosition;

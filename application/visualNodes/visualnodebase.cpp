@@ -3,13 +3,14 @@
 VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects)
 {
     flowObjects = _flowObjects;
+    dbgLogger = flowObjects->getDbgLogger();
     selectionManager = flowObjects->getSelectionManager();
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(ItemIsSelectable, false);
     setAcceptHoverEvents(true);
 
     uniqueId = Utils::getRandom();
-    qDebug("[debug][VisualNodeBase] got new id %lld", uniqueId);
+    dbgLogger->debug(CLASSNAME,__FUNCTION__,"got new id %lld", uniqueId);
 }
 
 VisualNodeBase::VisualNodeBase(FlowObjects *_flowObjects, QJsonObject &jsonObject, DeserializationHandler &handler)
@@ -161,7 +162,7 @@ bool VisualNodeBase::requestConnection(Connector *connector1, Connector* connect
         }
         if(connector2->getParent()->recursiveCircularDependencyCheck(this))
         {
-            qDebug("[info][requestConnection] circular dependency detected on output");
+            dbgLogger->debug(CLASSNAME,__FUNCTION__,"circular dependency detected on output");
             return false;
         }
     }
@@ -169,7 +170,7 @@ bool VisualNodeBase::requestConnection(Connector *connector1, Connector* connect
     {
         if(recursiveCircularDependencyCheck(connector2->getParent()))
         {
-            qDebug("[info][requestConnection] circular dependency detected on input");
+           dbgLogger->debug(CLASSNAME,__FUNCTION__,"circular dependency detected on input");
             return false;
         }
 
@@ -233,7 +234,7 @@ bool VisualNodeBase::recursiveCircularDependencyCheck(VisualNodeBase* originNode
                     inputConnector = currentConnection->getConnector2();
                 }
                 else {
-                    qDebug("[error][recursiveCircularDependencyCheck] no input connector");
+                    dbgLogger->error(CLASSNAME,__FUNCTION__,"no input connector");
                     break;
                 }
                 if(inputConnector->getParent() == originNode)
@@ -338,8 +339,6 @@ bool VisualNodeBase::isSelected()
 
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-
-    //qDebug("[info,VisualNodeBase] press");
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {
@@ -374,7 +373,6 @@ void VisualNodeBase::moveBy(QPointF& by)
 }
 void VisualNodeBase::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug("[info,VisualNodeBase] release");
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {

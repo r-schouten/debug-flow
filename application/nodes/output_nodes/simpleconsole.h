@@ -16,7 +16,7 @@ public:
     void clear();
     void NotifyBufferUpdate(Subscription *source)override;
 
-    SimpleConsole();
+    SimpleConsole(DbgLogger *dbgLogger);
     virtual ~SimpleConsole();
     NodeSettingsBase *getNodeSettings();
 

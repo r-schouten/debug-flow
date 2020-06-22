@@ -1,6 +1,7 @@
 #include "contextfiltersettings.h"
 
-ContextFilterSettings::ContextFilterSettings()
+ContextFilterSettings::ContextFilterSettings(DbgLogger* dbgLogger)
+    :NodeSettingsBase(dbgLogger)
 {
     tagAndOptionsSettings = new TagAndOptionsSettings();
     connect(tagAndOptionsSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this, SLOT(optionAdded(Tag*,TagOption*)));
@@ -44,7 +45,7 @@ void ContextFilterSettings::notifySettingsChanged(DataValid dataValid, SaveSetti
     Q_UNUSED(dataValid);
     Q_UNUSED(source);
     Q_UNUSED(event);
-    qDebug("contextfilter node settings changed");
+    dbgLogger->debug("ContextFilterSettings",__FUNCTION__,"contextfilter node settings changed");
     if(saveSettings == SAVE)
     {
         emit saveAbleChangeOccured();

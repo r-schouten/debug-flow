@@ -44,7 +44,7 @@ void VisualSimpleConsole::setWindowManager(WindowManager *_windowManager)
     }
     windowManager = _windowManager;
 
-    node = new SimpleConsole();
+    node = new SimpleConsole(dbgLogger);
     baseNode = node;
     if(node->hasInput)
     {

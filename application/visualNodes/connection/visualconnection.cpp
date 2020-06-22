@@ -7,6 +7,8 @@ VisualConnection::VisualConnection(FlowObjects *_flowObjects, Connector *connect
     selectionManager = _flowObjects->getSelectionManager();
     style = new ConnectionStyle();
 
+    dbgLogger = _flowObjects->getDbgLogger();
+
     uniqueId = Utils::getRandom();
 
 }
@@ -264,7 +266,7 @@ Connector* VisualConnection::getUnsetConnector()
     {
         return connector2;
     }
-    qDebug("[error][VisualConnection]  getUnsedConnector called while both are connected");
+    dbgLogger->error(CLASSNAME,__FUNCTION__,"getUnsedConnector called while both are connected");
     return nullptr;
 }
 
@@ -278,7 +280,7 @@ Connector *VisualConnection::getSetConnector()
     {
         return connector2;
     }
-    qDebug("[error][VisualConnection]  getUnsedConnector called while both are connected");
+    dbgLogger->error(CLASSNAME,__FUNCTION__,"getUnsedConnector called while both are connected");
     return nullptr;
 }
 void VisualConnection::mousePressEvent(QGraphicsSceneMouseEvent *event)

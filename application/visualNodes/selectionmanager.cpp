@@ -1,13 +1,13 @@
 #include "selectionmanager.h"
 
-SelectionManager::SelectionManager()
+SelectionManager::SelectionManager(PropertyWidgetManager *_propertyWidgetManager, DbgLogger *dbgLogger)
+    :propertyWidgetManager(_propertyWidgetManager),dbgLogger(dbgLogger)
 {
 
 }
-void SelectionManager::setPropertyWidgetManager(PropertyWidgetManager *value)
-{
-    propertyWidgetManager = value;
-}
+
+
+
 bool SelectionManager::isSelected(VisualNodeBase* node)
 {
     return selectedNodes.contains(node);

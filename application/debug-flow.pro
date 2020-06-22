@@ -8,7 +8,6 @@ TEMPLATE = app
 SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
-    flowdata.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
     loadstore/filesystem.cpp \
@@ -39,6 +38,7 @@ SOURCES += \
     undo_redo/undoredomanager.cpp \
     utils/ansiescapereader.cpp \
     utils/contextfilterengine.cpp \
+    utils/dbglogger.cpp \
     utils/flowobjects.cpp \
     utils/tagandoptionssettings.cpp \
     utils/utils.cpp \
@@ -72,7 +72,6 @@ SOURCES += \
 HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
-    flowdata.h \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \
@@ -111,6 +110,7 @@ HEADERS += \
     utils/ansi_types.h \
     utils/ansiescapereader.h \
     utils/contextfilterengine.h \
+    utils/dbglogger.h \
     utils/flowobjects.h \
     utils/tagandoptionssettings.h \
     utils/utils.h \

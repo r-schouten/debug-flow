@@ -23,7 +23,7 @@ class FilteredNodeSettings: public NodeSettingsBase
     Q_OBJECT
 public:
     TagAndOptionsSettings* tagAndOptionSettings = nullptr;
-    FilteredNodeSettings();
+    FilteredNodeSettings(DbgLogger* dbgLogger);
     virtual ~FilteredNodeSettings();
     void setHorizontalScroll(const HorizontalScrollOptions &value);
     HorizontalScrollOptions getHorizontalScroll() const;

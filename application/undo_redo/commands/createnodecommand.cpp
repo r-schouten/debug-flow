@@ -1,6 +1,7 @@
 #include "createnodecommand.h"
 
-NodeCommand::NodeCommand(VisualNodeBase *node, State _state)
+NodeCommand::NodeCommand(FlowObjects* _flowObjects, VisualNodeBase *node, State _state)
+    :CommandBase(_flowObjects)
 {
     state = _state;
     if(state == CREATE)
@@ -19,17 +20,17 @@ NodeCommand::NodeCommand(VisualNodeBase *node, State _state)
            .saveTempData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true
-        });
+        }, flowObjects->getDbgLogger());
         nodeJson = LoadStore::serializeNode(node, handler);
     }
 }
 
 
-void NodeCommand::undo(FlowData *_flowData, LoadStore *loadStore)
+void NodeCommand::undo(LoadStore *loadStore)
 {
     if(state == CREATE)
     {
-        VisualNodeBase* nodeToDelete = _flowData->findnode(nodeUniqueId);
+        VisualNodeBase* nodeToDelete = flowObjects->findnode(nodeUniqueId);
         if(nodeToDelete == nullptr)
         {
             qFatal("[fatal][NodeCommand] connectionToDelete = nullptr");
@@ -43,9 +44,9 @@ void NodeCommand::undo(FlowData *_flowData, LoadStore *loadStore)
            .saveTempData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true
-        });
+        }, flowObjects->getDbgLogger());
         nodeJson = loadStore->serializeNode(nodeToDelete, handler);
-        Utils::printJson(nodeJson);
+        Utils::printJson(nodeJson, flowObjects->getDbgLogger());
         delete nodeToDelete;
         state = DELETE;
         setText("DELETE node");
@@ -59,8 +60,8 @@ void NodeCommand::undo(FlowData *_flowData, LoadStore *loadStore)
            .restoreData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true,
-       });
-       Utils::printJson(nodeJson);
+       },flowObjects->getDbgLogger());
+       Utils::printJson(nodeJson, flowObjects->getDbgLogger());
 
       VisualNodeBase * recoveredNode = loadStore->deserializeNode(*nodeJson, handler);
       if(recoveredNode == nullptr)

@@ -13,16 +13,15 @@ UndoRedoManager::~UndoRedoManager()
     delete undoView;
 }
 
-void UndoRedoManager::setData(FlowData *_flowData, LoadStore *_loadStore)
+void UndoRedoManager::setData(FlowObjects* _flowObjects, LoadStore *_loadStore)
 {
-    flowData = _flowData;
+    flowObjects = _flowObjects;
     loadStore = _loadStore;
 }
 
 void UndoRedoManager::registerEvent()
 {
     eventCounter++;
-    //qDebug("[debug][MementoManager] event happended %d eventcounter = %d", event.type(), eventCounter);
 }
 
 void UndoRedoManager::pushChange(CommandBase *command)
@@ -53,7 +52,7 @@ void UndoRedoManager::undo()
         //take and undo
         CommandBase *undoneCommand = undoStack.at(cursorPosition);
 
-        undoneCommand->undo(flowData,loadStore);
+        undoneCommand->undo(loadStore);
 
         //insert it above the cursor
         undoView->setCurrentRow(cursorPosition);
@@ -76,7 +75,7 @@ void UndoRedoManager::redo()
     {
         CommandBase *redoCommand = undoStack.at(cursorPosition);
 
-        redoCommand->undo(flowData,loadStore);
+        redoCommand->undo(loadStore);
 
         undoView->setCurrentRow(cursorPosition);
 

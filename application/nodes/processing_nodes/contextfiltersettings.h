@@ -10,7 +10,7 @@ class ContextFilterSettings: public NodeSettingsBase
 {
     Q_OBJECT
 public:
-    ContextFilterSettings();
+    ContextFilterSettings(DbgLogger* dbgLogger);
     virtual ~ContextFilterSettings();
     QJsonObject *serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);

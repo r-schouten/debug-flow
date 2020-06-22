@@ -1,6 +1,6 @@
 #include "propertywidgetbase.h"
 
-PropertyWidgetBase::PropertyWidgetBase(QWidget *parent) : QWidget (parent)
+PropertyWidgetBase::PropertyWidgetBase(QWidget *parent, DbgLogger *dbgLogger) : QWidget (parent), dbgLogger(dbgLogger)
 {
 
 }

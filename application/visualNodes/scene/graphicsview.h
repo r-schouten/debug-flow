@@ -11,13 +11,14 @@ class GraphicsView : public QGraphicsView
     Q_OBJECT
 public:
     explicit GraphicsView(QWidget *parent);
-    void setSelectionManager(SelectionManager *_selectionManager);
+    void setData(FlowObjects* _flowObjects, NodeScene* _nodeScene);
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     SelectionManager* selectionManager = nullptr;
+    DbgLogger* dbgLogger = nullptr;
     bool scrollButtonHold = false;
     QPointF lastMousePosition;
 public slots:

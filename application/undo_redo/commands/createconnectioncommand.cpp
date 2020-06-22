@@ -1,6 +1,7 @@
 #include "createconnectioncommand.h"
 
-ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
+ConnectionCommand::ConnectionCommand(FlowObjects* _flowObjects, VisualConnection *connection, State _state)
+    :CommandBase(_flowObjects)
 {
     state = _state;
     if(state == CREATE)
@@ -8,7 +9,7 @@ ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
         setText("CREATE connection");
         state = CREATE;
         connectionUniqueId = connection->getUniqueId();
-        qDebug("[debug][ConnectionCommand] constructor unique %lld", connectionUniqueId);
+        flowObjects->getDbgLogger()->debug("ConnectionCommand",__FUNCTION__,"constructor unique %lld", connectionUniqueId);
     }
     else
     {
@@ -21,16 +22,16 @@ ConnectionCommand::ConnectionCommand(VisualConnection *connection, State _state)
            .saveTempData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true
-        });
+        }, flowObjects->getDbgLogger());
         connectionJson = connection->serialize(handler);
     }
 }
 
-void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
+void ConnectionCommand::undo(LoadStore *loadStore)
 {
     if(state == CREATE)
     {
-        VisualConnection* connectionToDelete = _flowData->findConnection(connectionUniqueId);
+        VisualConnection* connectionToDelete = flowObjects->findConnection(connectionUniqueId);
         if(connectionToDelete == nullptr)
         {
             qFatal("[fatal][ConnectionCommand] connectionToDelete = nullptr");
@@ -43,7 +44,7 @@ void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
            .saveTempData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true
-        });
+        }, flowObjects->getDbgLogger());
         connectionJson = connectionToDelete->serialize(handler);
 
         connectionToDelete->setDeleteReason(VisualConnection::DeleteReason::UNDO_REDO);
@@ -60,7 +61,7 @@ void ConnectionCommand::undo(FlowData *_flowData, LoadStore *loadStore)
            .restoreData = false,
            .exceptionOnError = true,
            .exceptionOnFatal = true,
-       });
+       },flowObjects->getDbgLogger());
       VisualConnection* recoveredConnection = loadStore->deserializeConnection(*connectionJson, handler);
       if(recoveredConnection == nullptr)
       {

@@ -1,9 +1,12 @@
 #include "nodebase.h"
 
-NodeBase::NodeBase()
+
+NodeBase::NodeBase(DbgLogger *dbgLogger)
+    :dbgLogger(dbgLogger)
 {
 
 }
+
 NodeBase::~NodeBase()
 {
 

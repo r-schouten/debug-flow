@@ -12,7 +12,7 @@ class SerialNodePropertiesWidget : public PropertyWidgetBase
 {
     Q_OBJECT
 public:
-    SerialNodePropertiesWidget(QWidget *parent, SerialNode *serialNode);
+    SerialNodePropertiesWidget(QWidget *parent, DbgLogger* dbgLogger, SerialNode *serialNode);
     ~SerialNodePropertiesWidget();
 public slots:
     void loadAvailablePorts();

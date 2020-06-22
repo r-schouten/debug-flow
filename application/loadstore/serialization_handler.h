@@ -4,7 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include "serialistationexception.h"
-
+#include "dbglogger.h"
 //macro to make functions like findStringSafe easier to use
 #define CLASSNAME (staticMetaObject.className())
 
@@ -24,7 +24,7 @@ public:
 class SerializationHandler
 {
 public:
-    SerializationHandler(SerializationSettings_t settings);
+    SerializationHandler(SerializationSettings_t settings, DbgLogger* _dbgLogger);
     void logWaring(QString callingClass, QString message);
     void logError(QString callingClass, QString message);
     void logFatal(QString callingClass, QString message);
@@ -39,6 +39,6 @@ private:
     bool anyErrorOccured = false;
 
     SerializationSettings_t settings;
-
+    DbgLogger* dbgLogger = nullptr;
     QList<SerialistationException> occuredErrors;
 };

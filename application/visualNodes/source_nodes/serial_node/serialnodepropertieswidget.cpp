@@ -3,8 +3,8 @@
 #include <QGroupBox>
 #include <QLabel>
 
-SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNode *serialNode)
-    :PropertyWidgetBase (parent),serialNode(serialNode)
+SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, DbgLogger *dbgLogger, SerialNode *serialNode)
+    :PropertyWidgetBase(parent,dbgLogger),serialNode(serialNode)
 {    
     serialSettings = serialNode->getNodeSettings();
 
@@ -81,7 +81,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     }
     if(found == false)
     {
-        qDebug("[error][SerialNodePropertiesWidget] databits not found");
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"databits not found");
     }
     layout->addRow("data bits",dataBitsBox);
 
@@ -103,7 +103,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     }
     if(found == false)
     {
-        qDebug("[error][SerialNodePropertiesWidget] stopBits not found");
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"stopBits not found");
     }
     layout->addRow("stop bits",stopBitsBox);
 
@@ -124,7 +124,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     }
     if(found == false)
     {
-        qDebug("[error][SerialNodePropertiesWidget] parity not found");
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"parity not found");
     }
     layout->addRow("parity",parityCombobox);
 
@@ -143,7 +143,7 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, SerialNo
     }
     if(found == false)
     {
-        qDebug("[error][SerialNodePropertiesWidget] flowcontrol not found");
+        dbgLogger->error(CLASSNAME,__FUNCTION__,"flowcontrol not found");
     }
     layout->addRow("flow control",flowControlBox);
 
@@ -338,7 +338,7 @@ void SerialNodePropertiesWidget::disconnectClicked()
 }
 void SerialNodePropertiesWidget::settingsChanged()
 {
-    qDebug("[debug][SerialNodePropertiesWidget] settingsChanged");
+    dbgLogger->debug(CLASSNAME,__FUNCTION__,"settingsChanged");
     settingChanged = true;
     updateButtonStates();
     emit serialSettings->notifySettingsChanged();

@@ -14,10 +14,13 @@ GraphicsView::GraphicsView(QWidget *parent)
 
     centerOn(graphicsViewOriginX,graphicsViewOriginY);
 }
-void GraphicsView::setSelectionManager(SelectionManager* _selectionManager)
+void GraphicsView::setData(FlowObjects *_flowObjects, NodeScene *_nodeScene)
 {
-    selectionManager = _selectionManager;
+    dbgLogger = _flowObjects->getDbgLogger();
+    selectionManager = _flowObjects->getSelectionManager();
     connect(this,SIGNAL(rubberBandChanged(QRect, QPointF, QPointF)),this,SLOT(selectionUpdate(QRect, QPointF, QPointF)));
+
+    this->setScene((QGraphicsScene*)_nodeScene);
 }
 void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint, QPointF toScenePoint)
 {
@@ -34,8 +37,6 @@ void GraphicsView::selectionUpdate(QRect rubberBandRect, QPointF fromScenePoint,
         VisualNodeBase* node = dynamic_cast<VisualNodeBase*>(iterator.next());
         if(node)
         {
-            qDebug("selectionUpdate");
-
             selectionManager->setSelected(node, false);
         }
     }

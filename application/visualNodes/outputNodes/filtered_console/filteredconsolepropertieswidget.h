@@ -17,7 +17,7 @@ class FilteredConsolePropertiesWidget : public PropertyWidgetBase
 {
     Q_OBJECT
 public:
-    FilteredConsolePropertiesWidget(QWidget *parent, FilteredNodeSettings *settings);
+    FilteredConsolePropertiesWidget(QWidget *parent, DbgLogger* dbgLogger, FilteredNodeSettings *settings);
     virtual ~FilteredConsolePropertiesWidget();
 
 public slots:

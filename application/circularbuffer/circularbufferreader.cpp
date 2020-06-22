@@ -33,17 +33,14 @@ char &CircularBufferReader::at(int i)
 void CircularBufferReader::release(int length)
 {
 #ifdef QT_DEBUG
-//    if(length == 0)
-//    {
-//        qDebug("error CircularBufferReader::release(int length) : length == 0");
-//    }
+
     if(length < 0)
     {
-        qFatal("error CircularBufferReader::release(int length) : length < 0");
+        buffer->dbgLogger->fatal("CircularBufferReader",__FUNCTION__,"length < 0");
     }
     if(availableSize() < length)
     {
-        qFatal("error CircularBufferReader::release(int length) : availableSize() < length");
+        buffer->dbgLogger->fatal("CircularBufferReader",__FUNCTION__,"availableSize() < length");
     }
 #endif
     tail += length;

@@ -1,6 +1,7 @@
 #include "filterednodesettings.h"
 
-FilteredNodeSettings::FilteredNodeSettings()
+FilteredNodeSettings::FilteredNodeSettings(DbgLogger* dbgLogger)
+    :NodeSettingsBase(dbgLogger)
 {
     tagAndOptionSettings = new TagAndOptionsSettings();
 }
@@ -154,10 +155,10 @@ void FilteredNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettin
     Q_UNUSED(dataValid);
     Q_UNUSED(source);
     Q_UNUSED(event);
-    qDebug("filtered node settings changed");
+    dbgLogger->debug("FilteredNodeSettings",__FUNCTION__,"filtered node settings changed");
     if(saveSettings == SAVE)
-    {    qDebug("filtered node settings changed save");
-
+    {
+        dbgLogger->debug("FilteredNodeSettings",__FUNCTION__,"filtered node settings changed save");
         emit saveAbleChangeOccured();
     }
 }

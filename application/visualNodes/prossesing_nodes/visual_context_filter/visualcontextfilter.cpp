@@ -15,7 +15,7 @@ VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject 
 }
 void VisualContextFilter::construct()
 {
-    node = new ContextFilterNode();
+    node = new ContextFilterNode(dbgLogger);
     baseNode = node;
 
     name = "Context filter";
@@ -44,10 +44,10 @@ PropertyWidgetBase *VisualContextFilter::loadPropertiesWidget(QWidget* parent)
 {
     if(propertyWidget == nullptr)
     {
-        propertyWidget = new VisualContextFilterPropertiesWidget(parent, settings);
+        propertyWidget = new VisualContextFilterPropertiesWidget(parent, dbgLogger, settings);
     }
     else {
-        qDebug("[warning][VisualContextFilter] propertywidget already exist");
+        dbgLogger->warning(CLASSNAME,__FUNCTION__,"propertywidget already exist");
     }
     return propertyWidget;
 }

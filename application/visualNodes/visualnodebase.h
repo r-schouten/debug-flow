@@ -19,8 +19,6 @@
 #include "serialization_handler.h"
 #include "deserialization_handler.h"
 
-#include "movecommand.h"
-
 class SelectionManager;
 class FlowObjects;
 class Connector;
@@ -82,6 +80,7 @@ public:
     //the unique id is used to connect nodes and connectors when deserializing
     int64_t getUniqueId();
 
+    DbgLogger* dbgLogger = nullptr;
 protected:
     //the current open property widget
     PropertyWidgetBase* propertyWidget = nullptr;

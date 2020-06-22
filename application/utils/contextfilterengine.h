@@ -6,7 +6,6 @@
 #pragma once
 #include <QStandardItemModel>
 #include <QTextCharFormat>
-#include <qdebug.h>
 #include <qsignalmapper.h>
 #include "circularbufferreader.h"
 #include "ansi_types.h"
@@ -17,12 +16,13 @@ class ContextFilterEngine: public QObject
     Q_OBJECT
 
 public:
-    ContextFilterEngine(TagAndOptionsSettings* settings);
+    ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
     bool filterDataWithStyle(const std::function<void (char)> &addChar, const std::function<bool ()> &deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat* format);
 
     bool filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader);
 private:
     TagAndOptionsSettings* settings = nullptr;
+    DbgLogger* dbgLogger = nullptr;
     bool showCurrentContext = false;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);

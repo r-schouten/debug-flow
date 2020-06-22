@@ -7,7 +7,7 @@
 class ContextFilterNode : public InputNode, public OutputNode
 {
 public:
-    ContextFilterNode();
+    ContextFilterNode(DbgLogger *dbgLogger);
     virtual ~ContextFilterNode();
     ContextFilterSettings *getNodeSettings();
     void NotifyBufferUpdate(Subscription *source);
@@ -17,6 +17,5 @@ private:
 
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;
-
 };
 

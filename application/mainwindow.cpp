@@ -126,9 +126,9 @@ void MainWindow::newFlow()
 }
 void MainWindow::open()
 {
-    qDebug("[debug][MainWindow] openFlow()");
+    DbgLogger::getStaticLogger()->verbose("MainWindow",__FUNCTION__,"openFlow()");
 
-    FileSystem* fileSystem = new FileSystem;
+    FileSystem* fileSystem = new FileSystem();
     QJsonObject jsonObject;
     QString fileName;
     if(fileSystem->openFile(this, jsonObject, fileName))
@@ -143,7 +143,7 @@ void MainWindow::open()
 
 void MainWindow::save()
 {
-    qDebug("[debug][MainWindow] saveFlow()");
+    DbgLogger::getStaticLogger()->verbose("MainWindow",__FUNCTION__,"saveFlow()");
     if(anyFlowOpen())
     {
         getCurrentFlow()->save(false);
@@ -152,7 +152,7 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-    qDebug("[debug][MainWindow] saveFlow()");
+    DbgLogger::getStaticLogger()->verbose("MainWindow",__FUNCTION__,"saveFlow()");
     if(anyFlowOpen())
     {
         getCurrentFlow()->save(true);

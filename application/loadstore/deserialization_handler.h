@@ -21,7 +21,7 @@ public:
 class DeserializationHandler
 {
 public:
-    DeserializationHandler(DeserializationSettings_t settings);
+    DeserializationHandler(DeserializationSettings_t settings, DbgLogger *_dbgLogger);
     void logWaring(QString callingClass, QString message, QJsonObject jsonObject);
     void logError(QString callingClass, QString message, QJsonObject jsonObject);
     void logFatal(QString callingClass, QString message, QJsonObject jsonObject);
@@ -41,6 +41,6 @@ private:
     bool anyErrorOccured = false;
 
     DeserializationSettings_t settings;
-
+    DbgLogger* dbgLogger = nullptr;
     QList<DeserialistationException> occuredErrors;
 };

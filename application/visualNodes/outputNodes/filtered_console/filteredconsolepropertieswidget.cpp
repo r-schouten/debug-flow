@@ -1,8 +1,9 @@
 #include "filteredconsolepropertieswidget.h"
 
 
-FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget* parent, FilteredNodeSettings* settings)
-    :PropertyWidgetBase (parent),settings(settings)
+FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget *parent, DbgLogger* dbgLogger, FilteredNodeSettings *settings)
+
+    :PropertyWidgetBase(parent,dbgLogger),settings(settings)
 {
     layout = new QVBoxLayout;
     layout->setMargin(5);

@@ -5,7 +5,8 @@
 #include <QString>
 #include <QStringList>
 #include <exception>
-#include <serialistationexception.h>
+#include "serialistationexception.h"
+#include "dbglogger.h"
 using std::exception;
 
 class DeserialistationException : public exception
@@ -20,11 +21,11 @@ public:
     {
         return QString("%1 deserialisation exception  from %2: \"%3\"").arg(errorLevelString.at(errorLevel), callingClass, message).toLatin1();
     }
-    void printJson()
+    void printJson(DbgLogger* dbgLogger)
     {
         QJsonDocument doc(jsonObject);
         QString strJson(doc.toJson(QJsonDocument::Indented));
-        qDebug(strJson.toLatin1());
+        dbgLogger->error("DeserialistationException",__FUNCTION__,strJson.toLatin1());
     }
 private:
     ErrorLevel errorLevel;

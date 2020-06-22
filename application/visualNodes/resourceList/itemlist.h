@@ -27,6 +27,7 @@ public:
 private:
     QTreeWidget *resourceList = nullptr;
     FlowObjects *flowObjects = nullptr;
+    DbgLogger* dbgLogger = nullptr;
     NodeScene* nodeScene = nullptr;
     QList<VisualNodeBase*> nodes;
     bool lastItemPressed = false;

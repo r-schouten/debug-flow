@@ -1,8 +1,9 @@
 #include "filteredconsole.h"
 
-FilteredConsole::FilteredConsole()
+FilteredConsole::FilteredConsole(DbgLogger *dbgLogger)
+    :NodeBase(dbgLogger)
 {
-    nodeSettings = new FilteredNodeSettings();
+    nodeSettings = new FilteredNodeSettings(dbgLogger);
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
     loadMaxLines();
@@ -19,7 +20,7 @@ FilteredConsole::FilteredConsole()
     p.setColor(QPalette::Text, Qt::black);
     console->setPalette(p);
 
-    contextFilter = new ContextFilterEngine(nodeSettings->tagAndOptionSettings);
+    contextFilter = new ContextFilterEngine(nodeSettings->tagAndOptionSettings, dbgLogger);
 
     loadScrollSettings();
     loadTags();

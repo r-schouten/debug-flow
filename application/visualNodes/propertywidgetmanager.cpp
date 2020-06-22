@@ -1,8 +1,8 @@
 #include "propertywidgetmanager.h"
 
 
-PropertyWidgetManager::PropertyWidgetManager(QScrollArea* propertyWidget,QTabWidget* tabWidget)
-    :propertyWidget(propertyWidget),tabWidget(tabWidget)
+PropertyWidgetManager::PropertyWidgetManager(QScrollArea* propertyWidget, QTabWidget* tabWidget, DbgLogger *_dbgLogger)
+    :propertyWidget(propertyWidget),tabWidget(tabWidget),dbgLogger(_dbgLogger)
 {
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -21,15 +21,12 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
         }
     }
 
-    qDebug("[debug][propertyWidgetManager] open properties");
-
     currentShownNode = node;
 
-    //tabWidget->setCurrentWidget(propertyWidget);
     QWidget * nodePropertiesWidget = node->loadPropertiesWidget(nullptr);
     if(nodePropertiesWidget == nullptr)
     {
-        qDebug("[error][propertyWidgetManager] node->loadPropertiesWidget() returned NULL");
+        dbgLogger->error("PropertyWidgetManager",__FUNCTION__, "returned NULL");
         return;
     }
     propertyWidget->setWidget(nodePropertiesWidget);

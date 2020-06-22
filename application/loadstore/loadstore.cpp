@@ -1,14 +1,14 @@
 #include "loadstore.h"
 
-LoadStore::LoadStore(FlowData* flowData,FlowObjects *flowObjects, NodeScene* scene)
-    :flowData(flowData),flowObjects(flowObjects),scene(scene)
+LoadStore::LoadStore(FlowObjects *flowObjects, NodeScene* scene)
+    :flowObjects(flowObjects),scene(scene)
 {
 
 }
 QJsonObject *LoadStore::serialize(SerializationHandler &handler)
 {
     QJsonArray allConnectionsJson;
-    QListIterator<VisualConnection*>iterator(flowData->connections);
+    QListIterator<VisualConnection*>iterator(flowObjects->connections);
     while(iterator.hasNext())
     {
         VisualConnection* connection = iterator.next();
@@ -26,7 +26,7 @@ QJsonObject *LoadStore::serialize(SerializationHandler &handler)
         }
     }
     QJsonArray allNodesJson;
-    QListIterator<VisualNodeBase*>iterator2(flowData->nodes);
+    QListIterator<VisualNodeBase*>iterator2(flowObjects->nodes);
     while(iterator2.hasNext())
     {
         VisualNodeBase* node = iterator2.next();
@@ -136,9 +136,9 @@ VisualConnection* LoadStore::deserializeConnection(QJsonObject &jsonNodeObject, 
     QString connector1Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR1_NAME, jsonNodeObject);
     QString connector2Name = handler.findStringSafe(CLASSNAME, JSON_CONNECTION_CONNECTOR2_NAME, jsonNodeObject);
     int64_t uniqueId = handler.findInt64Safe(CLASSNAME, JSON_CONNECTION_UNIQUE_ID, jsonNodeObject);
-    qDebug("[debug][LoadStore] unique id loaded %lld", uniqueId);
+    flowObjects->getDbgLogger()->debug("LoadStore",__FUNCTION__,"unique id loaded %lld", uniqueId);
     //search in the node list to find the connected node
-    QListIterator<VisualNodeBase*>iterator2(flowData->nodes);
+    QListIterator<VisualNodeBase*>iterator2(flowObjects->nodes);
     while(iterator2.hasNext())
     {
         VisualNodeBase* node = iterator2.next();

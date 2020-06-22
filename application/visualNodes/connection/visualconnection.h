@@ -73,6 +73,7 @@ private:
     bool settingsChanged = true;
     QPainterPath painterPath;
     PathStyle oldPathStyle;
+    DbgLogger* dbgLogger = nullptr;
 signals:
     void onDelete(VisualConnection* connection);
 };

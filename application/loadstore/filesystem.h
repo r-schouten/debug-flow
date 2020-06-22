@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QJsonParseError>
+
+#include "dbglogger.h"
 class FileSystem
 {
 public:
@@ -23,5 +25,6 @@ public:
 private:
     bool openFile(QUrl &path, QJsonObject &json);
     void saveFile(QJsonObject *json);
+
 };
 
