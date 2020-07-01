@@ -20,6 +20,8 @@ void InputNode::notifyUnsubscribe(Subscription *subscription)
     subScriptions.removeOne(subscription);
 }
 
+
+
 void InputNode::addSubscription(OutputNode *outputNode)
 {
     subScriptions.append(outputNode->subscribe(this));
@@ -37,4 +39,18 @@ void InputNode::deleteSubscription(OutputNode *outputNode)
             subscription->remove();
         }
     }
+}
+
+void InputNode::leftForwardHistoricalUpdate()
+{
+
+}
+
+void InputNode::inputNotifyHistoricalUpdate(Subscription *subscription)
+{
+    //the buffer reader is already resetted
+
+    dbgLogger->debug("InputNode", __FUNCTION__,"called");
+
+    this->leftHistoricalUpdateOccured();
 }

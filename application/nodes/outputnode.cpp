@@ -39,10 +39,19 @@ void OutputNode::notifyUnsubscribe(Subscription *subscription)
 {
     subscribers.removeOne(subscription);
 }
-void OutputNode::NotifyAllSubscriptions()
+void OutputNode::notifyAllSubscriptions()
 {
     QListIterator<Subscription*> i(subscribers);
     while (i.hasNext())
         i.next()->notifyBufferUpdate();
+}
+
+void OutputNode::rightForwardHistoricalUpdate()
+{
+    this->circularBuffer->reset();
+
+    QListIterator<Subscription*> i(subscribers);
+    while (i.hasNext())
+        i.next()->notifyHistoricalUpdate();
 }
 

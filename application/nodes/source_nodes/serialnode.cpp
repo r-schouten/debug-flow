@@ -67,9 +67,9 @@ void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
     circularBuffer->append(&data);
-    NotifyAllSubscriptions();
+    notifyAllSubscriptions();
 
-    dbgLogger->debug(CLASSNAME,__FUNCTION__,"thread id from readdata %d",QThread::currentThreadId());;
+    //dbgLogger->debug(CLASSNAME,__FUNCTION__,"thread id from readdata %d",QThread::currentThreadId());;
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {

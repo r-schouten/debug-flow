@@ -6,7 +6,7 @@ ContextFilterSettings::ContextFilterSettings(DbgLogger* dbgLogger)
     tagAndOptionsSettings = new TagAndOptionsSettings();
     connect(tagAndOptionsSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this, SLOT(optionAdded(Tag*,TagOption*)));
     connect(tagAndOptionsSettings, SIGNAL(tagsChanged()),this, SLOT(tagsChanged()));
-
+    connect(tagAndOptionsSettings, SIGNAL(settingsChanged(DataValid,SaveSettings, SettingsChangeSource, int)), SLOT(notifySettingsChanged(DataValid,SaveSettings, SettingsChangeSource, int)));
 }
 
 ContextFilterSettings::~ContextFilterSettings()
@@ -42,13 +42,17 @@ void ContextFilterSettings::deserialize(QJsonObject &jsonObject, Deserialization
 
 void ContextFilterSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
-    Q_UNUSED(dataValid);
     Q_UNUSED(source);
     Q_UNUSED(event);
     dbgLogger->debug("ContextFilterSettings",__FUNCTION__,"contextfilter node settings changed");
     if(saveSettings == SAVE)
     {
         emit saveAbleChangeOccured();
+    }
+    if(dataValid == DATA_INVALID)
+    {
+        emit notifyDataInvalid();
+        dbgLogger->debug("ContextFilterSettings",__FUNCTION__,"data invalid");
     }
 }
 

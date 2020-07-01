@@ -1,9 +1,5 @@
 #include "circularbuffer.h"
 
-CircularBuffer::CircularBuffer(DbgLogger *dbgLogger)
-{
-    CircularBuffer(dbgLogger, 100, 1000);
-}
 
 CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity)
     :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity)
@@ -14,17 +10,19 @@ CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const 
 #ifdef QT_DEBUG
     memset(data, 'x',capacity * sizeof(char));
 #endif
-
 }
 
 CircularBuffer::~CircularBuffer()
 {
     free(data);
 }
+
 void CircularBuffer::reset()
 {
     head = 0;
+    iterations = 0;
 }
+
 int CircularBuffer::usedSize(CircularBufferReader* reader)
 {
     if(head >= reader->tail)
@@ -59,34 +57,12 @@ void CircularBuffer::checkSize(int neededSize)
         dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= capacity) %d",neededSize);
     }
 }
+
 void CircularBuffer::append(const QByteArray *byteArray)
 {
     //take the raw data out of the byte array
     const char* data = static_cast<const char*>(*byteArray);
     append(const_cast<char*>(data), byteArray->length());
-
-    /*
-    checkSize(byteArray->size());
-    int noSplitAvailable = capacity - head;
-    int firstLength = std::min(noSplitAvailable, byteArray->size());
-    for(int i=0;i<firstLength;i++)
-    {
-        data[head] = byteArray->at(i);
-        head++;
-    }
-    if(head == capacity)//at the begin of the buffer
-    {
-        head = 0;
-        iterations++;
-        int secondLength = byteArray->size() - firstLength;
-        secondLength = std::min(secondLength, capacity);
-        for(int i=0;i<secondLength;i++)
-        {
-            data[head] = byteArray->at(firstLength+i);
-            head++;
-        }
-    }
-    */
 }
 
 void CircularBuffer::append(char *inputData, int size)
@@ -106,10 +82,23 @@ void CircularBuffer::append(char *inputData, int size)
         head += secondLength;
     }
 }
+
+void CircularBuffer::appendByte(char *inputData)
+{
+    *(data + head) = *inputData;
+    head++;
+    if(head == capacity)//at the begin of the buffer
+    {
+        head = 0;
+        iterations++;
+    }
+}
+
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
     return new CircularBufferReader(this, head, iterations, true);
 }
+
 void CircularBuffer::print()
 {
     std::cout << capacity << " buffer: ";

@@ -44,14 +44,25 @@ QByteArray getRandomBytes(int length, bool printableChars)
    }
    return randomString;
 }
-bool CircularBufferTest::testContinousAppendRead(CircularBuffer* buffer,int iterations, bool printableChars)
+bool CircularBufferTest::testContinousAppendRead(CircularBuffer* buffer,int iterations, bool printableChars, bool perByte)
 {
     CircularBufferReader* reader = buffer->requestNewReader();
     for(int iteration = 0;iteration<iterations;iteration++)
     {
         QByteArray byteArray = getRandomBytes(qrand() % 200 + 1,printableChars);
         //qDebug("byteArray size %d",byteArray->size());
-        buffer->append(&byteArray);
+        if(perByte)
+        {
+            for(int i=0;i<byteArray.length();i++)
+            {
+                char byte = byteArray.at(i);
+                buffer->appendByte(&byte);
+            }
+        }
+        else
+        {
+            buffer->append(&byteArray);
+        }
 
         if(reader->availableSize() != byteArray.length())
         {
@@ -81,16 +92,22 @@ bool CircularBufferTest::testContinousAppendRead(CircularBuffer* buffer,int iter
 void CircularBufferTest::testContinousAppendRead()
 {
     CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),1000,1000);
-    QVERIFY(testContinousAppendRead(circularBuffer,1000, true));
+    QVERIFY(testContinousAppendRead(circularBuffer,1000, true, false));
     //QVERIFY(testContinousAppendRead(circularBuffer,10000, true, false));
 
     delete circularBuffer;
 
 }
+void CircularBufferTest::testContinousAppendReadPerByte()
+{
+    CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),1000,1000);
+    QVERIFY(testContinousAppendRead(circularBuffer,1000, true, true));
+    delete circularBuffer;
+}
 void CircularBufferTest::testContinousAppendRead2()
 {
     CircularBuffer* circularBuffer = new CircularBuffer(DbgLogger::getStaticLogger(),1000,1000);
-    QVERIFY(testContinousAppendRead(circularBuffer,1000, false));
+    QVERIFY(testContinousAppendRead(circularBuffer,1000, false, false));
 
     delete circularBuffer;
 

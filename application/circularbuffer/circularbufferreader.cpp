@@ -51,3 +51,9 @@ void CircularBufferReader::release(int length)
     }
 
 }
+
+void CircularBufferReader::reset()
+{
+    tail = buffer->head;
+    iteration = buffer->iterations;
+}

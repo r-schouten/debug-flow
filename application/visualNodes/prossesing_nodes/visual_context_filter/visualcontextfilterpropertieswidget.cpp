@@ -15,10 +15,16 @@ VisualContextFilterPropertiesWidget::VisualContextFilterPropertiesWidget(QWidget
     connect(settings->tagAndOptionsSettings, SIGNAL(optionAdded(Tag*,TagOption*)),tagsWidget,SLOT(optionAdded(Tag*,TagOption*)));
     connect(settings->tagAndOptionsSettings,SIGNAL(tagsChanged()),tagsWidget,SLOT(loadTags()));
 
+    connect(tagsWidget, SIGNAL(DataChanged()), this, SLOT(contextSettingsChanged()));
+
     tagsWidget->loadTags();
 }
 
 VisualContextFilterPropertiesWidget::~VisualContextFilterPropertiesWidget()
 {
 
+}
+void VisualContextFilterPropertiesWidget::contextSettingsChanged()
+{
+    settings->notifySettingsChanged(DATA_INVALID, DONT_SAVE, PROPERIES);
 }

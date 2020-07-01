@@ -66,8 +66,8 @@ public:
     FilteredConsole(DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
-    void clear();
     void NotifyBufferUpdate(Subscription *source)override;
+    virtual void leftHistoricalUpdateOccured();
 
     NodeSettingsBase *getNodeSettings();
 
@@ -100,5 +100,7 @@ private slots:
     void filterOnWindowChanged();
     void loadMaxLines();
     void loadScrollSettings();
+
+
 };
 

@@ -16,11 +16,14 @@ public:
     virtual ~InputNode();
     virtual void NotifyBufferUpdate(Subscription* source) = 0;
     void notifyUnsubscribe(Subscription* subscription);
-
     void addSubscription(OutputNode* outputNode);
 
     void deleteSubscription(OutputNode* outputNode);
-protected:;
+
+    void inputNotifyHistoricalUpdate(Subscription *subscription);
+    void leftForwardHistoricalUpdate();
+
+protected:
     QList<Subscription*> subScriptions;
 };
 

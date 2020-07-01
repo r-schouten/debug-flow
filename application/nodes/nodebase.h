@@ -12,8 +12,10 @@ public:
 
     //function implemented by all derived classes to acces the node settings
     virtual NodeSettingsBase* getNodeSettings()=0;
+    virtual void leftHistoricalUpdateOccured();
 
 protected:
+
     DbgLogger* dbgLogger = nullptr;
 };
 

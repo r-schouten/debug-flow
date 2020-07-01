@@ -161,4 +161,8 @@ void FilteredNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettin
         dbgLogger->debug("FilteredNodeSettings",__FUNCTION__,"filtered node settings changed save");
         emit saveAbleChangeOccured();
     }
+    if(dataValid == DATA_INVALID)
+    {
+
+    }
 }

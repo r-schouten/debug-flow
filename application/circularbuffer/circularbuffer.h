@@ -16,8 +16,7 @@ private:
     int maxCapacity;
     void checkSize(int neededSize);
 public:
-    CircularBuffer(DbgLogger *dbgLogger);
-    CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const  int _maxCapacity);
+    CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 100, const  int _maxCapacity = 1000);
     ~CircularBuffer();
     //todo copy and move constructor
     int usedSize(CircularBufferReader *reader);
@@ -25,6 +24,8 @@ public:
 
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
+    void appendByte(char *inputData);
+
     int getSize();
     void print();
     void reset();

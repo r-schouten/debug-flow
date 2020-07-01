@@ -16,7 +16,10 @@ public:
 public slots:
     void loadTags();
     void optionAdded(Tag *destinationTag, TagOption *option);
+    void dataChanged();
 private:
     QVBoxLayout* layout = nullptr;
+signals:
+    void DataChanged();
 };
 

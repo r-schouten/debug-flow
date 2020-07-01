@@ -20,3 +20,8 @@ void Subscription::notifyBufferUpdate()
 {
     inputNode->NotifyBufferUpdate(this);
 }
+void Subscription::notifyHistoricalUpdate()
+{
+    bufferReader->reset();
+    inputNode->leftHistoricalUpdateOccured();
+}

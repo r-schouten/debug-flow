@@ -57,8 +57,5 @@ void TagAndOptionsSettings::deserialize(QJsonArray &jsonArray, DeserializationHa
 
 void TagAndOptionsSettings::notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event)
 {
-    Q_UNUSED(dataValid);
-    Q_UNUSED(saveSettings);
-    Q_UNUSED(source);
-    Q_UNUSED(event);
+    emit settingsChanged(dataValid, saveSettings, source, event);
 }

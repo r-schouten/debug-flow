@@ -99,6 +99,13 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     }
 }
 
+void FilteredConsole::leftHistoricalUpdateOccured()
+{
+    dbgLogger->debug(CLASSNAME, __FUNCTION__,"called");
+    nodeSettings->clearConsoleClicked();
+    clearConsole();
+}
+
 void FilteredConsole::loadTags()
 {
     while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
@@ -173,6 +180,7 @@ void FilteredConsole::loadScrollSettings()
         }
     }
 }
+
 void FilteredConsole::loadMaxLines()
 {
     console->document()->setMaximumBlockCount(nodeSettings->getMaxLines());
@@ -209,8 +217,4 @@ void FilteredConsole::mouseDoubleClickEvent(QMouseEvent *e)
 void FilteredConsole::contextMenuEvent(QContextMenuEvent *e)
 {
     Q_UNUSED(e)
-}
-void FilteredConsole::clear()
-{
-    console->clear();
 }

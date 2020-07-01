@@ -18,6 +18,6 @@ public:
     char &at(int i);
 
     void release(int index);
-
+    void reset();
     friend CircularBuffer;
 };

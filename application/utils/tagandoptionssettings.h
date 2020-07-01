@@ -27,12 +27,11 @@ private:
     bool hideContext = false;
     bool ANSIEnabled = true;
 
+
 signals:
     void optionAdded(Tag* tag,TagOption* option);
     void tagsChanged();
 
-
-
-
+    void settingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
 };
 

@@ -15,9 +15,13 @@
 #include "tagsandoptionswidget.h"
 class VisualContextFilterPropertiesWidget : public PropertyWidgetBase
 {
+    Q_OBJECT
+
 public:
     VisualContextFilterPropertiesWidget(QWidget *parent, DbgLogger *dbgLogger, ContextFilterSettings* _settings);
     virtual ~VisualContextFilterPropertiesWidget();
+public slots:
+    void contextSettingsChanged();
 protected:
     ContextFilterSettings* settings = nullptr;
     QList<TagGroupbox*> tagGroupboxes;

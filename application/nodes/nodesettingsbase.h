@@ -31,5 +31,7 @@ protected:
     DbgLogger* dbgLogger = nullptr;
 signals:
     void saveAbleChangeOccured();
+    void notifyDataInvalid();
+
 };
 

@@ -20,6 +20,7 @@ public:
     }
     OutputNode* getOutputNode();
     void notifyBufferUpdate();
+    void notifyHistoricalUpdate();
     CircularBufferReader* bufferReader;
 
     void remove();

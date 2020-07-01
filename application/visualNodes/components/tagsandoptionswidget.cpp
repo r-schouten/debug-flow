@@ -21,6 +21,7 @@ void TagsAndOptionsWidget::loadTags()
     while(tagIterator.hasNext())
     {
         Tag* currentTag = tagIterator.next();
+        connect(currentTag, SIGNAL(dataChanged(Tag*)), this, SLOT(dataChanged()));
         TagGroupbox* newGroupBox = new TagGroupbox(currentTag);
         tagGroupboxes.append(newGroupBox);
         newGroupBox->loadTag();
@@ -34,7 +35,9 @@ void TagsAndOptionsWidget::optionAdded(Tag* destinationTag, TagOption* option)
     TagGroupbox* destinationGroupbox = nullptr;
     if(tagGroupboxes.size() <= destinationTag->tagIndex)
     {
+        connect(destinationTag, SIGNAL(dataChanged()), this, SLOT(dataChanged()));
         destinationGroupbox = new TagGroupbox(destinationTag);
+
         tagGroupboxes.append(destinationGroupbox);
         layout->addWidget(destinationGroupbox);
     }
@@ -48,4 +51,9 @@ void TagsAndOptionsWidget::optionAdded(Tag* destinationTag, TagOption* option)
     item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
 
     destinationGroupbox->itemModel->appendRow(item);
+}
+
+void TagsAndOptionsWidget::dataChanged()
+{
+    emit DataChanged();
 }

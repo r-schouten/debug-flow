@@ -13,8 +13,10 @@ public:
     OutputNode();
     virtual ~OutputNode();
     void notifyUnsubscribe(Subscription* subscription);
+    void rightForwardHistoricalUpdate();
 protected:
-    void NotifyAllSubscriptions();
+    void notifyAllSubscriptions();
+
     QList<Subscription*> subscribers;
     CircularBuffer* circularBuffer = nullptr;
 private:

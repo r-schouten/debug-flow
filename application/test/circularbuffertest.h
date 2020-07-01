@@ -14,11 +14,12 @@
 class CircularBufferTest: public QObject
 {
     Q_OBJECT
-    bool testContinousAppendRead(CircularBuffer *buffer, int iterations, bool printableChars);
+    bool testContinousAppendRead(CircularBuffer *buffer, int iterations, bool printableChars, bool perByte);
 public:
     CircularBufferTest();
 private slots:
     void testContinousAppendRead();
+    void testContinousAppendReadPerByte();
     void testContinousAppend();
     void testContionousRead();
 

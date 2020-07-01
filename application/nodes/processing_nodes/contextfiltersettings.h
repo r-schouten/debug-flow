@@ -17,7 +17,7 @@ public:
     TagAndOptionsSettings* tagAndOptionsSettings = nullptr;
 
 public slots:
-    void notifySettingsChanged(DataValid dataValid, SaveSettings saveSettings, SettingsChangeSource source, int event);
+    virtual void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
     void optionAdded(Tag* tag,TagOption* option);
     void tagsChanged();
 };
