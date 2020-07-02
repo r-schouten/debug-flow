@@ -300,6 +300,23 @@ void VisualNodeBase::drawConnectors(QPainter* painter,NodeStyleBase* nodeStyle)
 
 void VisualNodeBase::paintBase(QPainter* painter, NodeStyleBase* nodeStyle, QString name)
 {
+    if(baseNode !=nullptr)
+    {
+        if(baseNode->hasInput)
+        {
+            InputNode* inputNode = dynamic_cast<InputNode*>(baseNode);
+            if(inputNode->isLocked())
+            {
+                setToolTip("locked");
+            }
+            else
+            {
+                setToolTip("not locked");
+            }
+        }
+    }
+
+
     setPos(nodePosition.x(),nodePosition.y());
     QRectF rect = innerRect();
 
@@ -339,6 +356,7 @@ bool VisualNodeBase::isSelected()
 
 void VisualNodeBase::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+
     QListIterator<Connector*> iterator(connectors);
     while(iterator.hasNext())
     {

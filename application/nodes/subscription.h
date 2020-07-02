@@ -18,9 +18,10 @@ public:
     {
 
     }
-    OutputNode* getOutputNode();
+    OutputNode *getOutputNode();
+    InputNode *getInputNode() const;
+
     void notifyBufferUpdate();
-    void notifyHistoricalUpdate();
     CircularBufferReader* bufferReader;
 
     void remove();

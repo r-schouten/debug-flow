@@ -46,17 +46,47 @@ void OutputNode::notifyAllSubscriptions()
         i.next()->notifyBufferUpdate();
 }
 
-void OutputNode::notifyLeftHistoricalUpdate()
+void OutputNode::resetBuffer()
 {
-
-}
-
-void OutputNode::rightForwardHistoricalUpdate()
-{
-    this->circularBuffer->reset();
-
+    circularBuffer->reset();
     QListIterator<Subscription*> i(subscribers);
     while (i.hasNext())
-        i.next()->notifyHistoricalUpdate();
+    {
+        Subscription* subscription = i.next();
+        subscription->getInputNode()->resetBufferReader(subscription);
+    }
+}
+
+bool OutputNode::bufferHistoricalCapable()
+{
+    circularBuffer->isHistoricalCapable();
+}
+
+void OutputNode::doHistoricalUpdate()
+{
+    dbgLogger->debug("OutputNode",__FUNCTION__,"called");
+    QListIterator<Subscription*> i(subscribers);
+    while (i.hasNext())
+    {
+        Subscription* subscription = i.next();
+        if(subscription->getInputNode()->isLocked())
+        {
+
+        }
+        else
+        {
+            subscription->getInputNode()->bufferReaderToBegin(subscription);
+        }
+    }
+}
+
+QList<Subscription *>* OutputNode::getSubscribers()
+{
+    return &subscribers;
+}
+
+std::string OutputNode::getNodeName()
+{
+    return "OutputNode";
 }
 

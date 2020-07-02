@@ -41,23 +41,34 @@ void InputNode::deleteSubscription(OutputNode *outputNode)
     }
 }
 
-void InputNode::leftForwardHistoricalUpdate()
+void InputNode::resetBufferReader(Subscription *caller)
 {
-    dbgLogger->debug("InputNode", __FUNCTION__,"called");
-
-    QListIterator<Subscription*> iterator(subScriptions);
-    while(iterator.hasNext())
-    {
-        Subscription* subscription = iterator.next();
-        subscription->getOutputNode()->notifyLeftHistoricalUpdate();
-    }
+    caller->bufferReader->reset();
 }
 
-void InputNode::inputNotifyHistoricalUpdate(Subscription *subscription)
+void InputNode::bufferReaderToBegin(Subscription *caller)
 {
-    //the buffer reader is already resetted
-
-    dbgLogger->debug("InputNode", __FUNCTION__,"called");
-
-    this->leftHistoricalUpdateOccured();
+    dbgLogger->debug("InputNode",__FUNCTION__,"called");
+    caller->bufferReader->toBegin();
 }
+
+std::string InputNode::getNodeName()
+{
+    return "InputNode";
+}
+
+QList<Subscription *>* InputNode::getSubScriptions()
+{
+    return &subScriptions;
+}
+
+void InputNode::lock()
+{
+    locked = true;
+}
+
+bool InputNode::isLocked()
+{
+    return locked;
+}
+

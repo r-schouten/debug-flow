@@ -13,11 +13,14 @@ public:
     OutputNode();
     virtual ~OutputNode();
     void notifyUnsubscribe(Subscription* subscription);
-    void rightForwardHistoricalUpdate();
-    void notifyLeftHistoricalUpdate();
+    QList<Subscription *>* getSubscribers();
+    virtual std::string getNodeName();
+
+    void resetBuffer();
+    bool bufferHistoricalCapable();
+    void doHistoricalUpdate();
 protected:
     void notifyAllSubscriptions();
-
     QList<Subscription*> subscribers;
     CircularBuffer* circularBuffer = nullptr;
 private:

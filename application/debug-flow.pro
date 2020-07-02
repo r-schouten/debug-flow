@@ -8,6 +8,7 @@ TEMPLATE = app
 SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
+    features/historicalupdatemanager.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
     loadstore/filesystem.cpp \
@@ -72,6 +73,7 @@ SOURCES += \
 HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
+    features/historicalupdatemanager.h \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \
@@ -156,6 +158,7 @@ RESOURCES += \
 INCLUDEPATH += \
     circularbuffer \
     nodes \
+    features \
     inputNodes \
     windows \
     visualNodes \

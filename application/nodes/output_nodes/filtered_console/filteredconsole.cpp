@@ -49,6 +49,18 @@ NodeSettingsBase *FilteredConsole::getNodeSettings()
 {
     return nodeSettings;
 }
+
+std::string FilteredConsole::getNodeName()
+{
+    return CLASSNAME;
+}
+
+void FilteredConsole::reset()
+{
+    dbgLogger->debug(CLASSNAME, __FUNCTION__,"called");
+    nodeSettings->clearConsoleClicked();
+    clearConsole();
+}
 bool FilteredConsole::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {
     auto lambda = [&](char character) mutable {destination->append(character);};
@@ -97,13 +109,6 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
         //when ansi is found the filter stops searching and is perhaps not empty, read it again
         NotifyBufferUpdate(source);
     }
-}
-
-void FilteredConsole::leftHistoricalUpdateOccured()
-{
-    dbgLogger->debug(CLASSNAME, __FUNCTION__,"called");
-    nodeSettings->clearConsoleClicked();
-    clearConsole();
 }
 
 void FilteredConsole::loadTags()

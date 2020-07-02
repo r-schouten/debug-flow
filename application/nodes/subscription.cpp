@@ -1,6 +1,11 @@
 #include "subscription.h"
 #include "inputnode.h"
 #include "outputnode.h"
+InputNode *Subscription::getInputNode() const
+{
+    return inputNode;
+}
+
 Subscription::~Subscription()
 {
     inputNode->notifyUnsubscribe(this);
@@ -19,9 +24,4 @@ void Subscription::remove()//use a function instead of a deconstructor so the ca
 void Subscription::notifyBufferUpdate()
 {
     inputNode->NotifyBufferUpdate(this);
-}
-void Subscription::notifyHistoricalUpdate()
-{
-    bufferReader->reset();
-    inputNode->leftHistoricalUpdateOccured();
 }

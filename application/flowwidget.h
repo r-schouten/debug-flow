@@ -19,6 +19,7 @@
 #include "deserialization_handler.h"
 
 #include "undoredomanager.h"
+#include "historicalupdatemanager.h"
 #include "flowobjects.h"
 
 class FlowWidget : public QWidget
@@ -49,7 +50,7 @@ private:
     UndoRedoManager* undoRedoManager = nullptr;
     FlowObjects* flowObjects = nullptr;
     SelectionManager* selectionManager = nullptr;
-
+    HistoricalUpdateManager* historicalUpdateManager = nullptr;
     bool changesSaved = false;
 public slots:
     void updateUI();

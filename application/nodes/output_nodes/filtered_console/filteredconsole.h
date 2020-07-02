@@ -67,11 +67,12 @@ public:
     virtual ~FilteredConsole();
 
     void NotifyBufferUpdate(Subscription *source)override;
-    virtual void leftHistoricalUpdateOccured();
 
     NodeSettingsBase *getNodeSettings();
-
+    virtual std::string getNodeName();
     FilteredNodeSettings* nodeSettings = nullptr;
+
+    virtual void reset();
 
 protected:
     void keyPressEvent(QKeyEvent *e) override;

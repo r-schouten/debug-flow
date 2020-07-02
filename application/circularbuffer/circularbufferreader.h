@@ -19,5 +19,7 @@ public:
 
     void release(int index);
     void reset();
+    void toBegin();
+
     friend CircularBuffer;
 };

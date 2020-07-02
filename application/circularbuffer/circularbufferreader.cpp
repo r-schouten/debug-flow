@@ -57,3 +57,18 @@ void CircularBufferReader::reset()
     tail = buffer->head;
     iteration = buffer->iterations;
 }
+
+void CircularBufferReader::toBegin()
+{
+    if(buffer->iterations != 0)
+    {
+        tail = buffer->head;
+        iteration = buffer->iterations-1;
+    }
+    else
+    {
+        tail = 0;
+        iteration = 0;
+    }
+
+}

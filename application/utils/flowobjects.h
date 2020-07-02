@@ -2,6 +2,7 @@
 
 #include "selectionmanager.h"
 #include "undoredomanager.h"
+#include "historicalupdatemanager.h"
 #include "dbglogger.h"
 #include "windowmanager.h"
 #include "visualnodebase.h"
@@ -16,8 +17,9 @@ private:
     UndoRedoManager* undoRedoManager = nullptr;
     DbgLogger* dbgLogger = nullptr;
     WindowManager* windowManager = nullptr;
+    HistoricalUpdateManager* historicalUpdateManager = nullptr;
 public:
-    FlowObjects(SelectionManager* _selectionManager, UndoRedoManager* _undoredoManager, DbgLogger* _dbgLogger, WindowManager* _windowManager);
+    FlowObjects(SelectionManager* _selectionManager, UndoRedoManager* _undoredoManager, DbgLogger* _dbgLogger, WindowManager* _windowManager, HistoricalUpdateManager* _historicalUpdateManager);
     ~FlowObjects();
 
     SelectionManager* getSelectionManager();
@@ -33,5 +35,6 @@ public:
     VisualConnection *findConnection(uint64_t uniqueId);
     VisualNodeBase *findnode(int64_t uniqueId);
     WindowManager *getWindowManager() const;
+    HistoricalUpdateManager *getHistoricalUpdateManager() const;
 };
 

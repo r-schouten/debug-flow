@@ -17,13 +17,20 @@ public:
     virtual void NotifyBufferUpdate(Subscription* source) = 0;
     void notifyUnsubscribe(Subscription* subscription);
     void addSubscription(OutputNode* outputNode);
-
     void deleteSubscription(OutputNode* outputNode);
 
-    void inputNotifyHistoricalUpdate(Subscription *subscription);
-    void leftForwardHistoricalUpdate();
+    void resetBufferReader(Subscription* caller);
+    void bufferReaderToBegin(Subscription* caller);
+
+    virtual std::string getNodeName();
+    QList<Subscription *>* getSubScriptions();
+
+    void lock();
+    bool isLocked();
 
 protected:
     QList<Subscription*> subScriptions;
+ private:
+    bool locked = false;
 };
 

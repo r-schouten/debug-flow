@@ -1,7 +1,7 @@
 #include "contextfilternode.h"
 
-ContextFilterNode::ContextFilterNode(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+ContextFilterNode::ContextFilterNode(DbgLogger *dbgLogger, HistoricalUpdateManager *historicalUpdateManager)
+    :NodeBase(dbgLogger),historcalUpdateManager(historicalUpdateManager)
 {
     circularBuffer = new CircularBuffer(dbgLogger);
     settings = new ContextFilterSettings(dbgLogger);
@@ -11,11 +11,17 @@ ContextFilterNode::ContextFilterNode(DbgLogger *dbgLogger)
 
 }
 
+
 ContextFilterNode::~ContextFilterNode()
 {
     delete settings;
     settings = nullptr;
     delete contextFilterEngine;
+}
+
+std::string ContextFilterNode::getNodeName()
+{
+    return CLASSNAME;
 }
 ContextFilterSettings *ContextFilterNode::getNodeSettings()
 {
@@ -37,24 +43,12 @@ void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
     notifyAllSubscriptions();
 }
 
+void ContextFilterNode::reset()
+{
+
+}
+
 void ContextFilterNode::initiateHistoricalUpdate()
 {
-
-    leftHistoricalUpdateOccured();
-
-    if(hasInput)
-    {
-        dynamic_cast<InputNode*>(this)->leftForwardHistoricalUpdate();
-    }
-}
-//called because an node connected to the input has changed settings
-void ContextFilterNode::leftHistoricalUpdateOccured()
-{
-    dbgLogger->debug("ContextFilterNode", __FUNCTION__,"called");
-
-
-    if(hasOutput)
-    {
-        dynamic_cast<OutputNode*>(this)->rightForwardHistoricalUpdate();
-    }
+    historcalUpdateManager->initatiateHistoricalUpdate(this);
 }

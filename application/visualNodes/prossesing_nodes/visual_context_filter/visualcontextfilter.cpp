@@ -15,7 +15,7 @@ VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject 
 }
 void VisualContextFilter::construct()
 {
-    node = new ContextFilterNode(dbgLogger);
+    node = new ContextFilterNode(dbgLogger, flowObjects->getHistoricalUpdateManager());
     baseNode = node;
 
     name = "Context filter";

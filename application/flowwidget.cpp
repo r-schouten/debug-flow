@@ -10,8 +10,9 @@ FlowWidget::FlowWidget(QWidget *parent, FileSystem* _fileSystem) : QWidget(paren
     selectionManager = new SelectionManager(propertyWidgetManager, dbgLogger);    //when a node in a scene is clicked its property's will been shown in the right tab bar, to give the nodes acces to the tab bar the selectionmanager have a propertyWidgetManager to open the property's on a node is selected
     windowManager = new WindowManager(flow_ui->mdiArea);
     undoRedoManager = new UndoRedoManager(flow_ui->undoRedoWidget);
+    historicalUpdateManager = new HistoricalUpdateManager(dbgLogger);
 
-    flowObjects = new FlowObjects(selectionManager, undoRedoManager, dbgLogger, windowManager);
+    flowObjects = new FlowObjects(selectionManager, undoRedoManager, dbgLogger, windowManager, historicalUpdateManager);
 
     nodeScene = new NodeScene(flowObjects);
     flow_ui->graphicsView->setData(flowObjects, nodeScene);

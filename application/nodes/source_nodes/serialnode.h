@@ -13,9 +13,12 @@ public:
     SerialNode(DbgLogger *dbgLogger);
     virtual ~SerialNode();
 
+    virtual std::string getNodeName();
+
     void openSerialPort();
     void closeSerialPort();
     void writeData(const char* data, const size_t length);
+    virtual void reset();
 
 private:
     QSerialPort *m_serial = nullptr;

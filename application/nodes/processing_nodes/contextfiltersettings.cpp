@@ -51,8 +51,8 @@ void ContextFilterSettings::notifySettingsChanged(DataValid dataValid, SaveSetti
     }
     if(dataValid == DATA_INVALID)
     {
-        emit notifyDataInvalid();
         dbgLogger->debug("ContextFilterSettings",__FUNCTION__,"data invalid");
+        emit notifyDataInvalid();
     }
 }
 

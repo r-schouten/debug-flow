@@ -16,6 +16,11 @@ SerialNode::~SerialNode()
 {
     delete m_serial;
 }
+
+std::string SerialNode::getNodeName()
+{
+    return CLASSNAME;
+}
 void SerialNode::openSerialPort()
 {
     if (m_serial->isOpen())
@@ -63,13 +68,17 @@ void SerialNode::writeData(const char* data, const size_t length)
     m_serial->write(data, length);
 }
 
+void SerialNode::reset()
+{
+
+}
+
 void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
     circularBuffer->append(&data);
     notifyAllSubscriptions();
 
-    //dbgLogger->debug(CLASSNAME,__FUNCTION__,"thread id from readdata %d",QThread::currentThreadId());;
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {

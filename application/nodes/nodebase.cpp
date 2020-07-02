@@ -12,9 +12,14 @@ NodeBase::~NodeBase()
 
 }
 
-void NodeBase::leftHistoricalUpdateOccured()
+void NodeBase::reset()
 {
-    dbgLogger->debug("NodeBase", __FUNCTION__,"called");
+    dbgLogger->fatal("NodeBase",__FUNCTION__, "base class called");
 }
+
+//std::string NodeBase::getNodeName()
+//{
+//    return "NodeBase";
+//}
 
 

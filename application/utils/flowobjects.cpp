@@ -11,7 +11,12 @@ WindowManager *FlowObjects::getWindowManager() const
     return windowManager;
 }
 
-FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoRedoManager *_undoredoManager, DbgLogger *_dbgLogger, WindowManager *_windowManager)
+HistoricalUpdateManager *FlowObjects::getHistoricalUpdateManager() const
+{
+    return historicalUpdateManager;
+}
+
+FlowObjects::FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoRedoManager *_undoredoManager, DbgLogger *_dbgLogger, WindowManager *_windowManager, HistoricalUpdateManager *_historicalUpdateManager)
 {
     dbgLogger = _dbgLogger;
     if(_selectionManager == nullptr)
@@ -25,7 +30,9 @@ FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoRedoManager *_
     windowManager = _windowManager;
     selectionManager = _selectionManager;
     undoRedoManager = _undoredoManager;
+    historicalUpdateManager = _historicalUpdateManager;
 }
+
 FlowObjects::~FlowObjects()
 {
     QListIterator<VisualConnection*> it(connections);

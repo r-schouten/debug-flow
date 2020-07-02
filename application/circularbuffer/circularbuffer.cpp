@@ -1,8 +1,8 @@
 #include "circularbuffer.h"
 
 
-CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity)
-    :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity)
+CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity, bool historicalCapable)
+    :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity),historicalCapable(historicalCapable)
 {
     data = (char*) malloc(capacity * sizeof(char));
     head = 0;
@@ -97,6 +97,11 @@ void CircularBuffer::appendByte(char *inputData)
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
     return new CircularBufferReader(this, head, iterations, true);
+}
+
+bool CircularBuffer::isHistoricalCapable() const
+{
+    return historicalCapable;
 }
 
 void CircularBuffer::print()
