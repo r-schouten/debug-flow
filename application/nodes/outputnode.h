@@ -14,6 +14,7 @@ public:
     virtual ~OutputNode();
     void notifyUnsubscribe(Subscription* subscription);
     void rightForwardHistoricalUpdate();
+    void notifyLeftHistoricalUpdate();
 protected:
     void notifyAllSubscriptions();
 

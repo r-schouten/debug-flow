@@ -43,7 +43,14 @@ void InputNode::deleteSubscription(OutputNode *outputNode)
 
 void InputNode::leftForwardHistoricalUpdate()
 {
+    dbgLogger->debug("InputNode", __FUNCTION__,"called");
 
+    QListIterator<Subscription*> iterator(subScriptions);
+    while(iterator.hasNext())
+    {
+        Subscription* subscription = iterator.next();
+        subscription->getOutputNode()->notifyLeftHistoricalUpdate();
+    }
 }
 
 void InputNode::inputNotifyHistoricalUpdate(Subscription *subscription)

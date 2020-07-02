@@ -16,7 +16,7 @@ private:
     int maxCapacity;
     void checkSize(int neededSize);
 public:
-    CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 100, const  int _maxCapacity = 1000);
+    CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 1000, const  int _maxCapacity = 1000);
     ~CircularBuffer();
     //todo copy and move constructor
     int usedSize(CircularBufferReader *reader);

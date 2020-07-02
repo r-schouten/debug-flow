@@ -46,6 +46,11 @@ void OutputNode::notifyAllSubscriptions()
         i.next()->notifyBufferUpdate();
 }
 
+void OutputNode::notifyLeftHistoricalUpdate()
+{
+
+}
+
 void OutputNode::rightForwardHistoricalUpdate()
 {
     this->circularBuffer->reset();

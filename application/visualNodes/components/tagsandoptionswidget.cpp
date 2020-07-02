@@ -35,7 +35,7 @@ void TagsAndOptionsWidget::optionAdded(Tag* destinationTag, TagOption* option)
     TagGroupbox* destinationGroupbox = nullptr;
     if(tagGroupboxes.size() <= destinationTag->tagIndex)
     {
-        connect(destinationTag, SIGNAL(dataChanged()), this, SLOT(dataChanged()));
+        connect(destinationTag, SIGNAL(dataChanged(Tag*)), this, SLOT(dataChanged()));
         destinationGroupbox = new TagGroupbox(destinationTag);
 
         tagGroupboxes.append(destinationGroupbox);
