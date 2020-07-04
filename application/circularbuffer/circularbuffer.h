@@ -15,6 +15,9 @@ private:
     int capacity;
     int maxCapacity;
     bool historicalCapable;
+
+    int minTail = 0;
+    int minTailIteration = 0;
     void checkSize(int neededSize);
 public:
     CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 1000, const  int _maxCapacity = 1000, bool historicalCapable = false);
@@ -28,12 +31,18 @@ public:
     void appendByte(char *inputData);
 
     int getSize();
+
+    void resetTail();
+    void calcTail(CircularBufferReader *reader);
+    int unUsedSize();
+
     void print();
     void reset();
     CircularBufferReader *requestNewReader();
 
-    friend CircularBufferReader;
     bool isHistoricalCapable() const;
+
+    friend CircularBufferReader;
 };
 
 

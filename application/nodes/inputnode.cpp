@@ -20,8 +20,6 @@ void InputNode::notifyUnsubscribe(Subscription *subscription)
     subScriptions.removeOne(subscription);
 }
 
-
-
 void InputNode::addSubscription(OutputNode *outputNode)
 {
     subScriptions.append(outputNode->subscribe(this));
@@ -40,7 +38,17 @@ void InputNode::deleteSubscription(OutputNode *outputNode)
         }
     }
 }
+std::string InputNode::getNodeName()
+{
+    return "InputNode";
+}
 
+QList<Subscription *>* InputNode::getSubScriptions()
+{
+    return &subScriptions;
+}
+
+//------historical update feature--------
 void InputNode::resetBufferReader(Subscription *caller)
 {
     caller->bufferReader->reset();
@@ -50,16 +58,6 @@ void InputNode::bufferReaderToBegin(Subscription *caller)
 {
     dbgLogger->debug("InputNode",__FUNCTION__,"called");
     caller->bufferReader->toBegin();
-}
-
-std::string InputNode::getNodeName()
-{
-    return "InputNode";
-}
-
-QList<Subscription *>* InputNode::getSubScriptions()
-{
-    return &subScriptions;
 }
 
 void InputNode::lock()

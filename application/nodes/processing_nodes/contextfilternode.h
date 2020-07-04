@@ -20,7 +20,7 @@ private slots:
     void initiateHistoricalUpdate();
 
 private:
-    bool filterData(CircularBuffer *destination, CircularBufferReader *bufferReader);
+    bool filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
 
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;

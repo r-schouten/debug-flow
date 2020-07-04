@@ -6,7 +6,7 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLog
 
 }
 
-bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader)
+bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int availableSize)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -14,7 +14,6 @@ bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
 
     bool readingInContext = false;
     bool styleChanged = false;
-    int availableSize = bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];

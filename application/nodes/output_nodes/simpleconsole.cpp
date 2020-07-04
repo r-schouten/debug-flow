@@ -35,22 +35,21 @@ void SimpleConsole::NotifyBufferUpdate(Subscription *source)
     if(source->bufferReader == nullptr){
         qFatal("SimpleConsole::notifyBufferUpdate() : bufferReader == nullptr");
     }
-    QString result;
-    result.reserve(source->bufferReader->availableSize());
-
-    QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = ansiReader->filterData(&result, source->bufferReader, &currentCharFormat);
-
-
-    console->moveCursor(QTextCursor::End);
-    console->setCurrentCharFormat(oldFormat);
-    console->insertPlainText(result);
-    console->moveCursor(QTextCursor::End);
-
-    if(styleChanged)
+    bool styleChanged = true;
+    while(styleChanged)
     {
-        //when ansi is found the filter stops searching and is perhaps not empty, read it again
-        NotifyBufferUpdate(source);
+        QString result;
+       // result.reserve(source->bufferReader->availableSize());
+
+        QTextCharFormat oldFormat = currentCharFormat;
+        styleChanged = ansiReader->filterData(&result, source->bufferReader, &currentCharFormat);
+
+
+        console->moveCursor(QTextCursor::End);
+        console->setCurrentCharFormat(oldFormat);
+        console->insertPlainText(result);
+        console->moveCursor(QTextCursor::End);
+
     }
     console->setUpdatesEnabled(true);
 
@@ -82,6 +81,17 @@ void SimpleConsole::mouseDoubleClickEvent(QMouseEvent *e)
 void SimpleConsole::contextMenuEvent(QContextMenuEvent *e)
 {
     Q_UNUSED(e)
+}
+
+std::string SimpleConsole::getNodeName()
+{
+    return CLASSNAME;
+
+}
+
+void SimpleConsole::reset()
+{
+console->clear();
 }
 void SimpleConsole::clear()
 {

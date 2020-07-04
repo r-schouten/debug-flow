@@ -13,7 +13,11 @@ void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
     historicalEventCounter++;
     historicalUpdate(node,true, 0);
 
-
+    for (auto const& i : sourcesList) {
+        i->doHistoricalUpdate();
+        i->notifyAllSubscriptions();
+    }
+    sourcesList.clear();
 }
 //recursive function
 void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset,int depth)
@@ -45,7 +49,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
     {
         if(outputNode->bufferHistoricalCapable())
         {
-            outputNode->doHistoricalUpdate();
+            sourcesList.push_front(outputNode);
         }
         else
         {
@@ -89,7 +93,5 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
             historicalUpdate(parentNode, false, depth-1);
         }
     }
-
-
 }
 

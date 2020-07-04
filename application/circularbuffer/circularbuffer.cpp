@@ -21,43 +21,93 @@ void CircularBuffer::reset()
 {
     head = 0;
     iterations = 0;
+
+    minTail = 0;
+    minTailIteration = 0;
 }
 
 int CircularBuffer::usedSize(CircularBufferReader* reader)
 {
-    if(head >= reader->tail)
+    if(reader->iteration < iterations)
     {
-#ifdef QT_DEBUG
-        if(reader->iteration != iterations)
+        if(reader->tail < head)
         {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != buffer->iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->tail < head %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
         }
-#endif
+        return (capacity - reader->tail) + head;
+
+    }
+    else if (reader->iteration == iterations)
+    {
+        if(reader->tail > head)
+        {
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->tail > head %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
+        }
         return head - reader->tail;
     }
-    else {
-#ifdef QT_DEBUG
-        if(reader->iteration + 1 != iterations)
-        {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration + 1 != iterations");
-        }
-#endif
-        return (capacity - reader->tail) + head;
+    else
+    {
+        dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->iteration > iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
     }
+
+
+//    if(head >= reader->tail)
+//    {
+//#ifdef QT_DEBUG
+//        if((reader->iteration != iterations)&&(head != 0))
+//        {
+//            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != buffer->iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
+//        }
+//#endif
+//        return head - reader->tail;
+//    }
+//    else {
+//#ifdef QT_DEBUG
+//        if(reader->iteration + 1 != iterations)
+//        {
+//            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration + 1 != iterations");
+//        }
+//#endif
+//        return (capacity - reader->tail) + head;
+//    }
 }
 int CircularBuffer::unUsedSize(CircularBufferReader* reader)
 {
      return capacity - usedSize(reader);
 }
-
+int CircularBuffer::unUsedSize()
+{
+    if(head >= minTail)
+    {
+#ifdef QT_DEBUG
+        if((minTailIteration != iterations)&&(head != 0))
+        {
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != tail iterations %d,%d    %d,%d",minTailIteration, minTail,iterations,head);
+        }
+#endif
+        return capacity - (head - minTail);
+    }
+    else {
+#ifdef QT_DEBUG
+        if(minTailIteration + 1 != iterations)
+        {
+            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"tail iteration + 1 != iterations");
+        }
+#endif
+        return minTail - head;
+    }
+}
 void CircularBuffer::checkSize(int neededSize)
 {
     if(neededSize >= capacity)
     {
         dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= capacity) %d",neededSize);
     }
+    if(neededSize > unUsedSize())
+    {
+        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= unUsedSize()) %d %d",unUsedSize(), neededSize);
+    }
 }
-
 void CircularBuffer::append(const QByteArray *byteArray)
 {
     //take the raw data out of the byte array
@@ -97,6 +147,27 @@ void CircularBuffer::appendByte(char *inputData)
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
     return new CircularBufferReader(this, head, iterations, true);
+}
+
+void CircularBuffer::resetTail()
+{
+    minTail = INT_MAX;
+    minTailIteration = INT_MAX;
+}
+void CircularBuffer::calcTail(CircularBufferReader* reader)
+{
+    if(reader->iteration < minTailIteration)
+    {
+       minTailIteration = reader->iteration;
+       minTail = reader->tail;
+    }
+    else if(reader->iteration == minTailIteration)
+    {
+        if(reader->tail < minTail)
+        {
+            minTail = reader->tail;
+        }
+    }
 }
 
 bool CircularBuffer::isHistoricalCapable() const

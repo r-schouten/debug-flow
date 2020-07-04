@@ -13,5 +13,7 @@ protected:
     void historicalUpdate(NodeBase *node, bool forwardReset, int depth);
     DbgLogger* dbgLogger = nullptr;
     int historicalEventCounter = 0;
+
+    std::list<OutputNode*> sourcesList;
 };
 

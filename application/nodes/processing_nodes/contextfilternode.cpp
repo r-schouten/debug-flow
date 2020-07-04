@@ -31,7 +31,10 @@ ContextFilterSettings *ContextFilterNode::getNodeSettings()
 bool ContextFilterNode::filterData(CircularBuffer* buffer, CircularBufferReader *bufferReader)
 {
     auto lambda = [&](char character) mutable {buffer->appendByte(&character);};
-    return contextFilterEngine->filterData(lambda, bufferReader);
+
+    OutputNode* outputNode = dynamic_cast<OutputNode*>(this);
+    int availableSize = std::min(bufferReader->availableSize(),outputNode->getBufferUnusedSize());
+    return contextFilterEngine->filterData(lambda, bufferReader, availableSize);
 }
 
 void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
@@ -39,7 +42,9 @@ void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
     if(source->bufferReader == nullptr){
         qFatal("ContextFilterNode::notifyBufferUpdate() : bufferReader == nullptr");
     }
+
     filterData(circularBuffer, source->bufferReader);
+
     notifyAllSubscriptions();
 }
 
@@ -47,7 +52,6 @@ void ContextFilterNode::reset()
 {
 
 }
-
 void ContextFilterNode::initiateHistoricalUpdate()
 {
     historcalUpdateManager->initatiateHistoricalUpdate(this);

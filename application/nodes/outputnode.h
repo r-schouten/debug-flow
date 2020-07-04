@@ -19,12 +19,16 @@ public:
     void resetBuffer();
     bool bufferHistoricalCapable();
     void doHistoricalUpdate();
-protected:
+
     void notifyAllSubscriptions();
+    int getBufferUnusedSize();
+
+protected:
     QList<Subscription*> subscribers;
     CircularBuffer* circularBuffer = nullptr;
 private:
     Subscription* subscribe(InputNode* inputNode);
     friend InputNode;
+    friend NodeBase;
 };
 

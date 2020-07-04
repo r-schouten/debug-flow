@@ -39,13 +39,39 @@ void OutputNode::notifyUnsubscribe(Subscription *subscription)
 {
     subscribers.removeOne(subscription);
 }
-void OutputNode::notifyAllSubscriptions()
+
+
+QList<Subscription *>* OutputNode::getSubscribers()
 {
-    QListIterator<Subscription*> i(subscribers);
-    while (i.hasNext())
-        i.next()->notifyBufferUpdate();
+    return &subscribers;
 }
 
+std::string OutputNode::getNodeName()
+{
+    return "OutputNode";
+}
+
+
+//-------buffer update-----------
+void OutputNode::notifyAllSubscriptions()
+{
+    circularBuffer->resetTail();
+    QListIterator<Subscription*> i(subscribers);
+    while (i.hasNext())
+    {
+        Subscription* subscription = i.next();
+        subscription->notifyBufferUpdate();
+        circularBuffer->calcTail(subscription->bufferReader);
+    }
+}
+
+int OutputNode::getBufferUnusedSize()
+{
+    return circularBuffer->unUsedSize();
+}
+
+
+//-------historical update feature----------
 void OutputNode::resetBuffer()
 {
     circularBuffer->reset();
@@ -56,7 +82,6 @@ void OutputNode::resetBuffer()
         subscription->getInputNode()->resetBufferReader(subscription);
     }
 }
-
 bool OutputNode::bufferHistoricalCapable()
 {
     circularBuffer->isHistoricalCapable();
@@ -78,15 +103,5 @@ void OutputNode::doHistoricalUpdate()
             subscription->getInputNode()->bufferReaderToBegin(subscription);
         }
     }
-}
-
-QList<Subscription *>* OutputNode::getSubscribers()
-{
-    return &subscribers;
-}
-
-std::string OutputNode::getNodeName()
-{
-    return "OutputNode";
 }
 

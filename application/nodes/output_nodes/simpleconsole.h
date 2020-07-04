@@ -32,4 +32,9 @@ private:
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     AnsiEscapeReader *ansiReader = nullptr;
+
+    // NodeBase interface
+public:
+    std::string getNodeName();
+    void reset();
 };
