@@ -20,7 +20,7 @@ void VisualFilteredConsole::construct()
     name = "filtered console";
     shortDiscription = QString("this node provides a console with configurable filters for %1 context").arg(CONTEXT_STYLE_NAME);
 
-    node = new FilteredConsole(dbgLogger);
+    node = new FilteredConsole(dbgLogger, flowObjects->getHistoricalUpdateManager());
     connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
     baseNode = node;
     if(node->hasInput)

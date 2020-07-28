@@ -163,6 +163,7 @@ void FilteredNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettin
     }
     if(dataValid == DATA_INVALID)
     {
-
+        dbgLogger->debug("FilteredNodeSettings",__FUNCTION__,"data invalid");
+        emit notifyDataInvalid();
     }
 }

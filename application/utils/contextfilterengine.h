@@ -19,7 +19,7 @@ public:
     ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
     bool filterDataWithStyle(const std::function<void (char)> &addChar, const std::function<bool ()> &deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat* format);
 
-    bool filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int availableSize);
+    void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed);
 private:
     TagAndOptionsSettings* settings = nullptr;
     DbgLogger* dbgLogger = nullptr;

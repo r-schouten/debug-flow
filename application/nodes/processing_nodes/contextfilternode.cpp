@@ -33,8 +33,7 @@ bool ContextFilterNode::filterData(CircularBuffer* buffer, CircularBufferReader 
     auto lambda = [&](char character) mutable {buffer->appendByte(&character);};
 
     OutputNode* outputNode = dynamic_cast<OutputNode*>(this);
-    int availableSize = std::min(bufferReader->availableSize(),outputNode->getBufferUnusedSize());
-    return contextFilterEngine->filterData(lambda, bufferReader, availableSize);
+    contextFilterEngine->filterData(lambda, bufferReader, bufferReader->availableSize(), outputNode->getBufferUnusedSize(), &processingDone);
 }
 
 void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
@@ -47,6 +46,7 @@ void ContextFilterNode::NotifyBufferUpdate(Subscription *source)
 
     notifyAllSubscriptions();
 }
+
 
 void ContextFilterNode::reset()
 {

@@ -11,10 +11,10 @@ class ContextFilterNode : public QObject, public InputNode, public OutputNode
 public:
     ContextFilterNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historicalUpdateManager);
     virtual ~ContextFilterNode();
-     virtual std::string getNodeName();
-    ContextFilterSettings *getNodeSettings();
-    void NotifyBufferUpdate(Subscription *source);
-    virtual void reset();
+    virtual std::string getNodeName() override;
+    virtual ContextFilterSettings *getNodeSettings() override;
+    virtual void NotifyBufferUpdate(Subscription *source) override;
+    virtual void reset() override;
 
 private slots:
     void initiateHistoricalUpdate();
@@ -24,7 +24,6 @@ private:
 
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;
-
     HistoricalUpdateManager* historcalUpdateManager = nullptr;
 };
 

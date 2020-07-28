@@ -1,7 +1,8 @@
 #include "filteredconsole.h"
 
-FilteredConsole::FilteredConsole(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
+
+    :NodeBase(dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
     nodeSettings = new FilteredNodeSettings(dbgLogger);
     console = new QPlainTextEdit(this);
@@ -33,6 +34,7 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger)
     connect(nodeSettings,SIGNAL(scrollSettingsChanged()),this,SLOT(loadScrollSettings()));
     connect(nodeSettings,SIGNAL(filterOnWindowChanged()),this,SLOT(filterOnWindowChanged()));
 
+    connect(nodeSettings,SIGNAL(notifyDataInvalid()), this, SLOT(initiateHistoricalUpdate()));
 
 }
 FilteredConsole::~FilteredConsole()
@@ -108,6 +110,32 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
     {
         //when ansi is found the filter stops searching and is perhaps not empty, read it again
         NotifyBufferUpdate(source);
+    }
+}
+
+void FilteredConsole::initiateHistoricalUpdate()
+{
+    historcalUpdateManager->initatiateHistoricalUpdate(this);
+}
+
+void FilteredConsole::notifyHistoricalUpdateFinished()
+{
+    QString text = "----historical update done----\n";
+    QTextCharFormat format;
+    format.setForeground(Qt::gray);
+    if(nodeSettings->getAutoScrollEnabled())
+    {
+        console->moveCursor(QTextCursor::End);
+        console->setCurrentCharFormat(format);
+        console->insertPlainText(text);
+        console->moveCursor(QTextCursor::End);
+    }
+    else {
+        QTextCursor cursor = console->textCursor();
+
+        cursor.movePosition(QTextCursor::End);
+        cursor.setCharFormat(format);
+        cursor.insertText(text);
     }
 }
 

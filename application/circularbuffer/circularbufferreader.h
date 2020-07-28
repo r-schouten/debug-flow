@@ -22,4 +22,6 @@ public:
     void toBegin();
 
     friend CircularBuffer;
+    int getIteration() const;
+    int getTail() const;
 };

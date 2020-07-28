@@ -28,6 +28,8 @@ public slots:
     void lineNumbersStateChanged();
     void ANSIStateChanged();
     void autoScrollStateChanged();
+    void contextSettingsChanged();
+
 private:
 
     FilteredNodeSettings* settings = nullptr;

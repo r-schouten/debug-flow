@@ -18,6 +18,16 @@ void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
         i->notifyAllSubscriptions();
     }
     sourcesList.clear();
+
+    for (auto const& i : lockedNodes) {
+        i->unlock();
+    }
+    lockedNodes.clear();
+
+    for (auto const& i : inputNodes) {
+        i->notifyHistoricalUpdateFinished();
+    }
+    inputNodes.clear();
 }
 //recursive function
 void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset,int depth)
@@ -36,7 +46,11 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
 
     InputNode* inputNode = nullptr;
     OutputNode* outputNode = nullptr;
-    if(node->hasInput) inputNode = dynamic_cast<InputNode*>(node);
+    if(node->hasInput)
+    {
+        inputNode = dynamic_cast<InputNode*>(node);
+        inputNodes.push_front(inputNode);
+    }
     if(node->hasOutput) outputNode = dynamic_cast<OutputNode*>(node);
 
     //reset this node
@@ -70,6 +84,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
                     if(forwardReset == false)
                     {
                         childNode->lock();
+                        lockedNodes.push_front(childNode);
                     }
                     else
                     {

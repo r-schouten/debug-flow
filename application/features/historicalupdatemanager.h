@@ -15,5 +15,8 @@ protected:
     int historicalEventCounter = 0;
 
     std::list<OutputNode*> sourcesList;
+    std::list<InputNode*> lockedNodes;
+    std::list<InputNode*> inputNodes;
+
 };
 

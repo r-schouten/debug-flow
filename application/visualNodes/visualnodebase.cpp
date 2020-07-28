@@ -107,6 +107,8 @@ void VisualNodeBase::makeConnection(VisualConnection* connection)
 
     //make the connection at the low level node
     inputNode->addSubscription(outputNode);
+
+    flowObjects->getHistoricalUpdateManager()->initatiateHistoricalUpdate(inputNode);
 }
 
 bool VisualNodeBase::requestConnection(Connector *connector)

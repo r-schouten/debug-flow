@@ -6,15 +6,17 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLog
 
 }
 
-bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int availableSize)
+void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
     int releaseLength = 0;
+    int charsAdded = 0;
 
     bool readingInContext = false;
-    bool styleChanged = false;
-    for(int i=0;i<availableSize;i++)
+    *allDataProcessed = true;
+
+    for(int i=0;i<sourceAvailable;i++)
     {
         const char character = (*bufferReader)[i];
 
@@ -25,13 +27,19 @@ bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
                 processContext(bufferReader,contextBeginIndex,i);
                 if((!settings->getHideContext())&&(showCurrentContext))
                 {
+                    if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)//it doesn't fit anymore
+                    {
+                        *allDataProcessed = false;
+                        break;
+                    }
                     for(int j=contextBeginIndex;j<=i;j++)
                     {
                         addChar((*bufferReader)[j]);
+                        charsAdded++;
                     }
                 }
-                releaseLength += i - contextBeginIndex + 1;
                 readingInContext = false;
+                releaseLength += i - contextBeginIndex + 1;
             }
         }
         else {
@@ -49,13 +57,18 @@ bool ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
                 if(showCurrentContext)
                 {
                     addChar(character);
+                    charsAdded++;
                 }
                 releaseLength++;
             }
         }
+        if(charsAdded >= destinationAvailabe)//it doesn't fit anymore
+        {
+            *allDataProcessed = false;
+            break;
+        }
     }
     bufferReader->release(releaseLength);
-    return styleChanged;
 }
 bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
 {

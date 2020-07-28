@@ -93,6 +93,7 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget *parent
 
     connect(settings->tagAndOptionSettings, SIGNAL(optionAdded(Tag*,TagOption*)),tagContainer,SLOT(optionAdded(Tag*,TagOption*)));
     connect(settings->tagAndOptionSettings,SIGNAL(tagsChanged()),tagContainer,SLOT(loadTags()));
+    connect(tagContainer, SIGNAL(DataChanged()), this, SLOT(contextSettingsChanged()));
 
     tagContainer->loadTags();
 }
@@ -105,30 +106,41 @@ FilteredConsolePropertiesWidget::~FilteredConsolePropertiesWidget()
 void FilteredConsolePropertiesWidget::hideContextStateChanged()
 {
     settings->tagAndOptionSettings->setHideContext(hideContextCheckbox->checkState());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::horizontalScrollIndexChanged(int index)
 {
     Q_UNUSED(index);
     settings->setHorizontalScroll((HorizontalScrollOptions)horizontalScrollComboBox->currentData().toInt());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::maxLinesIndexChanged(int index)
 {
     Q_UNUSED(index);
     settings->setMaxLinesComboBox(maxLinesComboBox->currentData().toInt());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::filterOnWindowStateChanged()
 {
     settings->setFilterOnWindow(filterOnWindowCheckbox->checkState());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::lineNumbersStateChanged()
 {
     settings->setLineNumbersEnabled(lineNumbersCheckbox->checkState());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::ANSIStateChanged()
 {
     settings->tagAndOptionSettings->setANSIEnabled(ANSICheckbox->checkState());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::autoScrollStateChanged()
 {
     settings->setAutoScrollEnabled(autoScrollCheckbox->checkState());
+    settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
+}
+void FilteredConsolePropertiesWidget::contextSettingsChanged()
+{
+    settings->notifySettingsChanged(DATA_INVALID, DONT_SAVE, PROPERIES);
 }

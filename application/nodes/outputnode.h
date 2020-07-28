@@ -23,9 +23,14 @@ public:
     void notifyAllSubscriptions();
     int getBufferUnusedSize();
 
+    bool isProcessingDone() const;
+
 protected:
     QList<Subscription*> subscribers;
     CircularBuffer* circularBuffer = nullptr;
+
+    bool processingDone = false;//this variable indicates whether all data did fit in the output buffer, or wheter a second buffer write is needed.
+                                //care about this variable, when processing done stays false this may result in a infinite loop somewere, or it triggers a safetey meganism
 private:
     Subscription* subscribe(InputNode* inputNode);
     friend InputNode;

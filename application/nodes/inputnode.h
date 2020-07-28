@@ -15,6 +15,7 @@ public:
     InputNode();
     virtual ~InputNode();
     virtual void NotifyBufferUpdate(Subscription* source) = 0;
+    virtual void notifyHistoricalUpdateFinished();
     void notifyUnsubscribe(Subscription* subscription);
     void addSubscription(OutputNode* outputNode);
     void deleteSubscription(OutputNode* outputNode);
@@ -26,6 +27,8 @@ public:
     QList<Subscription *>* getSubScriptions();
 
     void lock();
+    void unlock();
+
     bool isLocked();
 
 protected:

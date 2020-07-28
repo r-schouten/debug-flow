@@ -15,6 +15,11 @@ InputNode::~InputNode()
     }
 }
 
+void InputNode::notifyHistoricalUpdateFinished()
+{
+    //do nothing, this function can be optionally overrided
+}
+
 void InputNode::notifyUnsubscribe(Subscription *subscription)
 {
     subScriptions.removeOne(subscription);
@@ -63,6 +68,11 @@ void InputNode::bufferReaderToBegin(Subscription *caller)
 void InputNode::lock()
 {
     locked = true;
+}
+
+void InputNode::unlock()
+{
+    locked = false;
 }
 
 bool InputNode::isLocked()

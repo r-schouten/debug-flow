@@ -1,5 +1,15 @@
 #include "circularbufferreader.h"
 
+int CircularBufferReader::getIteration() const
+{
+    return iteration;
+}
+
+int CircularBufferReader::getTail() const
+{
+    return tail;
+}
+
 CircularBufferReader::CircularBufferReader(CircularBuffer *buffer, int tail, int iteration, bool resize)
     :buffer(buffer),tail(tail),iteration(iteration),resizeEnabled(resize)
 {

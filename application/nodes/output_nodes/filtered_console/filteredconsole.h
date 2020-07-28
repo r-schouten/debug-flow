@@ -14,7 +14,7 @@
 #include "contextfilterengine.h"
 #include "filterednodesettings.h"
 #include "filteredconsolewidgets.h"
-
+#include "historicalupdatemanager.h"
 class TagComboBox :public QComboBox
 {
     Q_OBJECT
@@ -63,10 +63,12 @@ class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
 public:
-    FilteredConsole(DbgLogger *dbgLogger);
+    FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager *historcalUpdateManager);
     virtual ~FilteredConsole();
 
     void NotifyBufferUpdate(Subscription *source)override;
+    void notifyHistoricalUpdateFinished() override;
+
 
     NodeSettingsBase *getNodeSettings();
     virtual std::string getNodeName();
@@ -89,7 +91,7 @@ private:
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
     ContextFilterEngine *contextFilter = nullptr;
-
+    HistoricalUpdateManager* historcalUpdateManager = nullptr;
     bool filterData(QString *destination, CircularBufferReader *bufferReader, QTextCharFormat *format);
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
@@ -102,6 +104,6 @@ private slots:
     void loadMaxLines();
     void loadScrollSettings();
 
-
+    void initiateHistoricalUpdate();
 };
 
