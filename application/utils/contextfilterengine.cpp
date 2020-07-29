@@ -3,7 +3,7 @@
 ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLogger* dbgLogger)
     :settings(settings),dbgLogger(dbgLogger)
 {
-
+    timeStampHelper = new TimeStampHelper();
 }
 
 void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed)
@@ -14,12 +14,39 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     int charsAdded = 0;
 
     bool readingInContext = false;
+    bool readingInTimestamp = false;
+    int timeStampIndex = 0;
     *allDataProcessed = true;
 
     for(int i=0;i<sourceAvailable;i++)
     {
         const char character = (*bufferReader)[i];
 
+        if(character == TIMESTAMP_MARK)
+        {
+            //the lenght of the timestamp is known, check whether there is enough space left
+            if(i+7<sourceAvailable)
+            {
+                if(charsAdded +8 >= destinationAvailabe)
+                {
+                    *allDataProcessed = false;
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+            readingInTimestamp = true;
+            timeStampIndex = i;
+        }
+        if(readingInTimestamp)
+        {
+            if(timeStampIndex + 8 <= i)
+            {
+                readingInTimestamp = false;
+            }
+        }
         if(readingInContext)
         {
             if(character == ']')
@@ -78,11 +105,15 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
 
     bool readingInContext = false;
     bool readingANSIEscape = false;
+    bool readingInTimestamp = false;
+    int timeStampIndex = 0;
+
     bool styleChanged = false;
     int availableSize = bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
+
         if(readingInContext)
         {
             if(character == ']')
@@ -92,7 +123,15 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                 {
                     for(int j=contextBeginIndex;j<=i;j++)
                     {
-                        addChar((*bufferReader)[j]);
+                        char contextCharacter = (*bufferReader)[j];
+                        if(contextCharacter == TIMESTAMP_MARK)
+                        {
+                            j+= TIMESTAMP_BYTES - 1;
+                        }
+                        else
+                        {
+                            addChar(contextCharacter);
+                        }
                     }
                 }
                 releaseLength += i - contextBeginIndex + 1;
@@ -111,6 +150,24 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
             }
         }
         else {
+            if(readingInTimestamp)
+            {
+                if(timeStampIndex + TIMESTAMP_BYTES <= i)
+                {
+                    readingInTimestamp = false;
+                }
+            }
+            else if(character == TIMESTAMP_MARK)
+            {
+                //the lenght of the timestamp is known, check whether there is enough space left
+                if(i+TIMESTAMP_BYTES >= availableSize)
+                {
+                    break;
+                }
+                readingInTimestamp = true;
+                timeStampIndex = i;
+            }
+
             if(character == '[')
             {
                 readingInContext = true;
@@ -124,7 +181,10 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
             else {
                 if(showCurrentContext)
                 {
-                    addChar(character);
+                    if(readingInTimestamp == false)
+                    {
+                        addChar(character);
+                    }
                 }
                 releaseLength++;
             }
@@ -152,14 +212,21 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
     {
         const char character = (*bufferReader)[i];
 
-        if((character == ',')||(character == ' '))
+        if(character == TIMESTAMP_MARK)//skip 8 characters
         {
-            processOption(property,propertyIndex);
-            propertyIndex++;
-            property.clear();
+            i += TIMESTAMP_BYTES - 1;//warning, notice that i might overflow and no other operation can be done before checking if its needed to break the loop
         }
-        else {
-            property.append(character);
+        else
+        {
+            if((character == ',')||(character == ' '))
+            {
+                processOption(property,propertyIndex);
+                propertyIndex++;
+                property.clear();
+            }
+            else {
+                property.append(character);
+            }
         }
     }
     processOption(property,propertyIndex);

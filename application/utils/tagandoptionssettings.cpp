@@ -1,6 +1,7 @@
 #include "tagandoptionssettings.h"
 
-TagAndOptionsSettings::TagAndOptionsSettings()
+TagAndOptionsSettings::TagAndOptionsSettings(bool hideTimestamp)
+    :hideTimestamp(hideTimestamp)
 {
 
 }
@@ -23,6 +24,16 @@ void TagAndOptionsSettings::setHideContext(bool value)
 bool TagAndOptionsSettings::getANSIEnabled() const
 {
     return ANSIEnabled;
+}
+
+bool TagAndOptionsSettings::getHideTimeStamp() const
+{
+    return hideTimestamp;
+}
+
+void TagAndOptionsSettings::setHideTimeStamp(bool value)
+{
+    hideTimestamp = value;
 }
 
 void TagAndOptionsSettings::setANSIEnabled(bool value)

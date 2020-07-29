@@ -10,7 +10,7 @@
 #include "circularbufferreader.h"
 #include "ansi_types.h"
 #include "tagandoptionssettings.h"
-
+#include "timestamphelper.h"
 class ContextFilterEngine: public QObject
 {
     Q_OBJECT
@@ -23,6 +23,7 @@ public:
 private:
     TagAndOptionsSettings* settings = nullptr;
     DbgLogger* dbgLogger = nullptr;
+    TimeStampHelper* timeStampHelper = nullptr;
     bool showCurrentContext = false;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);

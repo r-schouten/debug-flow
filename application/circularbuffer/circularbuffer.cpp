@@ -49,27 +49,6 @@ int CircularBuffer::usedSize(CircularBufferReader* reader)
     {
         dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->iteration > iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
     }
-
-
-//    if(head >= reader->tail)
-//    {
-//#ifdef QT_DEBUG
-//        if((reader->iteration != iterations)&&(head != 0))
-//        {
-//            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != buffer->iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
-//        }
-//#endif
-//        return head - reader->tail;
-//    }
-//    else {
-//#ifdef QT_DEBUG
-//        if(reader->iteration + 1 != iterations)
-//        {
-//            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration + 1 != iterations");
-//        }
-//#endif
-//        return (capacity - reader->tail) + head;
-//    }
 }
 int CircularBuffer::unUsedSize(CircularBufferReader* reader)
 {

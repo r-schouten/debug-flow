@@ -3,7 +3,7 @@
 FilteredNodeSettings::FilteredNodeSettings(DbgLogger* dbgLogger)
     :NodeSettingsBase(dbgLogger)
 {
-    tagAndOptionSettings = new TagAndOptionsSettings();
+    tagAndOptionSettings = new TagAndOptionsSettings(true);
 }
 
 FilteredNodeSettings::~FilteredNodeSettings()

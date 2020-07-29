@@ -2,6 +2,7 @@ QT += widgets serialport
 QT += testlib
 requires(qtConfig(combobox))
 
+CONFIG += c++20
 TARGET = debug-flow
 TEMPLATE = app
 
@@ -9,6 +10,7 @@ SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
     features/historicalupdatemanager.cpp \
+    features/timestamphelper.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
     loadstore/filesystem.cpp \
@@ -74,6 +76,7 @@ HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
     features/historicalupdatemanager.h \
+    features/timestamphelper.h \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \
