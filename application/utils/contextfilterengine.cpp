@@ -112,93 +112,74 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
     uint8_t* timestamp8 = (uint8_t*)&timestamp64;
 
     int availableSize = bufferReader->availableSize();
+
     for(int i=0;i<availableSize;i++)
     {
-        const char character = (*bufferReader)[i];
+        const char &character = (*bufferReader)[i];
 
-        if((readingInContext)&&(readingInTimestamp == false))
+        if((character == TIMESTAMP_MARK)&&(readingInTimestamp==false))
         {
-            if(character == ']')
+            //the lenght of the timestamp is known, check whether there is enough space left
+            if(i + TIMESTAMP_BYTES >= availableSize)
             {
-                processContext(bufferReader,contextBeginIndex,i);
-                if((!settings->getHideContext())&&(showCurrentContext))
-                {
-                    for(int j=contextBeginIndex;j<=i;j++)
-                    {
-                        char contextCharacter = (*bufferReader)[j];
-                        if(contextCharacter == TIMESTAMP_MARK)
-                        {
-                            styleChangedLambda();
+                break;
+            }
+            styleChangedLambda();
+            readingInTimestamp = true;
+            timeStampIndex = i;
 
-                            timestamp64 = 0;
-                            timestamp8 = (uint8_t*)&timestamp64;
-                            int countTo = j+TIMESTAMP_BYTES-1;
-                            for(;j < countTo;j++)
-                            {
-                                *timestamp8 = (uint8_t)(*bufferReader)[j];
-                                timestamp8++;
-                            }
-                            currentTimeStamp->setTimestamp(timestamp64);
-                        }
-                        else
+            timestamp8 = (uint8_t*)&timestamp64;
+        }
+        if(readingInTimestamp)
+        {
+            *timestamp8 = (uint8_t)character;
+            timestamp8++;
+            releaseLength++;
+            if(timeStampIndex + TIMESTAMP_BYTES - 1 <= i)
+            {
+                readingInTimestamp = false;
+                currentTimeStamp->setTimestamp(timestamp64);
+            }
+        }
+        else
+        {
+            if(readingInContext)
+            {
+                if(character == ']')
+                {
+                    processContext(bufferReader,contextBeginIndex,i);
+                    if((!settings->getHideContext())&&(showCurrentContext))
+                    {
+                        for(int j=contextBeginIndex;j<=i;j++)
                         {
-                            if(!isprint(contextCharacter))
+                            char contextCharacter = (*bufferReader)[j];
+                            if(contextCharacter == TIMESTAMP_MARK)
                             {
-                                int error =1;
+                                j+= TIMESTAMP_BYTES-1;
+                                releaseLength -= TIMESTAMP_BYTES;
                             }
-                            addCharLambda(contextCharacter);
+                            else
+                            {
+                                addCharLambda(contextCharacter);
+                            }
                         }
                     }
+                    releaseLength += i - contextBeginIndex + 1;
+                    readingInContext = false;
                 }
-                releaseLength += i - contextBeginIndex + 1;
-                readingInContext = false;
             }
-        }
-        else if(readingANSIEscape)
-        {
-            bool done = processANSIEscape(bufferReader, format, ANSIBeginIndex,i);
-            if(done)
+            else if(readingANSIEscape)
             {
-                releaseLength += i - ANSIBeginIndex + 1;
-                readingANSIEscape = false;
-
-                styleChangedLambda();
-            }
-        }
-        else {
-            if(readingInTimestamp)
-            {
-                *timestamp8 = (uint8_t)character;
-                timestamp8++;
-                releaseLength++;
-                if(timeStampIndex + TIMESTAMP_BYTES -1 <= i)
+                bool done = processANSIEscape(bufferReader, format, ANSIBeginIndex,i);
+                if(done)
                 {
-                    readingInTimestamp = false;
-                    currentTimeStamp->setTimestamp(timestamp64);
+                    releaseLength += i - ANSIBeginIndex + 1;
+                    readingANSIEscape = false;
 
+                    styleChangedLambda();
                 }
             }
-
-            else if(character == TIMESTAMP_MARK)
-            {
-                styleChangedLambda();
-
-                //the lenght of the timestamp is known, check whether there is enough space left
-                if(i+TIMESTAMP_BYTES >= availableSize)
-                {
-                    break;
-                }
-                readingInTimestamp = true;
-                timeStampIndex = i;
-
-                timestamp64 = 0;
-                timestamp8 = (uint8_t*)&timestamp64;
-                *timestamp8 = (uint8_t)character;
-                timestamp8++;
-                releaseLength++;
-            }
-            else
-            {
+            else if(readingInTimestamp == false){
                 if(character == '[')
                 {
                     readingInContext = true;
@@ -212,17 +193,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                 else {
                     if(showCurrentContext)
                     {
-                        if(readingInTimestamp == false)
-                        {
-                            if(!isprint(character))
-                            {
-                                if((character!='\n')&&(character!='\r'))
-                                {
-                                    int error =1;
-                                }
-                            }
-                            addCharLambda(character);
-                        }
+                        addCharLambda(character);
                     }
                     releaseLength++;
                 }
