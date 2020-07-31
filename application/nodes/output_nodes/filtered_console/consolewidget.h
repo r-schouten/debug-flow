@@ -16,6 +16,7 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     void append(QString textToAdd, QTextCharFormat format, TimeStamp_t *timeStamp, bool autoScroll);
+    virtual void clear();
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &rect, int dy);

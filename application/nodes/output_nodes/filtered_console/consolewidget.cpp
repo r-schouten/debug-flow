@@ -20,7 +20,11 @@ ConsoleWidget::ConsoleWidget(QWidget *parent):
 
     updateLineNumberAreaWidth(0);
 }
-
+void ConsoleWidget::clear()
+{
+    QPlainTextEdit::clear();
+    deletedBlocks = 0;
+}
 void ConsoleWidget::setMaxLines(int lines)
 {
     maxBlockCount = lines;
@@ -72,7 +76,7 @@ int ConsoleWidget::lineNumberAreaWidth()
         max /= 10;
         ++digits;
     }
-    int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * (digits + 9+2);
+    int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * (digits + 9);
 
     return space;
 }
@@ -118,8 +122,15 @@ void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
     char buffer[32];
     while (block.isValid() && top <= event->rect().bottom())
     {
-        if (block.isVisible() && bottom >= event->rect().top())
+        if(block.isVisible()&&( bottom >= event->rect().top()))
         {
+            if(block.next().isValid() == false)
+            {
+                if(block.length() == 0)
+                {
+                    break;
+                }
+            }
             QString blockText = block.text();
             QString text;
             TextBlockWithTimestamp* userData = dynamic_cast<TextBlockWithTimestamp*>(block.userData());

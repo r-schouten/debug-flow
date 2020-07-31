@@ -47,7 +47,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
                 readingInTimestamp = false;
             }
         }
-        if(readingInContext)
+        if((readingInContext)&&(readingInTimestamp==false))
         {
             if(character == ']')
             {

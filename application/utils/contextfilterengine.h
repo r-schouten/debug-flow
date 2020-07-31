@@ -24,7 +24,7 @@ private:
     TagAndOptionsSettings* settings = nullptr;
     DbgLogger* dbgLogger = nullptr;
     TimeStampHelper* timeStampHelper = nullptr;
-    bool showCurrentContext = false;
+    bool showCurrentContext = true;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);
     void applyANSICode(QTextCharFormat *format, ANSICode ansiCode);
