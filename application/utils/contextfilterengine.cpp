@@ -14,11 +14,13 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     int charsAdded = 0;
 
     bool readingInContext = false;
+    bool readingInTimestamp = false;
+    int timeStampIndex = 0;
     *allDataProcessed = true;
 
     for(int i=0;i<sourceAvailable;i++)
     {
-        const char &character = (*bufferReader)[i];
+        const char character = (*bufferReader)[i];
 
         if(character == TIMESTAMP_MARK)
         {
@@ -35,8 +37,18 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 break;
             }
-            i+= TIMESTAMP_BYTES -1;
-            releaseLength += TIMESTAMP_BYTES;
+            readingInTimestamp = true;
+            timeStampIndex = i;
+        }
+        if(readingInTimestamp)
+        {
+            if(timeStampIndex + TIMESTAMP_BYTES - 1 <= i)
+            {
+                readingInTimestamp = false;
+            }
+            addChar(character);
+            charsAdded++;
+            releaseLength++;
         }
         else
         {
