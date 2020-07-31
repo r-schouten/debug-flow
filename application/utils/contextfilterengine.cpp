@@ -97,7 +97,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     }
     bufferReader->release(releaseLength);
 }
-bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addChar, const std::function<bool()>& deleteCarageReturnLambda, CircularBufferReader *bufferReader, QTextCharFormat *format)
+bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, TimeStamp_t* currentTimeStamp)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -106,15 +106,17 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
     bool readingInContext = false;
     bool readingANSIEscape = false;
     bool readingInTimestamp = false;
-    int timeStampIndex = 0;
 
-    bool styleChanged = false;
+    int timeStampIndex = 0;
+    uint64_t timestamp64 = 0;
+    uint8_t* timestamp8 = (uint8_t*)&timestamp64;
+
     int availableSize = bufferReader->availableSize();
     for(int i=0;i<availableSize;i++)
     {
         const char character = (*bufferReader)[i];
 
-        if(readingInContext)
+        if((readingInContext)&&(readingInTimestamp == false))
         {
             if(character == ']')
             {
@@ -126,11 +128,25 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                         char contextCharacter = (*bufferReader)[j];
                         if(contextCharacter == TIMESTAMP_MARK)
                         {
-                            j+= TIMESTAMP_BYTES - 1;
+                            styleChangedLambda();
+
+                            timestamp64 = 0;
+                            timestamp8 = (uint8_t*)&timestamp64;
+                            int countTo = j+TIMESTAMP_BYTES-1;
+                            for(;j < countTo;j++)
+                            {
+                                *timestamp8 = (uint8_t)(*bufferReader)[j];
+                                timestamp8++;
+                            }
+                            currentTimeStamp->setTimestamp(timestamp64);
                         }
                         else
                         {
-                            addChar(contextCharacter);
+                            if(!isprint(contextCharacter))
+                            {
+                                int error =1;
+                            }
+                            addCharLambda(contextCharacter);
                         }
                     }
                 }
@@ -145,20 +161,28 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
             {
                 releaseLength += i - ANSIBeginIndex + 1;
                 readingANSIEscape = false;
-                styleChanged = true;
-                break;
+
+                styleChangedLambda();
             }
         }
         else {
             if(readingInTimestamp)
             {
-                if(timeStampIndex + TIMESTAMP_BYTES <= i)
+                *timestamp8 = (uint8_t)character;
+                timestamp8++;
+                releaseLength++;
+                if(timeStampIndex + TIMESTAMP_BYTES -1 <= i)
                 {
                     readingInTimestamp = false;
+                    currentTimeStamp->setTimestamp(timestamp64);
+
                 }
             }
+
             else if(character == TIMESTAMP_MARK)
             {
+                styleChangedLambda();
+
                 //the lenght of the timestamp is known, check whether there is enough space left
                 if(i+TIMESTAMP_BYTES >= availableSize)
                 {
@@ -166,40 +190,46 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                 }
                 readingInTimestamp = true;
                 timeStampIndex = i;
-            }
 
-            if(character == '[')
-            {
-                readingInContext = true;
-                contextBeginIndex = i;
-            }
-            else if((character == '\033') && (settings->getANSIEnabled()))
-            {
-                readingANSIEscape = true;
-                ANSIBeginIndex = i;
-            }
-            else {
-                if(showCurrentContext)
-                {
-                    if(readingInTimestamp == false)
-                    {
-                        addChar(character);
-                    }
-                }
+                timestamp64 = 0;
+                timestamp8 = (uint8_t*)&timestamp64;
+                *timestamp8 = (uint8_t)character;
+                timestamp8++;
                 releaseLength++;
             }
-        }
-    }
-    //never split a \r\n, it will result in a 'random' newline
-    if(releaseLength > 0)
-    {
-        if(deleteCarageReturnLambda())
-        {
-            releaseLength--;
+            else
+            {
+                if(character == '[')
+                {
+                    readingInContext = true;
+                    contextBeginIndex = i;
+                }
+                else if((character == '\033') && (settings->getANSIEnabled()))
+                {
+                    readingANSIEscape = true;
+                    ANSIBeginIndex = i;
+                }
+                else {
+                    if(showCurrentContext)
+                    {
+                        if(readingInTimestamp == false)
+                        {
+                            if(!isprint(character))
+                            {
+                                if((character!='\n')&&(character!='\r'))
+                                {
+                                    int error =1;
+                                }
+                            }
+                            addCharLambda(character);
+                        }
+                    }
+                    releaseLength++;
+                }
+            }
         }
     }
     bufferReader->release(releaseLength);
-    return styleChanged;
 }
 
 void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int begin, int end)

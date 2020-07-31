@@ -1,7 +1,5 @@
 #pragma once
 
-
-#include <QPlainTextEdit>
 #include <QHBoxLayout>
 #include <QScrollBar>
 #include <QComboBox>
@@ -9,12 +7,13 @@
 #include <QStandardItemModel>
 #include <QSignalMapper>
 
-
+#include "consolewidget.h"
 #include "outputnode.h"
 #include "contextfilterengine.h"
 #include "filterednodesettings.h"
-#include "filteredconsolewidgets.h"
+#include "tag-option-item.h"
 #include "historicalupdatemanager.h"
+#include "timestamphelper.h"
 class TagComboBox :public QComboBox
 {
     Q_OBJECT
@@ -88,16 +87,17 @@ private:
     QVBoxLayout *layout = nullptr;
     QHBoxLayout *verticalLayout = nullptr;
 
-    QTextCharFormat currentCharFormat;
-    QPlainTextEdit* console = nullptr;
+    ConsoleWidget* console = nullptr;
     ContextFilterEngine *contextFilter = nullptr;
     HistoricalUpdateManager* historcalUpdateManager = nullptr;
-    bool filterData(QString *destination, CircularBufferReader *bufferReader, QTextCharFormat *format);
+
+    QString bufferString;
+    QTextCharFormat currentCharFormat;
+    TimeStamp_t timeStamp;
+    void filterData(CircularBufferReader *bufferReader);
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
     void clearConsole();
-    //void propertyChanged(Property *property);
-    //void slot_changed(QObject *property);
 private slots:
     void loadTags();
     void filterOnWindowChanged();
@@ -106,4 +106,3 @@ private slots:
 
     void initiateHistoricalUpdate();
 };
-

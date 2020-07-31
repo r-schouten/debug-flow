@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 
 #include "filterednodesettings.h"
-#include "filteredconsolewidgets.h"
+#include "tag-option-item.h"
 
 
 

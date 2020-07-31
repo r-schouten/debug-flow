@@ -10,7 +10,7 @@
 
 #include "filterednodesettings.h"
 #include "propertywidgetbase.h"
-#include "filteredconsolewidgets.h"
+#include "tag-option-item.h"
 #include "taggroupbox.h"
 #include "tagsandoptionswidget.h"
 class FilteredConsolePropertiesWidget : public PropertyWidgetBase

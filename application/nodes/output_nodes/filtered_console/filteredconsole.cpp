@@ -4,29 +4,32 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* 
 
     :NodeBase(dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
+    //initialize settings
     nodeSettings = new FilteredNodeSettings(dbgLogger);
-    console = new QPlainTextEdit(this);
-    console->setReadOnly(true);
+
+    //make textEdit filed
+    console = new ConsoleWidget(this);
     loadMaxLines();
 
+    //layout for filter selection widgets
     layout = new QVBoxLayout(this);
     verticalLayout = new QHBoxLayout(this);
 
     layout->addLayout(verticalLayout);
     layout->addWidget(console);
 
-
-    QPalette p = palette();
-    p.setColor(QPalette::Base, Qt::white);
-    p.setColor(QPalette::Text, Qt::black);
-    console->setPalette(p);
-
+    //use the context filter engine for filtering
     contextFilter = new ContextFilterEngine(nodeSettings->tagAndOptionSettings, dbgLogger);
 
+    //load stuff from the settings
     loadScrollSettings();
     loadTags();
     filterOnWindowChanged();
+
+    //for the filtering
     connect(nodeSettings->tagAndOptionSettings, SIGNAL(optionAdded(Tag*,TagOption*)),this,SLOT(optionAdded(Tag*,TagOption*)));
+
+    //signals from the propertiesWidget
     connect(nodeSettings, SIGNAL(clearConsole()),this,SLOT(clearConsole()));
 
     connect(nodeSettings->tagAndOptionSettings, SIGNAL(tagsChanged()),this,SLOT(loadTags()));
@@ -34,7 +37,11 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* 
     connect(nodeSettings,SIGNAL(scrollSettingsChanged()),this,SLOT(loadScrollSettings()));
     connect(nodeSettings,SIGNAL(filterOnWindowChanged()),this,SLOT(filterOnWindowChanged()));
 
+    //slot the initialize an historical update
     connect(nodeSettings,SIGNAL(notifyDataInvalid()), this, SLOT(initiateHistoricalUpdate()));
+
+    bufferString.reserve(100);
+
 
 }
 FilteredConsole::~FilteredConsole()
@@ -63,82 +70,46 @@ void FilteredConsole::reset()
     nodeSettings->clearConsoleClicked();
     clearConsole();
 }
-bool FilteredConsole::filterData(QString* destination, CircularBufferReader *bufferReader, QTextCharFormat *format)
+void FilteredConsole::filterData(CircularBufferReader *bufferReader)
 {
-    auto lambda = [&](char character) mutable {destination->append(character);};
-    auto cargeReturnLambda = [&]() mutable {
-        if(destination->length() > 0)
-        {
-            if(destination->at(destination->length()-1) == QChar('\r')){
-                destination->chop(1);
-                return true;
-            }
+    //callback function/lambda to add data to the result string
+    auto addCharLambda = [&](char character) mutable {bufferString.append(character);};
+
+    auto formatChangedLambda = [&]() mutable
+    {
+        //function to prevent a split between /r and /n, which would result in an extra linebreak
+        if(bufferString.endsWith(QChar('\r'))){
+            bufferString.chop(1);
         }
-        return false;
+        console->append(bufferString, currentCharFormat, &timeStamp, nodeSettings->getAutoScrollEnabled());
+        bufferString.clear();
     };
-    ANSICodes ansiCodes;
-    return contextFilter->filterDataWithStyle(lambda, cargeReturnLambda, bufferReader, format);
+    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  bufferReader, &currentCharFormat, &timeStamp);
+    formatChangedLambda();
 }
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {
     if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
     }
-    QString result;
-    result.reserve(source->bufferReader->availableSize());
 
-    QTextCharFormat oldFormat = currentCharFormat;
-    bool styleChanged = filterData(&result, source->bufferReader, &currentCharFormat);
-
-    if(nodeSettings->getAutoScrollEnabled())
-    {
-        console->moveCursor(QTextCursor::End);
-        console->setCurrentCharFormat(oldFormat);
-        console->insertPlainText(result);
-        console->moveCursor(QTextCursor::End);
-    }
-    else {
-        QTextCursor cursor = console->textCursor();
-
-        cursor.movePosition(QTextCursor::End);
-        cursor.setCharFormat(oldFormat);
-        cursor.insertText(result);
-    }
-
-
-    if(styleChanged)
-    {
-        //when ansi is found the filter stops searching and is perhaps not empty, read it again
-        NotifyBufferUpdate(source);
-    }
+    filterData(source->bufferReader);
 }
-
+//------historical update functions--------
 void FilteredConsole::initiateHistoricalUpdate()
 {
     historcalUpdateManager->initatiateHistoricalUpdate(this);
 }
-
 void FilteredConsole::notifyHistoricalUpdateFinished()
 {
     QString text = "----historical update done----\n";
     QTextCharFormat format;
     format.setForeground(Qt::gray);
-    if(nodeSettings->getAutoScrollEnabled())
-    {
-        console->moveCursor(QTextCursor::End);
-        console->setCurrentCharFormat(format);
-        console->insertPlainText(text);
-        console->moveCursor(QTextCursor::End);
-    }
-    else {
-        QTextCursor cursor = console->textCursor();
 
-        cursor.movePosition(QTextCursor::End);
-        cursor.setCharFormat(format);
-        cursor.insertText(text);
-    }
+    console->append(text, format, &timeStamp, nodeSettings->getAutoScrollEnabled());
 }
 
+//-----tag and option functions
 void FilteredConsole::loadTags()
 {
     while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
@@ -174,6 +145,8 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
 
     destinationComboBox->itemModel->appendRow(item);
 }
+
+//-------callbacks for changed settings-------
 void FilteredConsole::filterOnWindowChanged()
 {
     if(nodeSettings->getFilterOnWindow())
@@ -216,8 +189,9 @@ void FilteredConsole::loadScrollSettings()
 
 void FilteredConsole::loadMaxLines()
 {
-    console->document()->setMaximumBlockCount(nodeSettings->getMaxLines());
+    console->setMaxLines(nodeSettings->getMaxLines());
 }
+
 void FilteredConsole::clearConsole()
 {
     console->clear();

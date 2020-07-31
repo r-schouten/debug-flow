@@ -17,7 +17,7 @@ uint64_t TimeStampHelper::generateHeading()
     uint64_t headerWithTime =
         std::chrono::system_clock::now().time_since_epoch() /
         std::chrono::milliseconds(1);
-
+    headerWithTime <<= 16;
     uint8_t* byteRepresentation = (uint8_t*)&headerWithTime;
     //calculate result, overwrite some of the milliseconds_since_epoch since the full 64 bits are not needed.
     byteRepresentation[MARK_INDEX] = TIMESTAMP_MARK;
@@ -25,3 +25,7 @@ uint64_t TimeStampHelper::generateHeading()
 
     return headerWithTime;
 }
+
+
+
+

@@ -21,10 +21,12 @@ SOURCES += \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
     nodes/nodesettingsbase.cpp \
+    nodes/output_nodes/filtered_console/consolewidget.cpp \
     nodes/output_nodes/filtered_console/filteredconsole.cpp \
-    nodes/output_nodes/filtered_console/filteredconsolewidgets.cpp \
     nodes/output_nodes/filtered_console/filterednodesettings.cpp \
     nodes/output_nodes/filtered_console/filtertag.cpp \
+    nodes/output_nodes/filtered_console/tag-option-item.cpp \
+    nodes/output_nodes/filtered_console/textblockwithtimestamp.cpp \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
@@ -92,10 +94,12 @@ HEADERS += \
     nodes/inputnode.h \
     nodes/nodebase.h \
     nodes/nodesettingsbase.h \
+    nodes/output_nodes/filtered_console/consolewidget.h \
     nodes/output_nodes/filtered_console/filteredconsole.h \
-    nodes/output_nodes/filtered_console/filteredconsolewidgets.h \
     nodes/output_nodes/filtered_console/filterednodesettings.h \
     nodes/output_nodes/filtered_console/filtertag.h \
+    nodes/output_nodes/filtered_console/tag-option-item.h \
+    nodes/output_nodes/filtered_console/textblockwithtimestamp.h \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
