@@ -14,13 +14,11 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     int charsAdded = 0;
 
     bool readingInContext = false;
-    bool readingInTimestamp = false;
-    int timeStampIndex = 0;
     *allDataProcessed = true;
 
     for(int i=0;i<sourceAvailable;i++)
     {
-        const char character = (*bufferReader)[i];
+        const char &character = (*bufferReader)[i];
 
         if(character == TIMESTAMP_MARK)
         {
@@ -37,62 +35,58 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 break;
             }
-            readingInTimestamp = true;
-            timeStampIndex = i;
+            i+= TIMESTAMP_BYTES -1;
+            releaseLength += TIMESTAMP_BYTES;
         }
-        if(readingInTimestamp)
+        else
         {
-            if(timeStampIndex + 8 <= i)
+            if(readingInContext)
             {
-                readingInTimestamp = false;
-            }
-        }
-        if((readingInContext)&&(readingInTimestamp==false))
-        {
-            if(character == ']')
-            {
-                processContext(bufferReader,contextBeginIndex,i);
-                if((!settings->getHideContext())&&(showCurrentContext))
+                if(character == ']')
                 {
-                    if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)//it doesn't fit anymore
+                    processContext(bufferReader,contextBeginIndex,i);
+                    if((!settings->getHideContext())&&(showCurrentContext))
                     {
-                        *allDataProcessed = false;
-                        break;
+                        if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)//it doesn't fit anymore
+                        {
+                            *allDataProcessed = false;
+                            break;
+                        }
+                        for(int j=contextBeginIndex;j<=i;j++)
+                        {
+                            addChar((*bufferReader)[j]);
+                            charsAdded++;
+                        }
                     }
-                    for(int j=contextBeginIndex;j<=i;j++)
+                    readingInContext = false;
+                    releaseLength += i - contextBeginIndex + 1;
+                }
+            }
+            else {
+                if((character == '[')&&(i - ANSIBeginIndex != 1))//ansi codes also use [
+                {
+                    readingInContext = true;
+                    contextBeginIndex = i;
+                }
+                else
+                {
+                    if(character == '\033')
                     {
-                        addChar((*bufferReader)[j]);
+                        ANSIBeginIndex = i;
+                    }
+                    if(showCurrentContext)
+                    {
+                        addChar(character);
                         charsAdded++;
                     }
+                    releaseLength++;
                 }
-                readingInContext = false;
-                releaseLength += i - contextBeginIndex + 1;
             }
-        }
-        else {
-            if((character == '[')&&(i - ANSIBeginIndex != 1))//ansi codes also use [
+            if(charsAdded >= destinationAvailabe)//it doesn't fit anymore
             {
-                readingInContext = true;
-                contextBeginIndex = i;
+                *allDataProcessed = false;
+                break;
             }
-            else
-            {
-                if(character == '\033')
-                {
-                    ANSIBeginIndex = i;
-                }
-                if(showCurrentContext)
-                {
-                    addChar(character);
-                    charsAdded++;
-                }
-                releaseLength++;
-            }
-        }
-        if(charsAdded >= destinationAvailabe)//it doesn't fit anymore
-        {
-            *allDataProcessed = false;
-            break;
         }
     }
     bufferReader->release(releaseLength);
