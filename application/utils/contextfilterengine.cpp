@@ -20,7 +20,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
 
     for(int i=0;i<sourceAvailable;i++)
     {
-        const char character = (*bufferReader)[i];
+        const char &character = (*bufferReader)[i];
 
         if(character == TIMESTAMP_MARK)
         {

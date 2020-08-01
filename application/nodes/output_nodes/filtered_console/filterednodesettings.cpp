@@ -62,14 +62,15 @@ void FilteredNodeSettings::setFilterOnWindow(bool value)
     notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
-bool FilteredNodeSettings::getLineNumbersEnabled() const
+SideLineOptions FilteredNodeSettings::getSideLineOptions() const
 {
-    return LineNumbersEnabled;
+    return sideLineOption;
 }
 
-void FilteredNodeSettings::setLineNumbersEnabled(bool value)
+void FilteredNodeSettings::setSideLineOptions(SideLineOptions value)
 {
-    LineNumbersEnabled = value;
+    sideLineOption = value;
+    emit SideLineOptionsChanged();
     notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 
@@ -88,7 +89,8 @@ bool FilteredNodeSettings::getAutoScrollEnabled() const
 QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 {
     QJsonObject *jsonObject = new QJsonObject();
-    jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,LineNumbersEnabled);
+    jsonObject->insert(JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED,SideLineOptionsText[(int)sideLineOption]);
+
     jsonObject->insert(JSON_FILTEREDCONSOLE_ANSIENABLED,tagAndOptionSettings->getANSIEnabled());
     jsonObject->insert(JSON_FILTEREDCONSOLE_AUTO_SCROLL,autoScrollEnabled);
     jsonObject->insert(JSON_TAGS_HIDE_CONTEXT,tagAndOptionSettings->getHideContext());
@@ -117,7 +119,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
 
 void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationHandler &handler)
 {
-    LineNumbersEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED, jsonObject);
+
     tagAndOptionSettings->setANSIEnabled(handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_ANSIENABLED, jsonObject));
     autoScrollEnabled = handler.findBoolSafe(CLASSNAME, JSON_FILTEREDCONSOLE_AUTO_SCROLL, jsonObject);
     tagAndOptionSettings->setHideContext(handler.findBoolSafe(CLASSNAME, JSON_TAGS_HIDE_CONTEXT, jsonObject));
@@ -140,6 +142,23 @@ void FilteredNodeSettings::deserialize(QJsonObject &jsonObject, DeserializationH
     {
         handler.logError(CLASSNAME,"scroll option not found",jsonObject);
     }
+
+    QString sideLineOptionText = handler.findStringSafe(CLASSNAME, JSON_FILTEREDCONSOLE_LINE_NUMBERS_ENABLED, jsonObject);
+    found = false;
+    for(int i =0;i<SideLineOptionsText.size();i++)
+    {
+        if(sideLineOptionText.compare(SideLineOptionsText[i]) == 0)
+        {
+           sideLineOption = (SideLineOptions)i;
+           found = true;
+        }
+    }
+    if(!found)
+    {
+        handler.logError(CLASSNAME,"sideline option not found",jsonObject);
+    }
+
+
 
     //depending on to the SerializationSettings_t the JSON_FILTEREDCONSOLE_TAGS key is not in the json
     QJsonArray tagsJson = handler.findArraySafe(CLASSNAME, JSON_TAGS, jsonObject,ErrorLevel::WARNING);

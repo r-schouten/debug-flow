@@ -17,6 +17,14 @@ enum class HorizontalScrollOptions:int{
     ignore=1,
     newline=2
 };
+static QStringList SideLineOptionsText = {"none","linenumbers","time", "both"};
+enum class SideLineOptions:int{
+    NONE=0,
+    LINENUMBERS=1,
+    TIME=2,
+    BOTH=3
+};
+
 
 class FilteredNodeSettings: public NodeSettingsBase
 {
@@ -36,8 +44,8 @@ public:
     bool getAutoScrollEnabled() const;
     void setAutoScrollEnabled(bool value);
 
-    bool getLineNumbersEnabled() const;
-    void setLineNumbersEnabled(bool value);
+    SideLineOptions getSideLineOptions() const;
+    void setSideLineOptions(SideLineOptions value);
 
     QJsonObject *serialize(SerializationHandler &handler);
     void deserialize(QJsonObject &jsonObject, DeserializationHandler &handler);
@@ -49,7 +57,7 @@ private:
     HorizontalScrollOptions horizontalScroll = HorizontalScrollOptions::scrollbar;
     bool filterOnWindow = true;
 
-    bool LineNumbersEnabled = false;
+    SideLineOptions sideLineOption = SideLineOptions::NONE;
     bool autoScrollEnabled = true;
 signals:
     void clearConsole();
@@ -57,6 +65,7 @@ signals:
     void maxLinesChanged();
     void scrollSettingsChanged();
     void filterOnWindowChanged();
+    void SideLineOptionsChanged();
 public slots:
     void clearConsoleClicked();
     void clearContextClicked();

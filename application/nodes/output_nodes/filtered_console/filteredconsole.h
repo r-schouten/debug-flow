@@ -105,4 +105,5 @@ private slots:
     void loadScrollSettings();
 
     void initiateHistoricalUpdate();
+    void SideLineOptionsChanged();
 };

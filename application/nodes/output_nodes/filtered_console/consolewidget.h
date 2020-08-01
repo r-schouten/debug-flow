@@ -3,6 +3,7 @@
 #include <QPlainTextEdit>
 #include <QPainter>
 #include <QTextBlock>
+#include <Qtooltip>
 
 #include "textblockwithtimestamp.h"
 #include "timestamphelper.h"
@@ -15,8 +16,11 @@ public:
     int lineNumberAreaWidth();
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
+    bool LineNumberAreaEvent(QEvent *event);
     void append(QString textToAdd, QTextCharFormat format, TimeStamp_t *timeStamp, bool autoScroll);
     virtual void clear();
+    void setLineNumbersEnabled(bool enabled);
+    void setTimeEnabled(bool enabled);
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &rect, int dy);
@@ -28,6 +32,10 @@ private:
     int oldBlockCount = 0;
     int deletedBlocks = 0;
     int oldAreaWidth = 0;
+
+    bool lineNumbersEnabled = true;
+    bool timeEnabled = false;
+    bool sideLineEnabled = true;
 };
 
 class LineNumberArea : public QWidget
@@ -39,7 +47,14 @@ public:
     QSize sizeHint() const override {
         return QSize(consoleWidget->lineNumberAreaWidth(), 0);
     }
-
+    bool event(QEvent *event)
+    {
+        if(consoleWidget->LineNumberAreaEvent(event))
+        {
+            return true;
+        }
+        return QWidget::event(event);
+    }
 protected:
     void paintEvent(QPaintEvent *event) override {
         consoleWidget->lineNumberAreaPaintEvent(event);
@@ -47,4 +62,5 @@ protected:
 
 private:
     ConsoleWidget *consoleWidget;
+
 };

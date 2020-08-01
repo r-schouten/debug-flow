@@ -23,9 +23,21 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget *parent
     filterOnWindowCheckbox->setChecked(settings->getFilterOnWindow());
     containerLayout->addRow("show filter",filterOnWindowCheckbox);
 
-    lineNumbersCheckbox = new QCheckBox(this);
-    lineNumbersCheckbox->setChecked(settings->getLineNumbersEnabled ());
-    containerLayout->addRow("show line numbers",lineNumbersCheckbox);
+    sideLineOptionsCombobox = new QComboBox(this);
+    containerLayout->addRow("sideline",sideLineOptionsCombobox);
+    sideLineOptionsCombobox->addItem("none",(int)SideLineOptions::NONE);
+    sideLineOptionsCombobox->addItem("linenumbers",(int)SideLineOptions::LINENUMBERS);
+    sideLineOptionsCombobox->addItem("time",(int)SideLineOptions::TIME);
+    sideLineOptionsCombobox->addItem("both",(int)SideLineOptions::BOTH);
+
+    for(int i = 0;i<sideLineOptionsCombobox->count();i++)
+    {
+        if(sideLineOptionsCombobox->itemData(i).toInt() == (int)settings->getSideLineOptions())
+        {
+            sideLineOptionsCombobox->setCurrentIndex(i);
+            break;
+        }
+    }
 
     hideContextCheckbox = new QCheckBox(this);
     hideContextCheckbox->setChecked(settings->tagAndOptionSettings->getHideContext());
@@ -84,7 +96,7 @@ FilteredConsolePropertiesWidget::FilteredConsolePropertiesWidget(QWidget *parent
     connect(filterOnWindowCheckbox,SIGNAL(stateChanged(int)),this,SLOT(filterOnWindowStateChanged()));
     connect(hideContextCheckbox,SIGNAL(stateChanged(int)),this,SLOT(hideContextStateChanged()));
 
-    connect(lineNumbersCheckbox,SIGNAL(stateChanged(int)),this,SLOT(lineNumbersStateChanged()));
+    connect(sideLineOptionsCombobox,SIGNAL(currentIndexChanged(int)),this,SLOT(SideLineOptionsChanged()));
     connect(ANSICheckbox,SIGNAL(stateChanged(int)),this,SLOT(ANSIStateChanged()));
     connect(autoScrollCheckbox,SIGNAL(stateChanged(int)),this,SLOT(autoScrollStateChanged()));
 
@@ -125,9 +137,9 @@ void FilteredConsolePropertiesWidget::filterOnWindowStateChanged()
     settings->setFilterOnWindow(filterOnWindowCheckbox->checkState());
     settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
-void FilteredConsolePropertiesWidget::lineNumbersStateChanged()
+void FilteredConsolePropertiesWidget::SideLineOptionsChanged()
 {
-    settings->setLineNumbersEnabled(lineNumbersCheckbox->checkState());
+    settings->setSideLineOptions((SideLineOptions)sideLineOptionsCombobox->currentData().toInt());
     settings->notifySettingsChanged(DATA_VALID, SAVE, PROPERIES);
 }
 void FilteredConsolePropertiesWidget::ANSIStateChanged()

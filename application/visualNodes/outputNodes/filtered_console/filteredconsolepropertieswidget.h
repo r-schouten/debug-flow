@@ -25,7 +25,7 @@ public slots:
     void horizontalScrollIndexChanged(int index);
     void maxLinesIndexChanged(int index);
     void filterOnWindowStateChanged();
-    void lineNumbersStateChanged();
+    void SideLineOptionsChanged();
     void ANSIStateChanged();
     void autoScrollStateChanged();
     void contextSettingsChanged();
@@ -40,7 +40,7 @@ private:
     TagsAndOptionsWidget* tagContainer = nullptr;
 
     QCheckBox* filterOnWindowCheckbox = nullptr;
-    QCheckBox* lineNumbersCheckbox = nullptr;
+    QComboBox* sideLineOptionsCombobox = nullptr;
     QCheckBox* hideContextCheckbox = nullptr;
 
     QCheckBox*ANSICheckbox = nullptr;

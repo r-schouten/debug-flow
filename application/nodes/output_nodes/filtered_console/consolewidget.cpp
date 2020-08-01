@@ -29,6 +29,19 @@ void ConsoleWidget::setMaxLines(int lines)
 {
     maxBlockCount = lines;
 }
+void ConsoleWidget::setLineNumbersEnabled(bool enabled)
+{
+    lineNumbersEnabled = enabled;
+    oldAreaWidth = 0;
+
+    sideLineEnabled = lineNumbersEnabled | timeEnabled;
+}
+void ConsoleWidget::setTimeEnabled(bool enabled)
+{
+    timeEnabled = enabled;
+    sideLineEnabled = lineNumbersEnabled | timeEnabled;
+
+}
 void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,TimeStamp_t* timeStamp, bool autoScroll)
 {
     document()->setMaximumBlockCount(0);
@@ -76,22 +89,32 @@ int ConsoleWidget::lineNumberAreaWidth()
         max /= 10;
         ++digits;
     }
-    int space = 3 + fontMetrics().horizontalAdvance(QLatin1Char('9')) * (digits + 9);
-
+    int space = 3;
+    if(lineNumbersEnabled) space+= fontMetrics().horizontalAdvance(QLatin1Char('9')) * (digits);
+    if(timeEnabled) space+=40;
+    if(lineNumbersEnabled&timeEnabled) space+=5;
     return space;
 }
 void ConsoleWidget::updateLineNumberAreaWidth(int newBlockCount)
 {
-    int areaWidth = lineNumberAreaWidth();
-    if(oldAreaWidth != areaWidth)
+    if(sideLineEnabled)
     {
-        setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
-        oldAreaWidth = areaWidth;
+        int areaWidth = lineNumberAreaWidth();
+        if(oldAreaWidth != areaWidth)
+        {
+            setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
+            oldAreaWidth = areaWidth;
+        }
+    }
+    else
+    {
+        setViewportMargins(0, 0, 0, 0);
     }
 }
 
 void ConsoleWidget::updateLineNumberArea(const QRect &rect, int dy)
 {
+    if(!sideLineEnabled)return;
     if (dy)
         lineNumberArea->scroll(0, dy);
     else
@@ -105,6 +128,7 @@ void ConsoleWidget::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
 
+    if(!sideLineEnabled)return;
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
@@ -112,6 +136,7 @@ void ConsoleWidget::resizeEvent(QResizeEvent *e)
 
 void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
+    if(!sideLineEnabled)return;
     QPainter painter(lineNumberArea);
     painter.fillRect(event->rect(), Qt::lightGray);
     QTextBlock block = firstVisibleBlock();
@@ -136,8 +161,18 @@ void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
             TextBlockWithTimestamp* userData = dynamic_cast<TextBlockWithTimestamp*>(block.userData());
             if(userData)
             {
-                text = QString::number(userData->blockNr);
-                text += " - " + userData->timestamp.toHourMinuteSecond(buffer, sizeof(buffer));
+                if(timeEnabled)
+                {
+                    text = userData->timestamp.toHourMinuteSecond(buffer, sizeof(buffer));
+                }
+                if(lineNumbersEnabled&timeEnabled)
+                {
+                    text += " ";
+                }
+                if(lineNumbersEnabled)
+                {
+                    text += QString::number(userData->blockNr);
+                }
             }
             painter.setPen(Qt::black);
             painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
@@ -150,3 +185,37 @@ void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
         ++blockNumber;
     }
 }
+
+bool ConsoleWidget::LineNumberAreaEvent(QEvent *event)
+{
+    if (event->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+
+        //find the relative line number
+        QTextBlock block = firstVisibleBlock();
+        int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
+        int bottom = top + (int) blockBoundingRect(block).height();
+        while(top < helpEvent->y())
+        {
+            if(block.next().isVisible() == false)break;
+            block = block.next();
+            top = bottom;
+            bottom = top + (int) blockBoundingRect(block).height();
+        }
+        block = block.previous();
+        QString text;
+        TextBlockWithTimestamp* userData = dynamic_cast<TextBlockWithTimestamp*>(block.userData());
+        if(userData)
+        {
+             char buffer[32];
+             text = "line " + QString::number(userData->blockNr);
+             text += "\nat " + userData->timestamp.toHourMinuteSecond(buffer, sizeof(buffer));
+        }
+        QToolTip::showText(helpEvent->globalPos(), text);
+
+        return true;
+    }
+    return false;
+}
+
+

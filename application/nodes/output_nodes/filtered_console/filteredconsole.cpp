@@ -10,6 +10,7 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* 
     //make textEdit filed
     console = new ConsoleWidget(this);
     loadMaxLines();
+    SideLineOptionsChanged();
 
     //layout for filter selection widgets
     layout = new QVBoxLayout(this);
@@ -36,6 +37,7 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* 
     connect(nodeSettings,SIGNAL(maxLinesChanged()),this,SLOT(loadMaxLines()));
     connect(nodeSettings,SIGNAL(scrollSettingsChanged()),this,SLOT(loadScrollSettings()));
     connect(nodeSettings,SIGNAL(filterOnWindowChanged()),this,SLOT(filterOnWindowChanged()));
+    connect(nodeSettings,SIGNAL(SideLineOptionsChanged()),this,SLOT(SideLineOptionsChanged()));
 
     //slot the initialize an historical update
     connect(nodeSettings,SIGNAL(notifyDataInvalid()), this, SLOT(initiateHistoricalUpdate()));
@@ -196,7 +198,25 @@ void FilteredConsole::clearConsole()
 {
     console->clear();
 }
-
+void FilteredConsole::SideLineOptionsChanged()
+{
+    if((nodeSettings->getSideLineOptions() == SideLineOptions::LINENUMBERS)||(nodeSettings->getSideLineOptions() == SideLineOptions::BOTH))
+    {
+        console->setLineNumbersEnabled(true);
+    }
+    else
+    {
+        console->setLineNumbersEnabled(false);
+    }
+    if((nodeSettings->getSideLineOptions() == SideLineOptions::TIME)||(nodeSettings->getSideLineOptions() == SideLineOptions::BOTH))
+    {
+        console->setTimeEnabled(true);
+    }
+    else
+    {
+        console->setTimeEnabled(false);
+    }
+}
 
 void FilteredConsole::keyPressEvent(QKeyEvent *e)
 {
