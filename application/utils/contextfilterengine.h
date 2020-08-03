@@ -31,7 +31,7 @@ private:
     void processContext(CircularBufferReader *bufferReader, int begin, int end, int &releaseLength);
     bool proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
     void processOption(QString &optionName, int tagIndex);
-    bool forwardMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
+    bool forwardMetaData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe, int &releaseLength);
 signals:
     //void propertyChanged(Property* property);
 };

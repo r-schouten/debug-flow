@@ -14,93 +14,71 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     int charsAdded = 0;
 
     bool readingInContext = false;
-    bool readingInMetaData = false;
-    int metaDataIndex = 0;
     *allDataProcessed = true;
 
     for(int i=0;i<sourceAvailable;i++)
     {
         const char &character = (*bufferReader)[i];
 
-        if((character == METADATA_MARK)&&(readingInMetaData == false))
+        if((character == METADATA_MARK))
         {
-            //the lenght of the timestamp is known, check whether there is enough space left
-            if(i+7<sourceAvailable)
+            if(forwardMetaData(addChar, bufferReader,currentMetaData, i, sourceAvailable, charsAdded, destinationAvailabe, releaseLength))
             {
-                if(charsAdded +8 >= destinationAvailabe)
-                {
-                    *allDataProcessed = false;
-                    break;
-                }
+
             }
             else
             {
                 break;
             }
-
-            readingInMetaData = true;
-            metaDataIndex = i;
+            continue;
         }
-        if(readingInMetaData)
+        if(readingInContext)
         {
-            if(metaDataIndex + TIMESTAMP_BYTES - 1 <= i)
+            if(character == ']')
             {
-                readingInMetaData = false;
-            }
-            addChar(character);
-            charsAdded++;
-            releaseLength++;
-        }
-        else
-        {
-            if(readingInContext)
-            {        
-                if(character == ']')
+                //check of it fits in the destination buffer
+                if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)
                 {
-                    //check of it fits in the destination buffer
-                    if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)
-                    {
-                        *allDataProcessed = false;
-                        break;
-                    }
-                    processContext(bufferReader, contextBeginIndex, i, releaseLength);
-                    releaseLength+=2;//don't forget the []
-                    if((!settings->getHideContext())&&(showCurrentContext))
-                    {
-                        for(int j=contextBeginIndex;j<=i;j++)
-                        {
-                            addChar((*bufferReader)[j]);
-                            charsAdded++;
-                        }
-                    }
-                    readingInContext = false;
+                    *allDataProcessed = false;
+                    break;
                 }
-            }
-            else {
-                if((character == '[')&&(i - ANSIBeginIndex != 1))//ansi codes also use [
+                processContext(bufferReader, contextBeginIndex, i, releaseLength);
+                releaseLength+=2;//don't forget the []
+                if((!settings->getHideContext())&&(showCurrentContext))
                 {
-                    readingInContext = true;
-                    contextBeginIndex = i;
-                }
-                else
-                {
-                    if(character == '\033')
+                    for(int j=contextBeginIndex;j<=i;j++)
                     {
-                        ANSIBeginIndex = i;
-                    }
-                    if(showCurrentContext)
-                    {
-                        addChar(character);
+                        addChar((*bufferReader)[j]);
                         charsAdded++;
                     }
-                    releaseLength++;
                 }
+                readingInContext = false;
             }
-            if(charsAdded >= destinationAvailabe)//it doesn't fit anymore
+        }
+        else {
+            if((character == '[')&&(i - ANSIBeginIndex != 1))//ansi codes also use [
             {
-                *allDataProcessed = false;
-                break;
+                readingInContext = true;
+                contextBeginIndex = i;
             }
+            else
+            {
+                if(character == '\033')
+                {
+                    ANSIBeginIndex = i;
+                }
+                if(showCurrentContext)
+                {
+                    addChar(character);
+                    charsAdded++;
+                }
+                releaseLength++;
+            }
+        }
+        if(charsAdded >= destinationAvailabe)//it doesn't fit anymore
+        {
+            *allDataProcessed = false;
+            break;
         }
     }
     bufferReader->release(releaseLength);
@@ -192,25 +170,26 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
     }
     bufferReader->release(releaseLength);
 }
-bool ContextFilterEngine::forwardMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength)
+bool ContextFilterEngine::forwardMetaData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe,int &releaseLength)
 {
     //the lenght of the metadata is minimal TIMESTAMP_BYTES, check whether there is enough space left
     if(i + TIMESTAMP_BYTES >= availabeSize)
     {
         return false;
     }
-    uint64_t timestamp64 = 0;
-    uint8_t* timestamp8 = (uint8_t*)&timestamp64;
+    if(charsAdded +8 >= destinationAvailabe)
+    {
+        return false;
+    }
     int end = i+TIMESTAMP_BYTES;
     for(;i < end;i++)
     {
-        const char &character = (*bufferReader)[i];
-        *timestamp8 = (uint8_t)character;
-        timestamp8++;
+        addChar((*bufferReader)[i]);
+
     }
     i--;
-    currentMetaData->setTimestamp(timestamp64);
     releaseLength += TIMESTAMP_BYTES;
+    charsAdded += TIMESTAMP_BYTES;
     return true;
 }
 bool ContextFilterEngine::proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength)
