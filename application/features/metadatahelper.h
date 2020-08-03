@@ -2,25 +2,25 @@
 #include "time.h"
 #include "circularbuffer.h"
 #define CLOCK_PER_US (CLOCKS_PER_SEC*1000000)
-#define TIMESTAMP_MARK '\001'
+#define METADATA_MARK '\001'
 #define MARK_INDEX 0
 #define HEADER_INDEX 1
 #define TIMESTAMP_BYTES 8
-class TimeStampHelper
+class MetaDataHelper
 {
 public:
-    TimeStampHelper();
+    MetaDataHelper();
     void appendTime(CircularBuffer* buffer);
     uint64_t generateHeading();
 };
-class TimeStamp_t
+class MetaData_t
 {
 public:
-    TimeStamp_t()
+    MetaData_t()
     {
         timestamp = 0;
     }
-    TimeStamp_t(uint64_t timestamp)
+    MetaData_t(uint64_t timestamp)
         :timestamp(timestamp){}
     uint64_t getTimestamp() const
     {

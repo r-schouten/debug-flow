@@ -3,7 +3,7 @@
 ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLogger* dbgLogger)
     :settings(settings),dbgLogger(dbgLogger)
 {
-    timeStampHelper = new TimeStampHelper();
+    metaDataHelper = new MetaDataHelper();
 }
 
 void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed)
@@ -14,15 +14,15 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     int charsAdded = 0;
 
     bool readingInContext = false;
-    bool readingInTimestamp = false;
-    int timeStampIndex = 0;
+    bool readingInMetaData = false;
+    int metaDataIndex = 0;
     *allDataProcessed = true;
 
     for(int i=0;i<sourceAvailable;i++)
     {
         const char &character = (*bufferReader)[i];
 
-        if((character == TIMESTAMP_MARK)&&(readingInTimestamp == false))
+        if((character == METADATA_MARK)&&(readingInMetaData == false))
         {
             //the lenght of the timestamp is known, check whether there is enough space left
             if(i+7<sourceAvailable)
@@ -37,15 +37,15 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 break;
             }
-            readingInTimestamp = true;
-            timeStampIndex = i;
+            readingInMetaData = true;
+            metaDataIndex = i;
 
         }
-        if(readingInTimestamp)
+        if(readingInMetaData)
         {
-            if(timeStampIndex + TIMESTAMP_BYTES - 1 <= i)
+            if(metaDataIndex + TIMESTAMP_BYTES - 1 <= i)
             {
-                readingInTimestamp = false;
+                readingInMetaData = false;
             }
             if(!readingInContext)
             {
@@ -108,7 +108,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     }
     bufferReader->release(releaseLength);
 }
-bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, TimeStamp_t* currentTimeStamp)
+bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -116,9 +116,9 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
 
     bool readingInContext = false;
     bool readingANSIEscape = false;
-    bool readingInTimestamp = false;
+    bool readingInMetaData = false;
 
-    int timeStampIndex = 0;
+    int metaDataIndex = 0;
     uint64_t timestamp64 = 0;
     uint8_t* timestamp8 = (uint8_t*)&timestamp64;
 
@@ -128,7 +128,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
     {
         const char &character = (*bufferReader)[i];
 
-        if((character == TIMESTAMP_MARK)&&(readingInTimestamp==false))
+        if((character == METADATA_MARK)&&(readingInMetaData==false))
         {
             //the lenght of the timestamp is known, check whether there is enough space left
             if(i + TIMESTAMP_BYTES >= availableSize)
@@ -136,21 +136,21 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                 break;
             }
             styleChangedLambda();
-            readingInTimestamp = true;
-            timeStampIndex = i;
+            readingInMetaData = true;
+            metaDataIndex = i;
 
             timestamp8 = (uint8_t*)&timestamp64;
         }
-        if(readingInTimestamp)
+        if(readingInMetaData)
         {
             *timestamp8 = (uint8_t)character;
             timestamp8++;
             if(!readingInContext)
                 releaseLength++;
-            if(timeStampIndex + TIMESTAMP_BYTES - 1 <= i)
+            if(metaDataIndex + TIMESTAMP_BYTES - 1 <= i)
             {
-                readingInTimestamp = false;
-                currentTimeStamp->setTimestamp(timestamp64);
+                readingInMetaData = false;
+                currentMetaData->setTimestamp(timestamp64);
                 addCharLambda('|');
             }
         }
@@ -166,7 +166,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                         for(int j=contextBeginIndex;j<=i;j++)
                         {
                             char contextCharacter = (*bufferReader)[j];
-                            if(contextCharacter == TIMESTAMP_MARK)
+                            if(contextCharacter == METADATA_MARK)
                             {
                                 j+= TIMESTAMP_BYTES-1;
                             }
@@ -191,7 +191,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                     styleChangedLambda();
                 }
             }
-            else if(readingInTimestamp == false){
+            else if(readingInMetaData == false){
                 if(character == '[')
                 {
                     readingInContext = true;
@@ -225,7 +225,7 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
     {
         const char &character = (*bufferReader)[i];
 
-        if(character == TIMESTAMP_MARK)//skip 8 characters
+        if(character == METADATA_MARK)//skip 8 characters
         {
             i += TIMESTAMP_BYTES - 1;//warning, notice that i might overflow and no other operation can be done before checking if its needed to break the loop
         }

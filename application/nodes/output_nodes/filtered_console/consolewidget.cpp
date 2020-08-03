@@ -42,7 +42,7 @@ void ConsoleWidget::setTimeEnabled(bool enabled)
     sideLineEnabled = lineNumbersEnabled | timeEnabled;
 
 }
-void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,TimeStamp_t* timeStamp, bool autoScroll)
+void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,MetaData_t* metaData, bool autoScroll)
 {
     document()->setMaximumBlockCount(0);
     oldBlockCount = document()->blockCount();
@@ -74,9 +74,9 @@ void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,TimeStamp_t
     {
         if(!block.userData())
         {
-            TextBlockWithTimestamp* userData = new TextBlockWithTimestamp();
+            TextBlockWithMetaData* userData = new TextBlockWithMetaData();
             userData->blockNr = block.blockNumber()+1 + deletedBlocks;
-            userData->timestamp.setTimestamp(timeStamp->getTimestamp());
+            userData->metaData.setTimestamp(metaData->getTimestamp());
             block.setUserData(userData);
         }
         block = block.next();
@@ -160,12 +160,12 @@ void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
             }
             QString blockText = block.text();
             QString text;
-            TextBlockWithTimestamp* userData = dynamic_cast<TextBlockWithTimestamp*>(block.userData());
+            TextBlockWithMetaData* userData = dynamic_cast<TextBlockWithMetaData*>(block.userData());
             if(userData)
             {
                 if(timeEnabled)
                 {
-                    text = userData->timestamp.toHourMinuteSecond(buffer, sizeof(buffer));
+                    text = userData->metaData.toHourMinuteSecond(buffer, sizeof(buffer));
                 }
                 if(lineNumbersEnabled&timeEnabled)
                 {
@@ -206,12 +206,12 @@ bool ConsoleWidget::LineNumberAreaEvent(QEvent *event)
         }
         block = block.previous();
         QString text;
-        TextBlockWithTimestamp* userData = dynamic_cast<TextBlockWithTimestamp*>(block.userData());
+        TextBlockWithMetaData* userData = dynamic_cast<TextBlockWithMetaData*>(block.userData());
         if(userData)
         {
              char buffer[32];
              text = "line " + QString::number(userData->blockNr);
-             text += "\nat " + userData->timestamp.toHourMinuteSecond(buffer, sizeof(buffer));
+             text += "\nat " + userData->metaData.toHourMinuteSecond(buffer, sizeof(buffer));
         }
         QToolTip::showText(helpEvent->globalPos(), text);
 

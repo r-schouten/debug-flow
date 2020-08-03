@@ -13,7 +13,7 @@
 #include "filterednodesettings.h"
 #include "tag-option-item.h"
 #include "historicalupdatemanager.h"
-#include "timestamphelper.h"
+#include "metadatahelper.h"
 class TagComboBox :public QComboBox
 {
     Q_OBJECT
@@ -93,7 +93,7 @@ private:
 
     QString bufferString;
     QTextCharFormat currentCharFormat;
-    TimeStamp_t timeStamp;
+    MetaData_t metaData;
     void filterData(CircularBufferReader *bufferReader);
 public slots:
     void optionAdded(Tag *tag, TagOption *option);

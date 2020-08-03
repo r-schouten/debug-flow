@@ -5,7 +5,7 @@
 #include "outputnode.h"
 #include "serialnodeinterface.h"
 #include "serialsettings.h"
-#include "timestamphelper.h"
+#include "metadatahelper.h"
 class SerialNode :public QObject, public SerialNodeInterface
 {
     Q_OBJECT
@@ -22,7 +22,7 @@ public:
 
 private:
     QSerialPort *m_serial = nullptr;
-    TimeStampHelper* timeStampHelper = nullptr;
+    MetaDataHelper* metaDataHelper = nullptr;
 public slots:
     void handleError(QSerialPort::SerialPortError error);
 private slots:

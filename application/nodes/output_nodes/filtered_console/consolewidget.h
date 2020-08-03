@@ -5,8 +5,8 @@
 #include <QTextBlock>
 #include <Qtooltip>
 
-#include "textblockwithtimestamp.h"
-#include "timestamphelper.h"
+#include "textblockwithmetadata.h"
+#include "metadatahelper.h"
 class ConsoleWidget: public QPlainTextEdit
 {
     Q_OBJECT
@@ -17,7 +17,7 @@ public:
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     bool LineNumberAreaEvent(QEvent *event);
-    void append(QString textToAdd, QTextCharFormat format, TimeStamp_t *timeStamp, bool autoScroll);
+    void append(QString textToAdd, QTextCharFormat format, MetaData_t *metaData, bool autoScroll);
     virtual void clear();
     void setLineNumbersEnabled(bool enabled);
     void setTimeEnabled(bool enabled);

@@ -83,10 +83,10 @@ void FilteredConsole::filterData(CircularBufferReader *bufferReader)
         if(bufferString.endsWith(QChar('\r'))){
             bufferString.chop(1);
         }
-        console->append(bufferString, currentCharFormat, &timeStamp, nodeSettings->getAutoScrollEnabled());
+        console->append(bufferString, currentCharFormat, &metaData, nodeSettings->getAutoScrollEnabled());
         bufferString.clear();
     };
-    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  bufferReader, &currentCharFormat, &timeStamp);
+    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  bufferReader, &currentCharFormat, &metaData);
     formatChangedLambda();
 }
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
@@ -108,7 +108,7 @@ void FilteredConsole::notifyHistoricalUpdateFinished()
     QTextCharFormat format;
     format.setForeground(Qt::gray);
 
-    console->append(text, format, &timeStamp, nodeSettings->getAutoScrollEnabled());
+    console->append(text, format, &metaData, nodeSettings->getAutoScrollEnabled());
 }
 
 //-----tag and option functions

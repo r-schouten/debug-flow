@@ -6,7 +6,7 @@ SerialNode::SerialNode::SerialNode(DbgLogger *dbgLogger)
     :NodeBase(dbgLogger),SerialNodeInterface(dbgLogger)
 {
     m_serial = new QSerialPort(this);
-    timeStampHelper = new TimeStampHelper;
+    metaDataHelper = new MetaDataHelper;
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
     connect(m_serial, &QSerialPort::readyRead, this, &SerialNode::readData);
 }
@@ -77,7 +77,7 @@ void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
 
-    timeStampHelper->appendTime(circularBuffer);
+    metaDataHelper->appendTime(circularBuffer);
     circularBuffer->append(&data);
     notifyAllSubscriptions();
 }

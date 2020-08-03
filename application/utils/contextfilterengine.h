@@ -10,7 +10,7 @@
 #include "circularbufferreader.h"
 #include "ansi_types.h"
 #include "tagandoptionssettings.h"
-#include "timestamphelper.h"
+#include "metadatahelper.h"
 class ContextFilterEngine: public QObject
 {
     Q_OBJECT
@@ -19,11 +19,11 @@ public:
     ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
 
     void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed);
-    bool filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, TimeStamp_t* currentTimeStamp);
+    bool filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData);
 private:
     TagAndOptionsSettings* settings = nullptr;
     DbgLogger* dbgLogger = nullptr;
-    TimeStampHelper* timeStampHelper = nullptr;
+    MetaDataHelper* metaDataHelper = nullptr;
     bool showCurrentContext = true;
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);

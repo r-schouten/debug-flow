@@ -10,7 +10,7 @@ SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
     features/historicalupdatemanager.cpp \
-    features/timestamphelper.cpp \
+    features/metadatahelper.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
     loadstore/filesystem.cpp \
@@ -26,7 +26,7 @@ SOURCES += \
     nodes/output_nodes/filtered_console/filterednodesettings.cpp \
     nodes/output_nodes/filtered_console/filtertag.cpp \
     nodes/output_nodes/filtered_console/tag-option-item.cpp \
-    nodes/output_nodes/filtered_console/textblockwithtimestamp.cpp \
+    nodes/output_nodes/filtered_console/textblockwithmetadata.cpp \
     nodes/output_nodes/simpleconsole.cpp \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
@@ -78,7 +78,7 @@ HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
     features/historicalupdatemanager.h \
-    features/timestamphelper.h \
+    features/metadatahelper.h \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \
@@ -99,7 +99,7 @@ HEADERS += \
     nodes/output_nodes/filtered_console/filterednodesettings.h \
     nodes/output_nodes/filtered_console/filtertag.h \
     nodes/output_nodes/filtered_console/tag-option-item.h \
-    nodes/output_nodes/filtered_console/textblockwithtimestamp.h \
+    nodes/output_nodes/filtered_console/textblockwithmetadata.h \
     nodes/output_nodes/simpleconsole.h \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
