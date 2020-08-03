@@ -21,7 +21,7 @@ private slots:
 
 private:
     bool filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
-
+    MetaData_t metaData;
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;
     HistoricalUpdateManager* historcalUpdateManager = nullptr;

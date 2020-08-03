@@ -77,8 +77,20 @@ void SerialNode::readData()
 {
     QByteArray data = m_serial->readAll();
 
-    metaDataHelper->appendTime(circularBuffer);
-    circularBuffer->append(&data);
+    //the current implementation is slow, it could be made better.
+    //it is acceptable now because this code doesn't run in a historical update
+    for(int i=0;i<data.length();i++)
+    {
+        char a = data.at(i);
+        if(a == '[')
+        {
+            if(!((i !=0)&&(data.at(i-1)=='\033')))
+            {
+                metaDataHelper->appendTime(circularBuffer);
+            }
+        }
+        circularBuffer->appendByte(&a);
+    }
     notifyAllSubscriptions();
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)

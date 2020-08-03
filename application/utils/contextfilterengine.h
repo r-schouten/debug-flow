@@ -18,7 +18,7 @@ class ContextFilterEngine: public QObject
 public:
     ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
 
-    void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed);
+    void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed, MetaData_t *currentMetaData);
     bool filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData);
 private:
     TagAndOptionsSettings* settings = nullptr;
@@ -28,8 +28,10 @@ private:
     //fuction should be able to both write to a qstring and a circular buffer, to place the data a lambda function must be given
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);
     void applyANSICode(QTextCharFormat *format, ANSICode ansiCode);
-    void processContext(CircularBufferReader *bufferReader, int begin, int end);
+    void processContext(CircularBufferReader *bufferReader, int begin, int end, int &releaseLength);
+    bool proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
     void processOption(QString &optionName, int tagIndex);
+    bool forwardMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
 signals:
     //void propertyChanged(Property* property);
 };

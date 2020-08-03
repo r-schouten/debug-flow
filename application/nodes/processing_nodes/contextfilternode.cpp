@@ -33,7 +33,7 @@ bool ContextFilterNode::filterData(CircularBuffer* buffer, CircularBufferReader 
     auto lambda = [&](char character) mutable {buffer->appendByte(&character);};
 
     OutputNode* outputNode = dynamic_cast<OutputNode*>(this);
-    contextFilterEngine->filterData(lambda, bufferReader, bufferReader->availableSize(), outputNode->getBufferUnusedSize(), &processingDone);
+    contextFilterEngine->filterData(lambda, bufferReader, bufferReader->availableSize(), outputNode->getBufferUnusedSize(), &processingDone,&metaData);
 }
 
 void ContextFilterNode::NotifyBufferUpdate(Subscription *source)

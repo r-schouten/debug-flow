@@ -6,7 +6,7 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLog
     metaDataHelper = new MetaDataHelper();
 }
 
-void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed)
+void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed, MetaData_t* currentMetaData)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -37,9 +37,9 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 break;
             }
+
             readingInMetaData = true;
             metaDataIndex = i;
-
         }
         if(readingInMetaData)
         {
@@ -47,12 +47,9 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 readingInMetaData = false;
             }
-            if(!readingInContext)
-            {
-                addChar(character);
-                charsAdded++;
-                releaseLength++;
-            }
+            addChar(character);
+            charsAdded++;
+            releaseLength++;
         }
         else
         {
@@ -66,7 +63,8 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
                         *allDataProcessed = false;
                         break;
                     }
-                    processContext(bufferReader,contextBeginIndex,i);
+                    processContext(bufferReader, contextBeginIndex, i, releaseLength);
+                    releaseLength+=2;//don't forget the []
                     if((!settings->getHideContext())&&(showCurrentContext))
                     {
                         for(int j=contextBeginIndex;j<=i;j++)
@@ -76,7 +74,6 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
                         }
                     }
                     readingInContext = false;
-                    releaseLength += i - contextBeginIndex + 1;
                 }
             }
             else {
@@ -116,11 +113,6 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
 
     bool readingInContext = false;
     bool readingANSIEscape = false;
-    bool readingInMetaData = false;
-
-    int metaDataIndex = 0;
-    uint64_t timestamp64 = 0;
-    uint8_t* timestamp8 = (uint8_t*)&timestamp64;
 
     int availableSize = bufferReader->availableSize();
 
@@ -128,94 +120,121 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
     {
         const char &character = (*bufferReader)[i];
 
-        if((character == METADATA_MARK)&&(readingInMetaData==false))
+        if((character == METADATA_MARK))
         {
-            //the lenght of the timestamp is known, check whether there is enough space left
-            if(i + TIMESTAMP_BYTES >= availableSize)
+            if(proccesMetaData(bufferReader,currentMetaData, i, availableSize, releaseLength))
+            {
+                styleChangedLambda();
+                addCharLambda('|');
+            }
+            else
             {
                 break;
             }
-            styleChangedLambda();
-            readingInMetaData = true;
-            metaDataIndex = i;
-
-            timestamp8 = (uint8_t*)&timestamp64;
+            continue;
         }
-        if(readingInMetaData)
+
+        if(readingInContext)
         {
-            *timestamp8 = (uint8_t)character;
-            timestamp8++;
-            if(!readingInContext)
-                releaseLength++;
-            if(metaDataIndex + TIMESTAMP_BYTES - 1 <= i)
+            if(character == ']')
             {
-                readingInMetaData = false;
-                currentMetaData->setTimestamp(timestamp64);
-                addCharLambda('|');
+                processContext(bufferReader, contextBeginIndex, i, releaseLength);
+                releaseLength+=2;//don't forget the []
+                if((!settings->getHideContext())&&(showCurrentContext))
+                {
+                    for(int j=contextBeginIndex;j<=i;j++)
+                    {
+                        char contextCharacter = (*bufferReader)[j];
+                        if(contextCharacter == METADATA_MARK)
+                        {
+                            j+= TIMESTAMP_BYTES-1;
+                        }
+                        else
+                        {
+                            addCharLambda(contextCharacter);
+                        }
+                    }
+                }
+                readingInContext = false;
+            }
+        }
+        else if(readingANSIEscape)
+        {
+            bool done = processANSIEscape(bufferReader, format, ANSIBeginIndex,i);
+            if(done)
+            {
+                releaseLength += i - ANSIBeginIndex + 1;
+                readingANSIEscape = false;
+
+                styleChangedLambda();
             }
         }
         else
         {
-            if(readingInContext)
+            if(character == '[')
             {
-                if(character == ']')
-                {
-                    processContext(bufferReader,contextBeginIndex,i);
-                    if((!settings->getHideContext())&&(showCurrentContext))
-                    {
-                        for(int j=contextBeginIndex;j<=i;j++)
-                        {
-                            char contextCharacter = (*bufferReader)[j];
-                            if(contextCharacter == METADATA_MARK)
-                            {
-                                j+= TIMESTAMP_BYTES-1;
-                            }
-                            else
-                            {
-                                addCharLambda(contextCharacter);
-                            }
-                        }
-                    }
-                    releaseLength += i - contextBeginIndex + 1;
-                    readingInContext = false;
-                }
+                readingInContext = true;
+                contextBeginIndex = i;
             }
-            else if(readingANSIEscape)
+            else if((character == '\033') && (settings->getANSIEnabled()))
             {
-                bool done = processANSIEscape(bufferReader, format, ANSIBeginIndex,i);
-                if(done)
-                {
-                    releaseLength += i - ANSIBeginIndex + 1;
-                    readingANSIEscape = false;
-
-                    styleChangedLambda();
-                }
+                readingANSIEscape = true;
+                ANSIBeginIndex = i;
             }
-            else if(readingInMetaData == false){
-                if(character == '[')
+            else {
+                if(showCurrentContext)
                 {
-                    readingInContext = true;
-                    contextBeginIndex = i;
+                    addCharLambda(character);
                 }
-                else if((character == '\033') && (settings->getANSIEnabled()))
-                {
-                    readingANSIEscape = true;
-                    ANSIBeginIndex = i;
-                }
-                else {
-                    if(showCurrentContext)
-                    {
-                        addCharLambda(character);
-                    }
-                    releaseLength++;
-                }
+                releaseLength++;
             }
         }
     }
     bufferReader->release(releaseLength);
 }
-
-void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int begin, int end)
+bool ContextFilterEngine::forwardMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength)
+{
+    //the lenght of the metadata is minimal TIMESTAMP_BYTES, check whether there is enough space left
+    if(i + TIMESTAMP_BYTES >= availabeSize)
+    {
+        return false;
+    }
+    uint64_t timestamp64 = 0;
+    uint8_t* timestamp8 = (uint8_t*)&timestamp64;
+    int end = i+TIMESTAMP_BYTES;
+    for(;i < end;i++)
+    {
+        const char &character = (*bufferReader)[i];
+        *timestamp8 = (uint8_t)character;
+        timestamp8++;
+    }
+    i--;
+    currentMetaData->setTimestamp(timestamp64);
+    releaseLength += TIMESTAMP_BYTES;
+    return true;
+}
+bool ContextFilterEngine::proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength)
+{
+    //the lenght of the metadata is minimal TIMESTAMP_BYTES, check whether there is enough space left
+    if(i + TIMESTAMP_BYTES >= availabeSize)
+    {
+        return false;
+    }
+    uint64_t timestamp64 = 0;
+    uint8_t* timestamp8 = (uint8_t*)&timestamp64;
+    int end = i+TIMESTAMP_BYTES;
+    for(;i < end;i++)
+    {
+        const char &character = (*bufferReader)[i];
+        *timestamp8 = (uint8_t)character;
+        timestamp8++;
+    }
+    i--;
+    currentMetaData->setTimestamp(timestamp64);
+    releaseLength += TIMESTAMP_BYTES;
+    return true;
+}
+void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int begin, int end, int &releaseLength)
 {
     showCurrentContext = true;
     int propertyIndex = 0;
@@ -231,6 +250,7 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         }
         else
         {
+            releaseLength++;
             if((character == ',')||(character == ' '))
             {
                 processOption(property,propertyIndex);
@@ -246,10 +266,9 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
 }
 void ContextFilterEngine::processOption(QString& optionName, int tagIndex)
 {
-
     if(settings->tags.size() <= tagIndex)
     {
-        settings->tags.append(new Tag(QString("tag %1").arg(tagIndex),tagIndex));
+        settings->tags.append(new Tag(QString("tag %0").arg(tagIndex),tagIndex));
     }
     Tag* tag = settings->tags.at(tagIndex);
     TagOption* option = tag->getOption(optionName);
