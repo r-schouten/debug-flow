@@ -72,10 +72,13 @@ void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,TimeStamp_t
     QTextBlock block = document()->findBlockByNumber(blockCountBeforeDeletion - insertedBlocks-1);
     for(int i = blockCountBeforeDeletion - insertedBlocks-1;i < blockCountAfter ;i++)
     {
-        TextBlockWithTimestamp* userData = new TextBlockWithTimestamp();
-        userData->blockNr = block.blockNumber()+1 + deletedBlocks;
-        userData->timestamp.setTimestamp(timeStamp->getTimestamp());
-        block.setUserData(userData);
+        if(!block.userData())
+        {
+            TextBlockWithTimestamp* userData = new TextBlockWithTimestamp();
+            userData->blockNr = block.blockNumber()+1 + deletedBlocks;
+            userData->timestamp.setTimestamp(timeStamp->getTimestamp());
+            block.setUserData(userData);
+        }
         block = block.next();
     }
 }
@@ -144,7 +147,6 @@ void ConsoleWidget::lineNumberAreaPaintEvent(QPaintEvent *event)
     int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
     int bottom = top + (int) blockBoundingRect(block).height();
 
-    char buffer[32];
     while (block.isValid() && top <= event->rect().bottom())
     {
         if(block.isVisible()&&( bottom >= event->rect().top()))

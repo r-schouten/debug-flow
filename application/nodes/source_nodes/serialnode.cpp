@@ -80,7 +80,6 @@ void SerialNode::readData()
     timeStampHelper->appendTime(circularBuffer);
     circularBuffer->append(&data);
     notifyAllSubscriptions();
-
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {

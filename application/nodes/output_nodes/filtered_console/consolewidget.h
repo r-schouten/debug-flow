@@ -36,6 +36,9 @@ private:
     bool lineNumbersEnabled = true;
     bool timeEnabled = false;
     bool sideLineEnabled = true;
+
+    char buffer[32];
+
 };
 
 class LineNumberArea : public QWidget

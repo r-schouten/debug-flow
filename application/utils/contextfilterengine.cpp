@@ -47,13 +47,6 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 readingInTimestamp = false;
             }
-            if(timeStampIndex+1 == i)
-            {
-                if(character != TIMESTAMP_MARK)
-                {
-                    int test = 0;
-                }
-            }
             if(!readingInContext)
             {
                 addChar(character);
@@ -158,6 +151,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
             {
                 readingInTimestamp = false;
                 currentTimeStamp->setTimestamp(timestamp64);
+                addCharLambda('|');
             }
         }
         else
@@ -175,7 +169,6 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                             if(contextCharacter == TIMESTAMP_MARK)
                             {
                                 j+= TIMESTAMP_BYTES-1;
-                                //releaseLength -= TIMESTAMP_BYTES;
                             }
                             else
                             {
@@ -238,10 +231,6 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         }
         else
         {
-            if(character == ']')
-            {
-                int test = 0;
-            }
             if((character == ',')||(character == ' '))
             {
                 processOption(property,propertyIndex);
