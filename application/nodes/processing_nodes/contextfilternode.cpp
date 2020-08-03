@@ -28,7 +28,7 @@ ContextFilterSettings *ContextFilterNode::getNodeSettings()
     return settings;
 }
 
-bool ContextFilterNode::filterData(CircularBuffer* buffer, CircularBufferReader *bufferReader)
+void ContextFilterNode::filterData(CircularBuffer* buffer, CircularBufferReader *bufferReader)
 {
     auto lambda = [&](char character) mutable {buffer->appendByte(&character);};
 

@@ -100,6 +100,7 @@ int ConsoleWidget::lineNumberAreaWidth()
 }
 void ConsoleWidget::updateLineNumberAreaWidth(int newBlockCount)
 {
+    Q_UNUSED(newBlockCount)
     if(sideLineEnabled)
     {
         int areaWidth = lineNumberAreaWidth();

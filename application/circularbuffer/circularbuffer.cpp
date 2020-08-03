@@ -49,6 +49,7 @@ int CircularBuffer::usedSize(CircularBufferReader* reader)
     {
         dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->iteration > iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
     }
+    return 0;
 }
 int CircularBuffer::unUsedSize(CircularBufferReader* reader)
 {

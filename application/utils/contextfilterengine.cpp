@@ -83,7 +83,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     }
     bufferReader->release(releaseLength);
 }
-bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData)
+void ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData)
 {
     int contextBeginIndex = 0;
     int ANSIBeginIndex = 0;
@@ -172,6 +172,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
 }
 bool ContextFilterEngine::forwardMetaData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe,int &releaseLength)
 {
+    Q_UNUSED(currentMetaData)
     //the lenght of the metadata is minimal TIMESTAMP_BYTES, check whether there is enough space left
     if(i + TIMESTAMP_BYTES >= availabeSize)
     {

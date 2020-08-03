@@ -109,7 +109,7 @@ void OutputNode::resetBuffer()
 }
 bool OutputNode::bufferHistoricalCapable()
 {
-    circularBuffer->isHistoricalCapable();
+    return circularBuffer->isHistoricalCapable();
 }
 
 void OutputNode::doHistoricalUpdate()
