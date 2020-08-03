@@ -56,6 +56,7 @@ int CircularBuffer::unUsedSize(CircularBufferReader* reader)
 }
 int CircularBuffer::unUsedSize()
 {
+    if(minTail == INT_MAX)return capacity;
     if(head >= minTail)
     {
 #ifdef QT_DEBUG

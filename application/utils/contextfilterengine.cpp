@@ -22,7 +22,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
     {
         const char &character = (*bufferReader)[i];
 
-        if(character == TIMESTAMP_MARK)
+        if((character == TIMESTAMP_MARK)&&(readingInTimestamp == false))
         {
             //the lenght of the timestamp is known, check whether there is enough space left
             if(i+7<sourceAvailable)
@@ -39,6 +39,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             }
             readingInTimestamp = true;
             timeStampIndex = i;
+
         }
         if(readingInTimestamp)
         {
@@ -46,24 +47,35 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             {
                 readingInTimestamp = false;
             }
-            addChar(character);
-            charsAdded++;
-            releaseLength++;
+            if(timeStampIndex+1 == i)
+            {
+                if(character != TIMESTAMP_MARK)
+                {
+                    int test = 0;
+                }
+            }
+            if(!readingInContext)
+            {
+                addChar(character);
+                charsAdded++;
+                releaseLength++;
+            }
         }
         else
         {
             if(readingInContext)
-            {
+            {        
                 if(character == ']')
                 {
+                    //check of it fits in the destination buffer
+                    if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)
+                    {
+                        *allDataProcessed = false;
+                        break;
+                    }
                     processContext(bufferReader,contextBeginIndex,i);
                     if((!settings->getHideContext())&&(showCurrentContext))
                     {
-                        if(charsAdded + (i - contextBeginIndex + 1) >= destinationAvailabe)//it doesn't fit anymore
-                        {
-                            *allDataProcessed = false;
-                            break;
-                        }
                         for(int j=contextBeginIndex;j<=i;j++)
                         {
                             addChar((*bufferReader)[j]);
@@ -140,7 +152,8 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
         {
             *timestamp8 = (uint8_t)character;
             timestamp8++;
-            releaseLength++;
+            if(!readingInContext)
+                releaseLength++;
             if(timeStampIndex + TIMESTAMP_BYTES - 1 <= i)
             {
                 readingInTimestamp = false;
@@ -162,7 +175,7 @@ bool ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
                             if(contextCharacter == TIMESTAMP_MARK)
                             {
                                 j+= TIMESTAMP_BYTES-1;
-                                releaseLength -= TIMESTAMP_BYTES;
+                                //releaseLength -= TIMESTAMP_BYTES;
                             }
                             else
                             {
@@ -217,7 +230,7 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
     property.reserve(end - begin);
     for(int i = begin+1;i<end;i++)
     {
-        const char character = (*bufferReader)[i];
+        const char &character = (*bufferReader)[i];
 
         if(character == TIMESTAMP_MARK)//skip 8 characters
         {
@@ -225,6 +238,10 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         }
         else
         {
+            if(character == ']')
+            {
+                int test = 0;
+            }
             if((character == ',')||(character == ' '))
             {
                 processOption(property,propertyIndex);
