@@ -1,14 +1,16 @@
 #include "propertywidgetmanager.h"
 
 
-PropertyWidgetManager::PropertyWidgetManager(QScrollArea* propertyWidget, QTabWidget* tabWidget, DbgLogger *_dbgLogger)
-    :propertyWidget(propertyWidget),tabWidget(tabWidget),dbgLogger(_dbgLogger)
+PropertyWidgetManager::PropertyWidgetManager(QScrollArea *propertyWidget, QTabWidget *tabWidget, NodeInfoViewer *nodeViewer, DbgLogger *_dbgLogger)
+    :propertyWidget(propertyWidget),tabWidget(tabWidget),nodeViewer(nodeViewer),dbgLogger(_dbgLogger)
 {
 
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     propertyWidget->setSizePolicy(sizePolicy);
 }
+
+
 
 void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
 {
@@ -30,6 +32,8 @@ void PropertyWidgetManager::notifyNodeSelected(VisualNodeBase *node)
         return;
     }
     propertyWidget->setWidget(nodePropertiesWidget);
+
+    nodeViewer->nodeSelected(node);
 }
 
 void PropertyWidgetManager::notifyMultipleSelected()
@@ -39,6 +43,8 @@ void PropertyWidgetManager::notifyMultipleSelected()
         currentShownNode->releasePropertiesWidget();
         currentShownNode = nullptr;
     }
+
+    nodeViewer->nodeDeselected();
 }
 
 void PropertyWidgetManager::notifyNoneSelected()
@@ -48,11 +54,13 @@ void PropertyWidgetManager::notifyNoneSelected()
         currentShownNode->releasePropertiesWidget();
         currentShownNode = nullptr;
     }
+    nodeViewer->nodeDeselected();
 }
 void PropertyWidgetManager::removeOne(VisualNodeBase* node)
 {
     if(node == currentShownNode)
     {
+        nodeViewer->nodeDeselected();
         currentShownNode = nullptr;
     }
 }

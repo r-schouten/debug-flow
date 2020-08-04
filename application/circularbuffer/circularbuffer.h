@@ -2,9 +2,9 @@
 #include <QObject>
 #include <iostream>
 #include "circularbufferreader.h"
-
 #include "dbglogger.h"
 class CircularBufferReader;
+class NodeInfoViewer;
 class CircularBuffer
 {
 private:
@@ -43,6 +43,7 @@ public:
     bool isHistoricalCapable() const;
 
     friend CircularBufferReader;
+    friend NodeInfoViewer;
 };
 
 

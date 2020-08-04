@@ -15,7 +15,7 @@
 #include "graphicsview.h"
 #include "globalconfig.h"
 #include "nodescene.h"
-
+#include "nodeinfoviewer.h"
 class Ui_flowWidget
 {
 public:
@@ -29,7 +29,7 @@ public:
     QTabWidget* rightTabWidget = nullptr;
     QScrollArea* propertiesWidget = nullptr;
     QScrollArea* undoRedoWidget = nullptr;
-    QWidget* secondTab = nullptr;
+    NodeInfoViewer* nodeViewerWidget = nullptr;
 
     void setupUi(QWidget* flowWidget)
     {
@@ -101,10 +101,10 @@ public:
         rightTabWidget->addTab(undoRedoWidget,"undo redo");
 
         //new tab, for testing
-        secondTab = new QWidget(rightTabWidget);
-        secondTab->setObjectName("propertiesWidget");
-        secondTab->setSizePolicy(sizePolicy1);
-        rightTabWidget->addTab(secondTab,"second tab");
+        nodeViewerWidget = new NodeInfoViewer(rightTabWidget);
+        nodeViewerWidget->setObjectName("Node info");
+        nodeViewerWidget->setSizePolicy(sizePolicy1);
+        rightTabWidget->addTab(nodeViewerWidget,"Node Info");
 
         sceneSplitter->setCollapsible(0,false);
         sceneSplitter->setCollapsible(1,false);

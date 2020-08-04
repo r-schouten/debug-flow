@@ -35,5 +35,6 @@ private:
     Subscription* subscribe(InputNode* inputNode);
     friend InputNode;
     friend NodeBase;
+    friend NodeInfoViewer;
 };
 

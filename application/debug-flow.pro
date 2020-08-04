@@ -6,6 +6,12 @@ CONFIG += c++20
 TARGET = debug-flow
 TEMPLATE = app
 
+QMAKE_CXXFLAGS_RELEASE -= -O
+QMAKE_CXXFLAGS_RELEASE -= -O1
+QMAKE_CXXFLAGS_RELEASE -= -O2
+
+QMAKE_CXXFLAGS_RELEASE *= -O3
+
 SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
@@ -67,7 +73,9 @@ SOURCES += \
     visualNodes/source_nodes/serial_node/visualserialnode.cpp \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/visualnodebase.cpp \
+    widgets/circularbuffervisualisation.cpp \
     widgets/combobox.cpp \
+    widgets/nodeinfoviewer.cpp \
     widgets/taggroupbox.cpp \
     windows/dialogwindow.cpp \
     windows/mdiwindow.cpp \
@@ -149,7 +157,9 @@ HEADERS += \
     visualNodes/source_nodes/visualsourcenodebase.h \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
+    widgets/circularbuffervisualisation.h \
     widgets/combobox.h \
+    widgets/nodeinfoviewer.h \
     widgets/taggroupbox.h \
     windows/dialogwindow.h \
     windows/mdiwindow.h \

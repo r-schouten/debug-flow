@@ -43,8 +43,6 @@ FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* 
     connect(nodeSettings,SIGNAL(notifyDataInvalid()), this, SLOT(initiateHistoricalUpdate()));
 
     bufferString.reserve(100);
-
-
 }
 FilteredConsole::~FilteredConsole()
 {
