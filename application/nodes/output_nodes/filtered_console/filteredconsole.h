@@ -106,4 +106,5 @@ private slots:
 
     void initiateHistoricalUpdate();
     void SideLineOptionsChanged();
+    void dataChanged();
 };

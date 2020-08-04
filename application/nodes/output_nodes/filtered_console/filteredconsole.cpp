@@ -118,6 +118,7 @@ void FilteredConsole::loadTags()
     while(tagIterator.hasNext())
     {
         Tag* currentTag = tagIterator.next();
+        connect(currentTag, SIGNAL(dataChanged(Tag*)), this, SLOT(dataChanged()));
         TagComboBox* newTagComboBox = new TagComboBox(currentTag);
         tagComboBoxes.append(newTagComboBox);
         newTagComboBox->loadTag();
@@ -129,6 +130,7 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
     TagComboBox* destinationComboBox = nullptr;
     if(tagComboBoxes.size() <= destinationTag->tagIndex)
     {
+        connect(destinationTag, SIGNAL(dataChanged(Tag*)), this, SLOT(dataChanged()));
         destinationComboBox = new TagComboBox(destinationTag);
         tagComboBoxes.append(destinationComboBox);
         verticalLayout->addWidget(destinationComboBox);
@@ -144,6 +146,11 @@ void FilteredConsole::optionAdded(Tag *destinationTag, TagOption *option)
     item->setData(item->tagOption->enabled? Qt::Checked:Qt::Unchecked, Qt::CheckStateRole);
 
     destinationComboBox->itemModel->appendRow(item);
+}
+
+void FilteredConsole::dataChanged()
+{
+     nodeSettings->notifySettingsChanged(DATA_INVALID, DONT_SAVE, NODE);
 }
 
 //-------callbacks for changed settings-------
