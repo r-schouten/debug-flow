@@ -101,9 +101,9 @@ protected:
     void addOutputConnector();
 
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     void drawConnectors(QPainter *painter, NodeStyleBase *nodeStyle);
     void paintBase(QPainter *painter, NodeStyleBase *nodeStyle, QString name);

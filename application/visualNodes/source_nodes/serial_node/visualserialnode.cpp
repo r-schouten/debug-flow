@@ -20,7 +20,7 @@ void VisualSerialNode::construct()
 
     serialSettings = node->getNodeSettings();
 
-    connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
+    connect(serialSettings, SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
 
     name = "Serial node";
     shortDiscription = "this node provide access to serial ports";
@@ -41,6 +41,9 @@ VisualSerialNode::~VisualSerialNode()
     node = nullptr;
 
 }
+
+//the resource list makes node instances just for the paint function.
+//in such case the activate function is not called and memory or performance wasting things should not be activated
 void VisualSerialNode::activate()
 {
     activated = true;

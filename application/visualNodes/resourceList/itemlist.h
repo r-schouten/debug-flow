@@ -17,6 +17,7 @@
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
 #include "visualsimpleconsole.h"
+#include "visualtestgeneratornode.h"
 
 class ItemList :public QObject
 {

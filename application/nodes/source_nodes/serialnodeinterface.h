@@ -14,7 +14,7 @@ public:
     virtual SerialSettings *getNodeSettings();
 
 protected:
-      SerialSettings* settings = nullptr;
+    SerialSettings* settings = nullptr;
 
     virtual void openSerialPort()=0;
     virtual void closeSerialPort()=0;

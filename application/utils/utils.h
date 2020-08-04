@@ -60,4 +60,23 @@ public:
         QString strJson(doc.toJson(QJsonDocument::Indented));
         dbglogger->debug("utils",__FUNCTION__,strJson.toStdString().c_str());
     }
+    static QByteArray getRandomBytes(int length, bool printableChars)
+    {
+       const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+
+       QByteArray randomString;
+       for(int i=0; i<length; i++)
+       {
+           int index = qrand() % possibleCharacters.length();
+           if(printableChars)
+           {
+               randomString.append(possibleCharacters.at(index));
+
+           }
+           else {
+               randomString.append(qrand()%255);
+           }
+       }
+       return randomString;
+    }
 };

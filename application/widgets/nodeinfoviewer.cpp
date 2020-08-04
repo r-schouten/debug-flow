@@ -83,9 +83,9 @@ NodeInfoViewer::NodeInfoViewer(QWidget *parent) : QWidget(parent)
 
 
     //timer
-    QTimer *updateTimer = new QTimer(this);
-   connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateLabels()));
-   updateTimer->start(30);
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateLabels()));
+    updateTimer->start(30);
 
 
 }
