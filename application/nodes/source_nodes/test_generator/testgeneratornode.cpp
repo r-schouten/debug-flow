@@ -158,4 +158,5 @@ void TestGeneratorNode::uploadData()
     {
         data.remove(0, length);
     }
+    notifyAllSubscriptions();
 }

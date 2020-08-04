@@ -126,12 +126,10 @@ void TestGeneratorPropertiesWidget::anySequenceChanged(int state)
 }
 void TestGeneratorPropertiesWidget::updateRateBoxChanged()
 {
-    dbgLogger->debug(CLASSNAME, __FUNCTION__,"called");
     settings->setUpdateRate(updateRateBox->value());
 }
 void TestGeneratorPropertiesWidget::dataPerUpdateChanged()
 {
-    dbgLogger->debug(CLASSNAME, __FUNCTION__,"called");
     settings->setDataPerUpdate(dataPerUpdateBox->value());
 }
 

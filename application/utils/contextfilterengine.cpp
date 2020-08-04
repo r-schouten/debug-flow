@@ -103,7 +103,6 @@ void ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& a
             if(proccesMetaData(bufferReader,currentMetaData, i, availableSize, releaseLength))
             {
                 styleChangedLambda();
-                addCharLambda('|');
             }
             else
             {
@@ -231,7 +230,7 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         else
         {
             releaseLength++;
-            if((character == ',')||(character == ' '))
+            if(character == ',')
             {
                 processOption(property,propertyIndex);
                 propertyIndex++;
