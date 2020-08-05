@@ -52,6 +52,7 @@ bool TestGeneratorSettings::getFromThread() const
 void TestGeneratorSettings::setFromThread(bool value)
 {
     fromThread = value;
+    emit threadSettingsChanged();
 }
 
 bool TestGeneratorSettings::getSplitOnNewLine() const

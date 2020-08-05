@@ -109,7 +109,7 @@ void VisualTamplateNode::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->setRenderHints(QPainter::TextAntialiasing, true);
 
-    paintBase(painter,this,"generator");
+    paintBase(painter,this,"tamplate");
     drawConnectors(painter, this);
 
 

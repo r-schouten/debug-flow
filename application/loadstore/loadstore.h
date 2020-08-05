@@ -9,6 +9,8 @@
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
 #include "visualcontextfilter.h"
+#include "visualtestgeneratornode.h"
+#include "visualsimpleconsole.h"
 
 #include "json_defs.h"
 #include "serialization_handler.h"

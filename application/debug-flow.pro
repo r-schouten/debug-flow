@@ -42,6 +42,7 @@ SOURCES += \
     nodes/source_nodes/serial_node/serialsettings.cpp \
     nodes/source_nodes/test_generator/testgeneratornode.cpp \
     nodes/source_nodes/test_generator/testgeneratorsettings.cpp \
+    nodes/source_nodes/test_generator/testgeneratorworker.cpp \
     nodes/subscription.cpp \
     nodes/tamplate/tamplatenode.cpp \
     nodes/tamplate/tamplatenodesettings.cpp \
@@ -126,6 +127,7 @@ HEADERS += \
     nodes/source_nodes/serial_node/serialsettings.h \
     nodes/source_nodes/test_generator/testgeneratornode.h \
     nodes/source_nodes/test_generator/testgeneratorsettings.h \
+    nodes/source_nodes/test_generator/testgeneratorworker.h \
     nodes/subscription.h \
     nodes/tamplate/tamplatenode.h \
     nodes/tamplate/tamplatenodesettings.h \

@@ -122,6 +122,10 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     {
         newNode = new VisualContextFilter(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
+    if(VisualTestGeneratorNode::classNameEquals(type))
+    {
+        newNode = new VisualTestGeneratorNode(flowObjects, baseJson, derivedJson, settingsJson, handler);
+    }
     return newNode;
 }
 
