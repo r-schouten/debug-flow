@@ -40,11 +40,11 @@ SOURCES += \
     nodes/source_nodes/serial_node/serialnode.cpp \
     nodes/source_nodes/serial_node/serialnodeinterface.cpp \
     nodes/source_nodes/serial_node/serialsettings.cpp \
-    nodes/source_nodes/tamplate/tamplatenode.cpp \
-    nodes/source_nodes/tamplate/tamplatenodesettings.cpp \
     nodes/source_nodes/test_generator/testgeneratornode.cpp \
     nodes/source_nodes/test_generator/testgeneratorsettings.cpp \
     nodes/subscription.cpp \
+    nodes/tamplate/tamplatenode.cpp \
+    nodes/tamplate/tamplatenodesettings.cpp \
     test/circularbuffertest.cpp \
     undo_redo/commands/commandbase.cpp \
     undo_redo/commands/createconnectioncommand.cpp \
@@ -68,6 +68,7 @@ SOURCES += \
     visualNodes/propertywidgetmanager.cpp \
     visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilter.cpp \
     visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilterpropertieswidget.cpp \
+    visualNodes/prossesing_nodes/visualprocessingnodebase.cpp \
     visualNodes/resourceList/itemlist.cpp \
     visualNodes/resourceList/mytreewidgetitem.cpp \
     visualNodes/scene/graphicsview.cpp \
@@ -123,11 +124,11 @@ HEADERS += \
     nodes/source_nodes/serial_node/serialnode.h \
     nodes/source_nodes/serial_node/serialnodeinterface.h \
     nodes/source_nodes/serial_node/serialsettings.h \
-    nodes/source_nodes/tamplate/tamplatenode.h \
-    nodes/source_nodes/tamplate/tamplatenodesettings.h \
     nodes/source_nodes/test_generator/testgeneratornode.h \
     nodes/source_nodes/test_generator/testgeneratorsettings.h \
     nodes/subscription.h \
+    nodes/tamplate/tamplatenode.h \
+    nodes/tamplate/tamplatenodesettings.h \
     test/circularbuffertest.h \
     undo_redo/commands/commandbase.h \
     undo_redo/commands/createconnectioncommand.h \
@@ -158,6 +159,7 @@ HEADERS += \
     visualNodes/prossesing_nodes/processingstyle.h \
     visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilter.h \
     visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilterpropertieswidget.h \
+    visualNodes/prossesing_nodes/visualprocessingnodebase.h \
     visualNodes/resourceList/itemlist.h \
     visualNodes/resourceList/mytreewidgetitem.h \
     visualNodes/scene/graphicsview.h \
@@ -212,10 +214,10 @@ INCLUDEPATH += \
     nodes/processing_nodes/visual_context_filter \
     nodes/output_nodes/filtered_console \
     nodes/source_nodes \
-    nodes/source_nodes/tamplate \
     nodes/source_nodes/test_generator \
     nodes/source_nodes/serial_node \
     nodes/output_nodes \
+    nodes/tamplate \
     utils \
     loadstore \
     undo_redo \

@@ -1,11 +1,11 @@
 #pragma once
-#include "visualnodebase.h"
+#include "visualprocessingnodebase.h"
 #include "contextfilternode.h"
 #include "processingstyle.h"
 #include "contextfiltersettings.h"
 #include "visualcontextfilterpropertieswidget.h"
 #include "globalconfig.h"
-class VisualContextFilter : public VisualNodeBase, public ProcessingStyle
+class VisualContextFilter : public VisualProcessingNodeBase, public ProcessingStyle
 {
     Q_OBJECT
 public:

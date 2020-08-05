@@ -1,13 +1,13 @@
 #include "visualcontextfilter.h"
 
 VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects)
-    :VisualNodeBase(_flowObjects)
+    :VisualProcessingNodeBase(_flowObjects)
 {
     construct();
 }
 
 VisualContextFilter::VisualContextFilter(FlowObjects *_flowObjects, QJsonObject &baseJson, QJsonObject &derivedJson, QJsonObject &settingsJson, DeserializationHandler &deserializationHandler)
-    :VisualNodeBase(_flowObjects, baseJson, deserializationHandler)
+    :VisualProcessingNodeBase(_flowObjects, baseJson, deserializationHandler)
 {
     Q_UNUSED(derivedJson);
     construct();

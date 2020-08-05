@@ -159,9 +159,8 @@ void TestGeneratorNode::uploadData()
             }
             circularBuffer->appendByte(&a);
         }
-        if(settings->getSplitOnNewLine())
+        if(!settings->getSplitOnNewLine())
         {
-
             data.clear();
         }
         else
