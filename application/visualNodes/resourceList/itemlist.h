@@ -18,7 +18,7 @@
 #include "visualserialnode.h"
 #include "visualsimpleconsole.h"
 #include "visualtestgeneratornode.h"
-
+#include "visualtamplatenode.h"
 class ItemList :public QObject
 {
     Q_OBJECT

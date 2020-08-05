@@ -1,14 +1,9 @@
 #include "serialnode.h"
 
-#include <QThread>
-
 SerialNode::SerialNode::SerialNode(DbgLogger *dbgLogger)
     :NodeBase(dbgLogger),SerialNodeInterface(dbgLogger)
 {
-    m_serial = new QSerialPort(this);
-    metaDataHelper = new MetaDataHelper;
-    connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
-    connect(m_serial, &QSerialPort::readyRead, this, &SerialNode::readData);
+    settings = new SerialSettings(dbgLogger);
 }
 
 
@@ -17,12 +12,27 @@ SerialNode::~SerialNode()
     delete m_serial;
 }
 
+void SerialNode::activate()
+{
+    activated = true;
+
+    circularBuffer = new CircularBuffer(dbgLogger, SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE, true);
+    m_serial = new QSerialPort(this);
+    metaDataHelper = new MetaDataHelper;
+    connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
+    connect(m_serial, &QSerialPort::readyRead, this, &SerialNode::readData);
+}
+void SerialNode::reset()
+{
+
+}
 std::string SerialNode::getNodeName()
 {
     return CLASSNAME;
 }
 void SerialNode::openSerialPort()
 {
+    if(!activated) return;
     if (m_serial->isOpen())
     {
         m_serial->close();
@@ -54,6 +64,7 @@ void SerialNode::openSerialPort()
 
 void SerialNode::closeSerialPort()
 {
+    if(!activated)return;
     if (m_serial->isOpen())
     {
         m_serial->close();
@@ -65,16 +76,16 @@ void SerialNode::closeSerialPort()
 
 void SerialNode::writeData(const char* data, const size_t length)
 {
+    if(!activated) return;
     m_serial->write(data, length);
 }
 
-void SerialNode::reset()
-{
 
-}
+
 
 void SerialNode::readData()
 {
+    if(!activated) return;
     QByteArray data = m_serial->readAll();
 
     //the current implementation is slow, it could be made better.
@@ -95,6 +106,7 @@ void SerialNode::readData()
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {
+    if(!activated) return;
     if (error != QSerialPort::NoError) {
         dbgLogger->error(CLASSNAME,__FUNCTION__,"- %s", m_serial->errorString().toStdString().c_str());
         settings->errorOccured = true;

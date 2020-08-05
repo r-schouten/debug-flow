@@ -37,9 +37,11 @@ SOURCES += \
     nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
     nodes/processing_nodes/contextfiltersettings.cpp \
-    nodes/source_nodes/serialnode.cpp \
-    nodes/source_nodes/serialnodeinterface.cpp \
-    nodes/source_nodes/serialsettings.cpp \
+    nodes/source_nodes/serial_node/serialnode.cpp \
+    nodes/source_nodes/serial_node/serialnodeinterface.cpp \
+    nodes/source_nodes/serial_node/serialsettings.cpp \
+    nodes/source_nodes/tamplate/tamplatenode.cpp \
+    nodes/source_nodes/tamplate/tamplatenodesettings.cpp \
     nodes/source_nodes/test_generator/testgeneratornode.cpp \
     nodes/source_nodes/test_generator/testgeneratorsettings.cpp \
     nodes/subscription.cpp \
@@ -76,6 +78,8 @@ SOURCES += \
     visualNodes/source_nodes/test_generator/testgeneratorpropertieswidget.cpp \
     visualNodes/source_nodes/test_generator/visualtestgeneratornode.cpp \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
+    visualNodes/tamplate/tamplatenodepropertieswidget.cpp \
+    visualNodes/tamplate/visualtamplatenode.cpp \
     visualNodes/visualnodebase.cpp \
     widgets/circularbuffervisualisation.cpp \
     widgets/combobox.cpp \
@@ -116,9 +120,11 @@ HEADERS += \
     nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
     nodes/processing_nodes/contextfiltersettings.h \
-    nodes/source_nodes/serialnode.h \
-    nodes/source_nodes/serialnodeinterface.h \
-    nodes/source_nodes/serialsettings.h \
+    nodes/source_nodes/serial_node/serialnode.h \
+    nodes/source_nodes/serial_node/serialnodeinterface.h \
+    nodes/source_nodes/serial_node/serialsettings.h \
+    nodes/source_nodes/tamplate/tamplatenode.h \
+    nodes/source_nodes/tamplate/tamplatenodesettings.h \
     nodes/source_nodes/test_generator/testgeneratornode.h \
     nodes/source_nodes/test_generator/testgeneratorsettings.h \
     nodes/subscription.h \
@@ -159,10 +165,12 @@ HEADERS += \
     visualNodes/selectionmanager.h \
     visualNodes/source_nodes/serial_node/serialnodepropertieswidget.h \
     visualNodes/source_nodes/serial_node/visualserialnode.h \
-    visualNodes/source_nodes/serial_node/visualtestgeneratornode.h \
     visualNodes/source_nodes/sourcestyle.h \
     visualNodes/source_nodes/test_generator/testgeneratorpropertieswidget.h \
+    visualNodes/source_nodes/test_generator/visualtestgeneratornode.h \
     visualNodes/source_nodes/visualsourcenodebase.h \
+    visualNodes/tamplate/tamplatenodepropertieswidget.h \
+   visualNodes/tamplate/visualtamplatenode.h \
     visualNodes/visualnodebase.h \
     visualNodes/visualnodeconfig.h \
     widgets/circularbuffervisualisation.h \
@@ -189,6 +197,7 @@ INCLUDEPATH += \
     visualNodes \
     sourceNodes \
     visualNodes/components \
+    visualNodes/tamplate \
     visualNodes/source_nodes \
     visualNodes/source_nodes/serial_node \
     visualNodes/source_nodes/test_generator \
@@ -203,7 +212,9 @@ INCLUDEPATH += \
     nodes/processing_nodes/visual_context_filter \
     nodes/output_nodes/filtered_console \
     nodes/source_nodes \
+    nodes/source_nodes/tamplate \
     nodes/source_nodes/test_generator \
+    nodes/source_nodes/serial_node \
     nodes/output_nodes \
     utils \
     loadstore \

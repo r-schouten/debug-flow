@@ -8,10 +8,6 @@ SerialNodePropertiesWidget::SerialNodePropertiesWidget(QWidget *parent, DbgLogge
 {    
     serialSettings = serialNode->getNodeSettings();
 
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy.setVerticalStretch(1);
-    this->setSizePolicy(sizePolicy);
-
     layout = new QFormLayout;
     layout->setSizeConstraint(QLayout::SetFixedSize);
     layout->setMargin(10);

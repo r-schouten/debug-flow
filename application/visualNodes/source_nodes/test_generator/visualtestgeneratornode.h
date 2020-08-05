@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QJsonObject>
+#include <QElapsedTimer>
 
 #include "sourcestyle.h"
 #include "selectionmanager.h"
@@ -34,7 +35,13 @@ protected:
 
     bool activated = false;
     TestGeneratorNode *node = nullptr;
-    NodeSettingsBase* settings = nullptr;
+    TestGeneratorSettings* settings = nullptr;
+
+    QElapsedTimer* elapsedTimer = nullptr;
+    uint64_t lastTransferedData = 0;
+    uint64_t dataTransferedLowpass = 0;
+    uint64_t lastElapsed = 0;
+    uint64_t lastVisualizedValue = 0;
 private:
     void construct();
 

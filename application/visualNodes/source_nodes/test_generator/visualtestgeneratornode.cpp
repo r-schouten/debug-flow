@@ -42,6 +42,9 @@ void VisualTestGeneratorNode::construct()
         addOutputConnector();
     }
     height = 80;
+
+    elapsedTimer = new QElapsedTimer();
+    elapsedTimer->start();
 }
 
 //create a new instance of such node, this function is used to make a new node from the resourceList.
@@ -85,7 +88,7 @@ PropertyWidgetBase *VisualTestGeneratorNode::loadPropertiesWidget(QWidget *paren
 {
     if(propertyWidget == nullptr)
     {
-        propertyWidget = new TestGeneratorPropertiesWidget(parent, dbgLogger, node->getNodeSettings());
+        propertyWidget = new TestGeneratorPropertiesWidget(parent, dbgLogger, settings);
     }
     else {
         dbgLogger->warning(CLASSNAME,__FUNCTION__,"propertywidget already exist");
@@ -112,8 +115,47 @@ void VisualTestGeneratorNode::paint(QPainter *painter, const QStyleOptionGraphic
     paintBase(painter,this,"generator");
     drawConnectors(painter, this);
 
+    drawStartStop(painter,settings->getEnabled());
+
     painter->setPen(textPen);
     painter->setFont(textFont);
+
+    uint64_t elapsed = elapsedTimer->restart();
+    lastElapsed += elapsed;
+    QString text;
+    if(elapsed != 0)
+    {
+        uint64_t dataTransfered = settings->getDataTransferred() - lastTransferedData;
+        uint64_t dataTransferedPerSecond = dataTransfered * (1000/elapsed);
+
+        dataTransferedLowpass = dataTransferedLowpass*0.95 + dataTransferedPerSecond*0.05;
+    }
+
+    lastTransferedData = settings->getDataTransferred();
+
+    if(lastElapsed > 200)
+    {
+        lastElapsed = 0;
+        lastVisualizedValue = dataTransferedLowpass;
+    }
+
+    if(lastVisualizedValue < 1000)
+    {
+        text = QString::number(lastVisualizedValue) +"bytes/s";
+    }
+    else
+    {
+        text = QString::number(round(lastVisualizedValue/1000.0))+"kb/s";
+    }
+    if(settings->getEnabled())
+    {
+        painter->drawText(QPointF(10,35),text);
+    }
+    else
+    {
+        painter->drawText(QPointF(10,35),"off");
+    }
+
 }
 
 void VisualTestGeneratorNode::mousePressEvent(QGraphicsSceneMouseEvent *event)

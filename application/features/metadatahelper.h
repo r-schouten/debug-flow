@@ -29,10 +29,6 @@ public:
     void setTimestamp(const uint64_t value)
     {
         timestamp = value;
-        if((value>>16) <1500000000000l)
-        {
-
-        }
     }
     void toTime_t(std::time_t &time, int &milliseconds)
     {

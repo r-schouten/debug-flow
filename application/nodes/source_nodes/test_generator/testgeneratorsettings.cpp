@@ -92,6 +92,7 @@ int TestGeneratorSettings::getUpdateRate() const
 void TestGeneratorSettings::setUpdateRate(int value)
 {
     updateRate = value;
+    emit updateRateChanged();
 }
 
 int TestGeneratorSettings::getDataPerUpdate() const
@@ -102,7 +103,6 @@ int TestGeneratorSettings::getDataPerUpdate() const
 void TestGeneratorSettings::setDataPerUpdate(int value)
 {
     dataPerUpdate = value;
-    emit updateRateChanged();
 }
 
 bool TestGeneratorSettings::getEnabled() const
@@ -113,4 +113,14 @@ bool TestGeneratorSettings::getEnabled() const
 void TestGeneratorSettings::setEnabled(bool value)
 {
     enabled = value;
+}
+
+uint64_t TestGeneratorSettings::getDataTransferred() const
+{
+    return dataTransferred;
+}
+
+void TestGeneratorSettings::addDataTransferred(const uint32_t &value)
+{
+    dataTransferred += value;
 }

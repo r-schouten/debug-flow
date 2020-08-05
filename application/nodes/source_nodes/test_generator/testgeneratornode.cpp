@@ -4,14 +4,7 @@
 TestGeneratorNode::TestGeneratorNode(DbgLogger *dbgLogger)
     :NodeBase(dbgLogger)
 {
-    circularBuffer = new CircularBuffer(dbgLogger, TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_BUFFER_SIZE, true);
     settings = new TestGeneratorSettings(dbgLogger);
-    metaDataHelper = new MetaDataHelper;
-
-    updateTimer = new QTimer(this);
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(uploadData()));
-
-    connect(settings, SIGNAL(updateRateChanged()),this, SLOT(updateRateChanged()));
 }
 
 TestGeneratorNode::~TestGeneratorNode()
@@ -20,11 +13,19 @@ TestGeneratorNode::~TestGeneratorNode()
 }
 void TestGeneratorNode::activate()
 {
+    circularBuffer = new CircularBuffer(dbgLogger, TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_BUFFER_SIZE, true);
+    metaDataHelper = new MetaDataHelper;
+
+    updateTimer = new QTimer(this);
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(uploadData()));
+    connect(settings, SIGNAL(updateRateChanged()),this, SLOT(updateRateChanged()));
+
     updateTimer->start(settings->getUpdateRate());
 }
 void TestGeneratorNode::updateRateChanged()
 {
-    updateTimer->setInterval(settings->getUpdateRate());
+    updateTimer->stop();
+    updateTimer->start(settings->getUpdateRate());
 }
 //implement for debug purposes
 std::string TestGeneratorNode::getNodeName()
@@ -131,32 +132,43 @@ void TestGeneratorNode::uploadData()
         if(!succes)return;
     }
 
-    //the current implementation is slow, it could be made better.
-    //it is acceptable now because this code doesn't run in a historical update
-    int length = data.length();
-    if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
-    for(int i=0;i<data.length();i++)
+    if(settings->getFromThread())
     {
-        char a = data.at(i);
-        if(settings->getAddTimestamp())
-        {
-            if(a == '[')
-            {
-                if(!((i !=0)&&(data.at(i-1)=='\033')))
-                {
-                    metaDataHelper->appendTime(circularBuffer);
-                }
-            }
-        }
-        circularBuffer->appendByte(&a);
-    }
-    if(settings->getSplitOnNewLine())
-    {
+        circularBuffer->append(&data);
+        settings->addDataTransferred(data.length());
         data.clear();
     }
     else
     {
-        data.remove(0, length);
+        //the current implementation is slow, it could be made better.
+        //it is acceptable now because this code doesn't run in a historical update
+        int length = data.length();
+        if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
+        for(int i=0;i<length;i++)
+        {
+            char a = data.at(i);
+            if(settings->getAddTimestamp())
+            {
+                if(a == '[')
+                {
+                    if(!((i !=0)&&(data.at(i-1)=='\033')))
+                    {
+                        metaDataHelper->appendTime(circularBuffer);
+                    }
+                }
+            }
+            circularBuffer->appendByte(&a);
+        }
+        if(settings->getSplitOnNewLine())
+        {
+
+            data.clear();
+        }
+        else
+        {
+            data.remove(0, length);
+        }
+        settings->addDataTransferred(length);
     }
     notifyAllSubscriptions();
 }

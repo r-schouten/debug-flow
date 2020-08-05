@@ -59,6 +59,9 @@ public:
     bool getEnabled() const;
     void setEnabled(bool value);
 
+    uint64_t getDataTransferred() const;
+    void addDataTransferred(const uint32_t &value);
+
 private:
     bool enabled = true;
     bool addTimestamp = true;
@@ -70,6 +73,7 @@ private:
 
     int updateRate = 500;
     int dataPerUpdate = 100;
+    uint64_t dataTransferred = 0;
 
     QStringList sentenceNames = {"value","value2","float value", "2x context", "2x context2",
                                "much context", "random context", "long sentence","ANSII escape", "ANSII in context",

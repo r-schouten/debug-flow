@@ -19,10 +19,12 @@ public:
     void closeSerialPort();
     void writeData(const char* data, const size_t length);
     virtual void reset();
+    void activate();
 
 private:
     QSerialPort *m_serial = nullptr;
     MetaDataHelper* metaDataHelper = nullptr;
+    bool activated = false;
 public slots:
     void handleError(QSerialPort::SerialPortError error);
 private slots:

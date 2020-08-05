@@ -1,5 +1,4 @@
 #include "visualsourcenodebase.h"
-
 VisualSourceNodeBase::VisualSourceNodeBase(FlowObjects *_flowObjects)
     :VisualNodeBase(_flowObjects)
 {

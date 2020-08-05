@@ -47,6 +47,7 @@ VisualSerialNode::~VisualSerialNode()
 void VisualSerialNode::activate()
 {
     activated = true;
+    node->activate();
 }
 void VisualSerialNode::openPort()
 {

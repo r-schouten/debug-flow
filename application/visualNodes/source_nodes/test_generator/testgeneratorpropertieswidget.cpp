@@ -3,10 +3,6 @@
 TestGeneratorPropertiesWidget::TestGeneratorPropertiesWidget(QWidget *parent, DbgLogger *dbgLogger, TestGeneratorSettings* settings)
     :PropertyWidgetBase(parent, dbgLogger), settings(settings)
 {
-    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    sizePolicy.setVerticalStretch(1);
-    this->setSizePolicy(sizePolicy);
-
     //main layout
     mainLayout = new QVBoxLayout();
     mainLayout->setSizeConstraint(QLayout::SetFixedSize);

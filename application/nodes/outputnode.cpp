@@ -74,7 +74,7 @@ void OutputNode::notifyAllSubscriptions()
 
                 dbgLogger->debug("OutputNode", __FUNCTION__,"isProcessingDone false, calling notifyBufferUpdate() again");
                 subscription->notifyBufferUpdate();
-
+                if(outputNode->isProcessingDone() == true)break;
                 if((previousIteration == subscription->bufferReader->getIteration()) && (previousTail == subscription->bufferReader->getTail()))
                 {
                     dbgLogger->fatal("OutputNode", __FUNCTION__, "safety mechanism triggered, node has processingDone not set but doensn't do anything\ncaused by node:%s",subscription->getInputNode()->getNodeName().c_str());
