@@ -8,9 +8,12 @@ class CircularBufferReader
 private:
     CircularBuffer* buffer = nullptr;
     int tail = 0;
+    int capacity = 0;//a copy of the original buffer capacity
     int iteration = 0;
-    bool resizeEnabled = false;
-    CircularBufferReader(CircularBuffer* buffer, int tail, int iteration, bool resizeEnabled = false);
+    char* readBuffer = nullptr;
+    CircularBufferReader(CircularBuffer* buffer, int tail, int iteration);
+    int usedSize();
+    int unUsedSize();
 public:
     ~CircularBufferReader();
     int availableSize();

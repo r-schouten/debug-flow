@@ -4,57 +4,87 @@
 CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity, bool historicalCapable)
     :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity),historicalCapable(historicalCapable)
 {
-    data = (char*) malloc(capacity * sizeof(char));
+    originalBuffer = (char*) malloc(capacity * sizeof(char));
+    writeBuffer = originalBuffer;
     head = 0;
 
 #ifdef QT_DEBUG
-    memset(data, 'x',capacity * sizeof(char));
+    memset(originalBuffer, 'x',capacity * sizeof(char));
 #endif
 }
 
 CircularBuffer::~CircularBuffer()
 {
-    free(data);
+    //todo resize
+    free(originalBuffer);
+
+    if(resizeOperation != NO_OPERATION)
+    {
+        free(resizeBuffer);
+    }
 }
 
 void CircularBuffer::reset()
 {
+    //todo resize
     head = 0;
     iterations = 0;
 
     minTail = 0;
     minTailIteration = 0;
+
+    if(resizeOperation != NO_OPERATION)
+    {
+        free(originalBuffer);
+        capacity = newBufferCapacity;
+        originalBuffer = resizeBuffer;
+        writeBuffer = resizeBuffer;
+    }
+    oldBufferCapacity = capacity;
+    resizeOperation = NO_OPERATION;
+
+}
+void CircularBuffer::returnToBegin()
+{
+    if(resizeOperation != NO_OPERATION)
+    {
+        if(resizeOperation == WRITING_IN_NEW_BUFFER)
+        {
+            resizeOperation = NO_OPERATION;
+
+            free(originalBuffer);
+            originalBuffer = resizeBuffer;
+            resizeBuffer = nullptr;
+        }
+        if(resizeOperation == STARTED)
+        {
+            //all new data will be placed in the new buffer
+            writeBuffer = resizeBuffer;
+            capacity = newBufferCapacity;
+            resizeOperation = WRITING_IN_NEW_BUFFER;
+        }
+    }
+}
+void CircularBuffer::resize(int newCapacity)
+{
+    if(resizeOperation != NO_OPERATION)
+    {
+        dbgLogger->error("CircularBuffer",__FUNCTION__, "resize operation is already going on");
+        return;
+    }
+    if(newCapacity > maxCapacity)
+    {
+        dbgLogger->error("CircularBuffer",__FUNCTION__, "requested is larger than allowed by this node");
+    }
+    dbgLogger->debug("CircularBuffer",__FUNCTION__, "resize to %d", newCapacity);
+
+
+    resizeBuffer = (char*) malloc(newCapacity * sizeof(char));
+    resizeOperation = STARTED;
+    newBufferCapacity = newCapacity;
+    oldBufferCapacity = capacity;
 }
 
-int CircularBuffer::usedSize(CircularBufferReader* reader)
-{
-    if(reader->iteration < iterations)
-    {
-        if(reader->tail < head)
-        {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->tail < head %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
-        }
-        return (capacity - reader->tail) + head;
-
-    }
-    else if (reader->iteration == iterations)
-    {
-        if(reader->tail > head)
-        {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->tail > head %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
-        }
-        return head - reader->tail;
-    }
-    else
-    {
-        dbgLogger->error("CircularBuffer",__FUNCTION__ ," reader->iteration > iterations %d,%d    %d,%d",reader->iteration,reader->tail,iterations,head);
-    }
-    return 0;
-}
-int CircularBuffer::unUsedSize(CircularBufferReader* reader)
-{
-     return capacity - usedSize(reader);
-}
 int CircularBuffer::unUsedSize()
 {
     if(minTail == INT_MAX)return capacity;
@@ -101,25 +131,27 @@ void CircularBuffer::append(char *inputData, int size)
     checkSize(size);
     int noSplitAvailable = capacity - head;
     int firstLength = std::min(noSplitAvailable, size);
-    memcpy(data+head, inputData, firstLength*sizeof(char));
+    memcpy(writeBuffer+head, inputData, firstLength*sizeof(char));
     head += firstLength;
     if(head == capacity)//at the begin of the buffer
     {
+        returnToBegin();
         head = 0;
         iterations++;
         int secondLength = size - firstLength;
         secondLength = std::min(secondLength, capacity);
-        memcpy(data, inputData+firstLength, secondLength*sizeof(char));
+        memcpy(writeBuffer, inputData+firstLength, secondLength*sizeof(char));
         head += secondLength;
     }
 }
 
 void CircularBuffer::appendByte(char *inputData)
 {
-    *(data + head) = *inputData;
+    *(writeBuffer + head) = *inputData;
     head++;
     if(head == capacity)//at the begin of the buffer
     {
+        returnToBegin();
         head = 0;
         iterations++;
     }
@@ -127,7 +159,7 @@ void CircularBuffer::appendByte(char *inputData)
 
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
-    return new CircularBufferReader(this, head, iterations, true);
+    return new CircularBufferReader(this, head, iterations);
 }
 
 void CircularBuffer::resetTail()
@@ -149,6 +181,7 @@ void CircularBuffer::calcTail(CircularBufferReader* reader)
             minTail = reader->tail;
         }
     }
+
 }
 
 bool CircularBuffer::isHistoricalCapable() const
@@ -165,13 +198,13 @@ void CircularBuffer::print()
         {
             std::cout << "|";
         }
-        if((data[i] == '\n')||(data[i] =='\r'))
+        if((writeBuffer[i] == '\n')||(writeBuffer[i] =='\r'))
         {
             std::cout << " ";
 
         }
         else {
-            std::cout << data[i];
+            std::cout << writeBuffer[i];
         }
     }
     std::cout << std::endl;

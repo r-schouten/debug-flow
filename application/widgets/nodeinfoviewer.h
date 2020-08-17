@@ -4,6 +4,8 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QTimer>
+#include <QSpinBox>
+#include <QPushButton>
 
 #include <QGraphicsView>
 #include "visualnodebase.h"
@@ -21,6 +23,7 @@ public:
     void nodeDeselected();
 private slots:
     void updateLabels();
+    void resizeBuffer();
 private:
     FlowObjects* flowObjects = nullptr;
     VisualNodeBase* activeNode = nullptr;
@@ -48,8 +51,14 @@ private:
     QLabel *minTailLabel = nullptr;
     QLabel *minTailIterationLabel = nullptr;
 
+    QSpinBox* bufferCapacitySelector = nullptr;
+    QPushButton* resizeBufferButton = nullptr;
+
     QGraphicsView* graphicsView = nullptr;
     CircularBufferVisualisation* bufferScene = nullptr;
+
+    QGraphicsView* graphicsView2 = nullptr;
+    CircularBufferVisualisation* bufferScene2 = nullptr;
 
     QTimer* updateTimer = nullptr;
 };

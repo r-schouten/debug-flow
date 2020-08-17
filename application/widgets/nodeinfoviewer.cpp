@@ -53,6 +53,12 @@ NodeInfoViewer::NodeInfoViewer(QWidget *parent) : QWidget(parent)
     bufferMaxCapacity = new QLabel();
     outputNodeLayout->addRow("max capacity",bufferMaxCapacity);
 
+    bufferCapacitySelector = new QSpinBox();
+    bufferCapacitySelector->setSingleStep(100);
+    resizeBufferButton = new QPushButton("set capacity");
+    outputNodeLayout->addRow(bufferCapacitySelector, resizeBufferButton);
+
+
     historicalCapableLabel = new QLabel();
     outputNodeLayout->addRow("historical capable",historicalCapableLabel);
 
@@ -72,12 +78,21 @@ NodeInfoViewer::NodeInfoViewer(QWidget *parent) : QWidget(parent)
     bufferScene = new CircularBufferVisualisation();
     graphicsView = new QGraphicsView(bufferScene);
 
+    bufferScene2 = new CircularBufferVisualisation();
+    graphicsView2 = new QGraphicsView(bufferScene2);
+
     graphicsView->setFixedSize(150, 150);
     graphicsView->fitInView(0, 0, 400, 400, Qt::KeepAspectRatio);
     graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    graphicsView2->setFixedSize(150, 150);
+    graphicsView2->fitInView(0, 0, 400, 400, Qt::KeepAspectRatio);
+    graphicsView2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    graphicsView2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     layout->addWidget(graphicsView);
+    layout->addWidget(graphicsView2);
 
     //input node
 
@@ -87,9 +102,18 @@ NodeInfoViewer::NodeInfoViewer(QWidget *parent) : QWidget(parent)
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateLabels()));
     updateTimer->start(30);
 
+    connect(resizeBufferButton, SIGNAL(clicked()), this, SLOT(resizeBuffer()));
+}
+void NodeInfoViewer::resizeBuffer()
+{
+    if(activeNode == nullptr)return;
+
+    int newCapacity = bufferCapacitySelector->value();
+    OutputNode* outputNode = dynamic_cast<OutputNode*>(activeNode->getNode());
+
+    outputNode->circularBuffer->resize(newCapacity);
 
 }
-
 void NodeInfoViewer::setFlowObjects(FlowObjects *_flowObjects)
 {
     flowObjects = _flowObjects;
@@ -124,6 +148,8 @@ void NodeInfoViewer::updateLabels()
         int maxCapacity = outputNode->circularBuffer->maxCapacity;
         bufferMaxCapacity->setText(QString::number(maxCapacity));
 
+        bufferCapacitySelector->setRange(100, maxCapacity);
+
         bool historicalCapable = outputNode->circularBuffer->historicalCapable;
         historicalCapableLabel->setText(QString::number(historicalCapable));
 
@@ -140,7 +166,26 @@ void NodeInfoViewer::updateLabels()
         minTailIterationLabel->setText(QString::number(minIterations));
 
         graphicsView->show();
-        bufferScene->updatePie(capacity, head, iterations, minTail, minIterations);
+
+        if(outputNode->circularBuffer->resizeOperation != NO_OPERATION)
+        {
+            graphicsView2->show();
+            if(outputNode->circularBuffer->resizeOperation == WRITING_IN_NEW_BUFFER)
+            {
+                bufferScene->updatePie(capacity, capacity, iterations, 0,0);
+                bufferScene2->updatePie(outputNode->circularBuffer->newBufferCapacity, head, iterations, minTail, minIterations);
+            }
+            else
+            {
+                bufferScene->updatePie(capacity, head, iterations, minTail, minIterations);
+                bufferScene2->updatePie(outputNode->circularBuffer->newBufferCapacity, 0, 0, 0, 0);
+            }
+        }
+        else
+        {
+            bufferScene->updatePie(capacity, head, iterations, minTail, minIterations);
+            graphicsView2->hide();
+        }
     }
     else
     {
@@ -165,4 +210,6 @@ void NodeInfoViewer::nodeDeselected()
     inputNodeContainer->hide();
     outputNodeContainer->hide();
     graphicsView->hide();
+    graphicsView2->hide();
+
 }

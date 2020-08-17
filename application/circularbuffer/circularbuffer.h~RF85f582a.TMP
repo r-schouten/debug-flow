@@ -9,23 +9,20 @@ class NodeInfoViewer;
 enum ResizeOperationState_t
 {
     NO_OPERATION,
-    STARTED,
-    WRITING_IN_NEW_BUFFER
+    STARTED
 };
 
 class CircularBuffer
 {
 private:
     DbgLogger* dbgLogger = nullptr;
-    char* writeBuffer;//the pointer to the begin of the buffer
-    char* originalBuffer = nullptr;
-    char* resizeBuffer = nullptr;
+    char* data;//the pointer to the begin of the buffer
 
+    char* originalBuffer = nullptr;
+    char* resizeBufferData = nullptr;
     int head;
     int iterations = 0;
     int capacity;
-    int newBufferCapacity;
-    int oldBufferCapacity;
     int maxCapacity;
     bool historicalCapable;
 
@@ -39,6 +36,8 @@ public:
     CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 1000, const  int _maxCapacity = 1000, bool historicalCapable = false);
     ~CircularBuffer();
     //todo copy and move constructor
+    int usedSize(CircularBufferReader *reader);
+    int unUsedSize(CircularBufferReader *reader);
 
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
@@ -58,7 +57,7 @@ public:
 
     friend CircularBufferReader;
     friend NodeInfoViewer;
-    void resize(int newCapacity);
+    int resize(int newCapacity);
 };
 
 

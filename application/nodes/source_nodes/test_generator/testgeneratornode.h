@@ -11,7 +11,8 @@
 #include "testgeneratorworker.h"
 
 
-#define TEST_GENERATOR_BUFFER_SIZE 100000
+#define TEST_GENERATOR_BUFFER_SIZE 10000
+#define TEST_GENERATOR_MAX_BUFFER_SIZE 1000000
 
 class TestGeneratorNode : public QObject, public OutputNode
 {
