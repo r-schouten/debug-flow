@@ -27,6 +27,8 @@ SOURCES += \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
     nodes/nodesettingsbase.cpp \
+    nodes/output_nodes/consistency_checker/consistencycheckernode.cpp \
+    nodes/output_nodes/consistency_checker/consistencycheckersettings.cpp \
     nodes/output_nodes/filtered_console/consolewidget.cpp \
     nodes/output_nodes/filtered_console/filteredconsole.cpp \
     nodes/output_nodes/filtered_console/filterednodesettings.cpp \
@@ -61,6 +63,8 @@ SOURCES += \
     visualNodes/components/tagsandoptionswidget.cpp \
     visualNodes/connection/connector.cpp \
     visualNodes/connection/visualconnection.cpp \
+    visualNodes/outputNodes/consistency_checker/consistencycheckerpropertieswidget.cpp \
+    visualNodes/outputNodes/consistency_checker/visualconsistencychecker.cpp \
     visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.cpp \
     visualNodes/outputNodes/filtered_console/visualfilteredconsole.cpp \
     visualNodes/outputNodes/visualoutputnodebase.cpp \
@@ -112,6 +116,8 @@ HEADERS += \
     nodes/inputnode.h \
     nodes/nodebase.h \
     nodes/nodesettingsbase.h \
+    nodes/output_nodes/consistency_checker/consistencycheckernode.h \
+    nodes/output_nodes/consistency_checker/consistencycheckersettings.h \
     nodes/output_nodes/filtered_console/consolewidget.h \
     nodes/output_nodes/filtered_console/filteredconsole.h \
     nodes/output_nodes/filtered_console/filterednodesettings.h \
@@ -151,6 +157,8 @@ HEADERS += \
     visualNodes/connection/connector.h \
     visualNodes/connection/visualconnection.h \
     visualNodes/nodestylebase.h \
+    visualNodes/outputNodes/consistency_checker/consistencycheckerpropertieswidget.h \
+    visualNodes/outputNodes/consistency_checker/visualconsistencychecker.h \
     visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.h \
     visualNodes/outputNodes/filtered_console/visualfilteredconsole.h \
     visualNodes/outputNodes/outputstyle.h \
@@ -212,6 +220,7 @@ INCLUDEPATH += \
     visualNodes/connection \
     visualNodes/outputNodes \
     visualNodes/outputNodes/filtered_console \
+    visualNodes/outputNodes/consistency_checker \
     nodes/processing_nodes \
     nodes/processing_nodes/visual_context_filter \
     nodes/output_nodes/filtered_console \
@@ -219,6 +228,7 @@ INCLUDEPATH += \
     nodes/source_nodes/test_generator \
     nodes/source_nodes/serial_node \
     nodes/output_nodes \
+    nodes/output_nodes/consistency_checker \
     nodes/tamplate \
     utils \
     loadstore \

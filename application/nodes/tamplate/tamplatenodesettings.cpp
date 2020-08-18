@@ -23,7 +23,7 @@ void TamplateNodeSettings::notifySettingsChanged(DataValid dataValid, SaveSettin
     Q_UNUSED(dataValid);
     Q_UNUSED(source);
     Q_UNUSED(event);
-    dbgLogger->debug(CLASSNAME, __FUNCTION__,"test generator settings changed");
+    dbgLogger->debug(CLASSNAME, __FUNCTION__,"tamplate node settings changed");
     if(saveSettings == SAVE)
     {
         emit saveAbleChangeOccured();

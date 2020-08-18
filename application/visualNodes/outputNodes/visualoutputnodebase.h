@@ -1,7 +1,7 @@
 #pragma once
 #include "visualnodebase.h"
 #include "windowmanager.h"
-
+#include "outputstyle.h"
 #include "deserialization_handler.h"
 
 class VisualOutputNodeBase : public VisualNodeBase

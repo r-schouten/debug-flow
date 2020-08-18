@@ -245,6 +245,7 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
 }
 void ContextFilterEngine::processOption(QString& optionName, int tagIndex)
 {
+    if(!settings)return;
     if(settings->tags.size() <= tagIndex)
     {
         settings->tags.append(new Tag(QString("tag %0").arg(tagIndex),tagIndex));

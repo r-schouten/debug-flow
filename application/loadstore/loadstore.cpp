@@ -126,6 +126,10 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     {
         newNode = new VisualTestGeneratorNode(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
+    if(VisualConsistencyChecker::classNameEquals(type))
+    {
+        newNode = new VisualConsistencyChecker(flowObjects, baseJson, derivedJson, settingsJson, handler);
+    }
     return newNode;
 }
 

@@ -4,7 +4,7 @@
 
 #include "nodesettingsbase.h"
 
-#define AMOUNT_OF_SENTENCES 14
+#define AMOUNT_OF_SENTENCES 15
 
 
 enum Sentence
@@ -22,7 +22,8 @@ enum Sentence
     GARBAGE1 = 10,
     GARBAGE2 = 11,
     GARBAGE3 = 12,
-    THREAD_ID = 13
+    THREAD_ID = 13,
+    TEST_DATA = 14
 };
 
 class TestGeneratorSettings : public NodeSettingsBase
@@ -78,7 +79,7 @@ private:
 
     QStringList sentenceNames = {"value","value2","float value", "2x context", "2x context2",
                                "much context", "random context", "long sentence","ANSII escape", "ANSII in context",
-                               "garbage 1","garbage 2", "garbage3","thread ID"};
+                               "garbage 1","garbage 2", "garbage3","thread ID", "test data"};
 signals:
     void updateRateChanged();
     void threadSettingsChanged();

@@ -12,14 +12,11 @@ TestGeneratorWorker::~TestGeneratorWorker()
 
 }
 
-//void TestGeneratorWorker::process() {
-//    qDebug("Hello World!");
-//    emit finished();
-//}
+
 bool TestGeneratorWorker::generateData()
 {
     bool found = false;
-    for(int i=0;i<settings->getAmountOfSenteces();i++)
+    for(int i=0;i<=settings->getAmountOfSenteces();i++)
     {
         if(settings->getSentenceEnabled((Sentence)generatorIndex) == false)
         {
@@ -92,6 +89,12 @@ bool TestGeneratorWorker::generateData()
     if(generatorIndex == Sentence::THREAD_ID)
     {
         data.append("[debug,threadID] ").append(QString::number((uint64_t)thread()->currentThread(),16)).append("\n");
+    }
+    if(generatorIndex == Sentence::TEST_DATA)
+    {
+        static int testNr = 0;
+        testNr++;
+        data.append("[debug, testdata] this should match exactly ").append(QString::number(testNr)).append("\n");
     }
 
     generatorIndex++;

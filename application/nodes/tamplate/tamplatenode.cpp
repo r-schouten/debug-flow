@@ -46,7 +46,7 @@ void TamplateNode::NotifyBufferUpdate(Subscription *source)
 
 void TamplateNode::notifyHistoricalUpdateFinished()
 {
-    //historcalUpdateManager->initatiateHistoricalUpdate(this);
+
 }
 #endif
 #ifdef OUTPUTNODE
