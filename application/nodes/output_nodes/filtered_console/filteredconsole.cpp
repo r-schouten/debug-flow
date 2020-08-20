@@ -70,7 +70,7 @@ void FilteredConsole::reset()
     nodeSettings->clearConsoleClicked();
     clearConsole();
 }
-void FilteredConsole::filterData(CircularBufferReader *bufferReader)
+void FilteredConsole::filterData()
 {
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {bufferString.append(character);};
@@ -84,7 +84,7 @@ void FilteredConsole::filterData(CircularBufferReader *bufferReader)
         console->append(bufferString, currentCharFormat, &metaData, nodeSettings->getAutoScrollEnabled());
         bufferString.clear();
     };
-    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  bufferReader, &currentCharFormat, &metaData);
+    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, &currentCharFormat, &metaData);
     formatChangedLambda();
 }
 void FilteredConsole::NotifyBufferUpdate(Subscription *source)
@@ -93,7 +93,16 @@ void FilteredConsole::NotifyBufferUpdate(Subscription *source)
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
     }
 
-    filterData(source->bufferReader);
+    lastSource = source;
+    if(thread() != QThread::currentThread())
+    {
+        QMetaObject::invokeMethod(this, "filterData" , Qt::QueuedConnection);
+    }
+    else
+    {
+        filterData();
+    }
+
 }
 //------historical update functions--------
 void FilteredConsole::initiateHistoricalUpdate()

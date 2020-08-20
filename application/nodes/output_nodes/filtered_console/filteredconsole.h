@@ -6,6 +6,7 @@
 #include <QCheckBox>
 #include <QStandardItemModel>
 #include <QSignalMapper>
+#include <QThread>
 
 #include "consolewidget.h"
 #include "outputnode.h"
@@ -94,7 +95,8 @@ private:
     QString bufferString;
     QTextCharFormat currentCharFormat;
     MetaData_t metaData;
-    void filterData(CircularBufferReader *bufferReader);
+
+    Subscription* lastSource = nullptr;
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
     void clearConsole();
@@ -107,4 +109,6 @@ private slots:
     void initiateHistoricalUpdate();
     void SideLineOptionsChanged();
     void dataChanged();
+    void filterData();
+
 };

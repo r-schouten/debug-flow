@@ -29,14 +29,13 @@ class TestGeneratorWorker : public QObject {
     Q_OBJECT
 
 public:
-    TestGeneratorWorker(TestGeneratorSettings *settings, CircularBuffer *circularBuffer);
+    TestGeneratorWorker(TestGeneratorSettings *settings, CircularBuffer *circularBuffer, const std::function<void()>& notifyLambda);
     ~TestGeneratorWorker();
 
 public slots:
     void process();
 
 signals:
-    void updateDone();
     void finished();
     void error(QString err);
 
@@ -48,4 +47,5 @@ private:
     QByteArray data;
     MetaDataHelper metaDataHelper;
     int generatorIndex = 0;
+    const std::function<void()> notifyLambda;
 };

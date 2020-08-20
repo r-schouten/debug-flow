@@ -1,4 +1,7 @@
 #pragma once
+
+#include <QMutexLocker>
+
 #include "circularbuffer.h"
 #include "inputnode.h"
 #include "subscription.h"
@@ -33,6 +36,9 @@ protected:
                                 //care about this variable, when processing done stays false this may result in a infinite loop somewere, or it triggers a safetey meganism
 private:
     Subscription* subscribe(InputNode* inputNode);
+
+    QMutex mutex;
+
     friend InputNode;
     friend NodeBase;
     friend NodeInfoViewer;

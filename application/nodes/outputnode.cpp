@@ -55,6 +55,7 @@ std::string OutputNode::getNodeName()
 //-------buffer update-----------
 void OutputNode::notifyAllSubscriptions()
 {
+    QMutexLocker locker(&mutex);
     circularBuffer->resetTail();//part of the tail tracking feature, this doesn't modify the buffer itself
     QListIterator<Subscription*> i(subscribers);
     while (i.hasNext())

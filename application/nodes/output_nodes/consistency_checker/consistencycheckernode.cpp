@@ -1,6 +1,8 @@
 #include "consistencycheckernode.h"
 
 
+
+
 ConsistencyCheckerNode::ConsistencyCheckerNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
     :NodeBase(dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
@@ -21,7 +23,12 @@ ConsistencyCheckerNode::ConsistencyCheckerNode(DbgLogger *dbgLogger, HistoricalU
 
 ConsistencyCheckerNode::~ConsistencyCheckerNode()
 {
-    delete settings;
+    QMutexLocker locker(&classMutex);
+    //VisualNodeBase decontructor will be called afterwards
+    //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
+    settings = nullptr;
+    delete tagAndOptionsSettings;
+    delete contextFilterEngine;
 }
 
 
@@ -42,56 +49,68 @@ void ConsistencyCheckerNode::reset()
 }
 void ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
 {
+    QMutexLocker locker(&classMutex);
+    lastSource = source;
     //callback function/lambda to add data to the result string
-
-    auto addCharLambda = [&](char character) mutable {bufferString.append(character);};
-
-    auto formatChangedLambda = [&]() mutable
-    {
+    auto addCharLambda = [&](char character) mutable {
+        bufferString.append(character);
         if(bufferString.endsWith("\n"))
         {
-            appendConsole(bufferString);
+            bufferStringCopy = bufferString;
             bufferString.clear();
+            QMetaObject::invokeMethod(this, "appendConsole" , Qt::QueuedConnection,Q_ARG(QString,bufferStringCopy));
         }
+    };
+    auto formatChangedLambda = [&]() mutable
+    {
+
     };
     QTextCharFormat format;
     MetaData_t metadata;
 
-    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda,  source->bufferReader, &format, &metadata);
+    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, &format, &metadata);
+
+//    if(thread() != QThread::currentThread())
+//    {
+
+//        return;
+//    }
+//    else
+//    {
+//        processUpdate();
+//    }
 }
+
 void ConsistencyCheckerNode::appendConsole(QString line)
 {
     QString textPart = line.left(match.length());
     if(textPart.compare(match,textPart) == 0)
     {
         QTextCharFormat format;
-        format.setForeground(Qt::green);
 
-        if(settings->getShowAll())
+        QString numberpart = line.right(line.length()-textPart.length()+1);
+        bool oke = true;
+        int number = numberpart.toInt(&oke);
+
+        if((oke == false) || (settings->getShowAll()))
         {
+            format.setForeground(Qt::green);
             console->moveCursor(QTextCursor::End);
             console->setCurrentCharFormat(format);
             console->insertPlainText(textPart);
             console->moveCursor(QTextCursor::End);
-        }
-        QString numberpart = line.right(line.length()-textPart.length()+1);
-        bool oke = true;
-        //QRegExp rx("\\d+");
-        //numberpart = numberpart.section(rx,0);
-        int number = numberpart.toInt(&oke);
-        if(!oke)
-        {
-            format.setForeground(Qt::red);
-        }
-        lastNr++;
-        if(lastNr != number)
-        {
-            lastNr = number;
-            format.setForeground(Qt::red);
-            oke = false;
-        }
-        if((oke == false) || (settings->getShowAll()))
-        {
+
+            if(!oke)
+            {
+                format.setForeground(Qt::red);
+            }
+            lastNr++;
+            if(lastNr != number)
+            {
+                lastNr = number;
+                format.setForeground(Qt::red);
+                oke = false;
+            }
             console->moveCursor(QTextCursor::End);
             console->setCurrentCharFormat(format);
             console->insertPlainText(numberpart);

@@ -4,6 +4,9 @@
 #include <QVBoxLayout>
 #include <QRegExp>
 
+#include <QApplication>
+#include <QThread>
+#include <QMutexLocker>
 
 #include "consistencycheckersettings.h"
 #include "inputnode.h"
@@ -12,8 +15,10 @@
 #include "contextfilterengine.h"
 #include "metadatahelper.h"
 #include "tagandoptionssettings.h"
-class ConsistencyCheckerNode :public InputNode, public QWidget
+
+class ConsistencyCheckerNode :public QWidget, public InputNode
 {
+    Q_OBJECT
 public:
     ConsistencyCheckerNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager);
     virtual ~ConsistencyCheckerNode();
@@ -33,10 +38,12 @@ protected:
 private slots:
     void initiateHistoricalUpdate();
 private:
-    void appendConsole(QString text);
+    Q_INVOKABLE void appendConsole(QString text);
     QString match = "[debug, testdata] this should match exactly ";
     int lastNr = 0;
     QString bufferString;
-
+    QString bufferStringCopy;
+    Subscription* lastSource = nullptr;
+    QMutex classMutex;
 };
 

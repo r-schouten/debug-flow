@@ -39,7 +39,6 @@ protected:
 
 private slots:
     void updateRateChanged();
-    void updateDone();
     void threadSettingsChanged();
     void processInMainThread();
 };

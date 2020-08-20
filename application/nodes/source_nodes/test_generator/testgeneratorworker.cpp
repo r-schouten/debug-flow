@@ -1,11 +1,10 @@
 #include "testgeneratorworker.h"
 
-TestGeneratorWorker::TestGeneratorWorker(TestGeneratorSettings* settings, CircularBuffer* circularBuffer)
-    :settings(settings), circularBuffer(circularBuffer)
+TestGeneratorWorker::TestGeneratorWorker(TestGeneratorSettings *settings, CircularBuffer *circularBuffer, const std::function<void()>& notifyLambda)
+    :settings(settings), circularBuffer(circularBuffer), notifyLambda(notifyLambda)
 {
 
 }
-
 
 TestGeneratorWorker::~TestGeneratorWorker()
 {
@@ -111,42 +110,33 @@ void TestGeneratorWorker::process()
         if(!succes)return;
     }
 
-    if(settings->getFromThread())
+    //the current implementation is slow, it could be made better.
+    //it is acceptable now because this code doesn't run in a historical update
+    int length = data.length();
+    if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
+    for(int i=0;i<length;i++)
     {
-        circularBuffer->append(&data);
-        settings->addDataTransferred(data.length());
+        char a = data.at(i);
+        if(settings->getAddTimestamp())
+        {
+            if(a == '[')
+            {
+                if(!((i !=0)&&(data.at(i-1)=='\033')))
+                {
+                    metaDataHelper.appendTime(circularBuffer);
+                }
+            }
+        }
+        circularBuffer->appendByte(&a);
+    }
+    if(!settings->getSplitOnNewLine())
+    {
         data.clear();
     }
     else
     {
-        //the current implementation is slow, it could be made better.
-        //it is acceptable now because this code doesn't run in a historical update
-        int length = data.length();
-        if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
-        for(int i=0;i<length;i++)
-        {
-            char a = data.at(i);
-            if(settings->getAddTimestamp())
-            {
-                if(a == '[')
-                {
-                    if(!((i !=0)&&(data.at(i-1)=='\033')))
-                    {
-                        metaDataHelper.appendTime(circularBuffer);
-                    }
-                }
-            }
-            circularBuffer->appendByte(&a);
-        }
-        if(!settings->getSplitOnNewLine())
-        {
-            data.clear();
-        }
-        else
-        {
-            data.remove(0, length);
-        }
-        settings->addDataTransferred(length);
+        data.remove(0, length);
     }
-    emit updateDone();
+    settings->addDataTransferred(length);
+    notifyLambda();
 }

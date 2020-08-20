@@ -63,33 +63,30 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
     {
         if(outputNode->bufferHistoricalCapable())
         {
-            sourcesList.push_front(outputNode);
+            sourcesList.push_front(outputNode);  
         }
-        else
+        else if(forwardReset)
         {
-            if(forwardReset)
-            {
-                outputNode->resetBuffer();
-            }
-            dbgLogger->printf("children on output %d:\n",depth);
-            QListIterator<Subscription*> i(*outputNode->getSubscribers());
-            while (i.hasNext())
-            {
-                Subscription* toChildNode = i.next();
-                InputNode* childNode = toChildNode->getInputNode();
-                dbgLogger->printf("- %s\n",childNode->getNodeName().c_str());
+            outputNode->resetBuffer();
+        }
+        dbgLogger->printf("children on output %d:\n",depth);
+        QListIterator<Subscription*> i(*outputNode->getSubscribers());
+        while (i.hasNext())
+        {
+            Subscription* toChildNode = i.next();
+            InputNode* childNode = toChildNode->getInputNode();
+            dbgLogger->printf("- %s\n",childNode->getNodeName().c_str());
 
-                if(childNode->HistoricalUpdateEventNr != historicalEventCounter)
+            if(childNode->HistoricalUpdateEventNr != historicalEventCounter)
+            {
+                if((forwardReset == false)||(outputNode->bufferHistoricalCapable()))
                 {
-                    if(forwardReset == false)
-                    {
-                        childNode->lock();
-                        lockedNodes.push_front(childNode);
-                    }
-                    else
-                    {
-                        historicalUpdate(childNode, forwardReset, depth+1);
-                    }
+                    childNode->lock();
+                    lockedNodes.push_front(childNode);
+                }
+                else
+                {
+                    historicalUpdate(childNode, forwardReset, depth+1);
                 }
             }
         }

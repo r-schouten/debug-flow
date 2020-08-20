@@ -17,9 +17,13 @@ VisualConsistencyChecker::VisualConsistencyChecker(FlowObjects *_flowObjects, QJ
 
 VisualConsistencyChecker::~VisualConsistencyChecker()
 {
-    //VisualNodeBase decontructor will be called afterwards
-    //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
+    if(window)
+    {
+        windowManager->deleteMdiWindow(window);
+    }
+    //node is already deleted with deleteMdiWindow(window);
     node = nullptr;
+    baseNode = nullptr;
 }
 
 void VisualConsistencyChecker::construct()
