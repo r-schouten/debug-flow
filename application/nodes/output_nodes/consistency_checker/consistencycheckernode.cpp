@@ -58,7 +58,8 @@ void ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
         {
             bufferStringCopy = bufferString;
             bufferString.clear();
-            QMetaObject::invokeMethod(this, "appendConsole" , Qt::QueuedConnection,Q_ARG(QString,bufferStringCopy));
+            //QMetaObject::invokeMethod(this, "appendConsole" , Qt::QueuedConnection,Q_ARG(QString,bufferStringCopy));
+            appendConsole(bufferStringCopy);
         }
     };
     auto formatChangedLambda = [&]() mutable

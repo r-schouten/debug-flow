@@ -24,6 +24,7 @@ private slots:
 
     void anySequenceChanged(int state);
     void startStopClicked();
+    void notifyFromThreadChanged(int state);
 private:
     TestGeneratorSettings* settings = nullptr;
     QVBoxLayout* mainLayout = nullptr;
@@ -39,6 +40,8 @@ private:
 
     QCheckBox *addTimestampCheckbox = nullptr;
     QCheckBox *fromThreadCheckbox = nullptr;
+    QCheckBox *notifyFromThreadCheckbox = nullptr;
+
     QCheckBox *splitOnNewLineCheckbox = nullptr;
 
     QSpinBox *updateRateBox = nullptr;

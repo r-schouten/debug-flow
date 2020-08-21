@@ -64,10 +64,14 @@ public:
     uint64_t getDataTransferred() const;
     void addDataTransferred(const uint32_t &value);
 
+    bool getNotifyFromThread() const;
+    void setNotifyFromThread(bool value);
+
 private:
     bool enabled = true;
     bool addTimestamp = true;
     bool fromThread = false;
+    bool notifyFromThread = false;
     bool splitOnNewLine = true;
 
     const int amountOfSenteces = AMOUNT_OF_SENTENCES;

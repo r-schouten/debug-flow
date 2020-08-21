@@ -36,8 +36,16 @@ void TestGeneratorNode::activate()
 
 
     worker = new TestGeneratorWorker(settings, circularBuffer, notifyLambda);
+    workerFromThread = new TestGeneratorWorker(settings, circularBuffer, notifyLambda);
     workerThread = new QThread;
-    worker->moveToThread(workerThread);
+    workerFromThread->moveToThread(workerThread);
+    workerThread->start();
+
+    updateTimer->moveToThread(workerThread);
+
+    connect(worker, SIGNAL(updateDone()),this, SLOT(updateDone()));
+    connect(workerFromThread, SIGNAL(updateDone()),this, SLOT(updateDone()));
+
 
     threadSettingsChanged();
 
@@ -62,6 +70,10 @@ void TestGeneratorNode::reset()
 {
 
 }
+void TestGeneratorNode::updateDone()
+{
+    notifyAllSubscriptions();
+}
 void TestGeneratorNode::processInMainThread()
 {
     worker->process();
@@ -70,18 +82,14 @@ void TestGeneratorNode::threadSettingsChanged()
 {
     if(settings->getFromThread())
     {
-        disconnect(updateTimer, nullptr, this, nullptr);
-        updateTimer->moveToThread(worker->thread());
-        //connect(workerThread, SIGNAL(started()), worker, SLOT(initialize()));
-        connect(updateTimer, SIGNAL(timeout()), worker, SLOT(process()));
-        connect(worker, SIGNAL(finished()), workerThread, SLOT(quit()));
-        connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
-        connect(workerThread, SIGNAL(finished()), workerThread, SLOT(deleteLater()));
-        workerThread->start();
+        disconnect(updateTimer, SIGNAL(timeout()), worker, SLOT(process()));
+        connect(updateTimer, SIGNAL(timeout()), workerFromThread, SLOT(process()));
+
     }
     else
     {
-        disconnect(updateTimer, nullptr, worker, nullptr);
-        connect(updateTimer, SIGNAL(timeout()), this, SLOT(processInMainThread()));
+        disconnect(updateTimer, SIGNAL(timeout()), workerFromThread, SLOT(process()));
+        connect(updateTimer, SIGNAL(timeout()), worker, SLOT(process()));
+
     }
 }

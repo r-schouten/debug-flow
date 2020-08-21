@@ -38,7 +38,7 @@ protected:
 private slots:
     void initiateHistoricalUpdate();
 private:
-    Q_INVOKABLE void appendConsole(QString text);
+    void appendConsole(QString text);
     QString match = "[debug, testdata] this should match exactly ";
     int lastNr = 0;
     QString bufferString;

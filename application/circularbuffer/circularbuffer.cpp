@@ -1,6 +1,6 @@
 #include "circularbuffer.h"
 
-
+//thread: main thread
 CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity, bool historicalCapable)
     :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity),historicalCapable(historicalCapable)
 {
@@ -13,8 +13,11 @@ CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const 
 #endif
 }
 
+//thread: main thread
+//all buffer reader objects must be deleted first! The parent class is responsible for this
 CircularBuffer::~CircularBuffer()
 {
+    QMutexLocker locker(&writeMutex);
     //todo resize
     free(originalBuffer);
 
@@ -24,8 +27,10 @@ CircularBuffer::~CircularBuffer()
     }
 }
 
+//thread: main thread
 void CircularBuffer::reset()
 {
+    QMutexLocker locker(&writeMutex);
     //todo resize
     head = 0;
     iterations = 0;
@@ -44,6 +49,7 @@ void CircularBuffer::reset()
     resizeOperation = NO_OPERATION;
 
 }
+//thread: main thread, producer thread
 void CircularBuffer::returnToBegin()
 {
     if(resizeOperation != NO_OPERATION)
@@ -65,8 +71,10 @@ void CircularBuffer::returnToBegin()
         }
     }
 }
+//thread: main thread
 void CircularBuffer::resize(int newCapacity)
 {
+    QMutexLocker locker(&writeMutex);
     if(resizeOperation != NO_OPERATION)
     {
         dbgLogger->error("CircularBuffer",__FUNCTION__, "resize operation is already going on");
@@ -85,6 +93,8 @@ void CircularBuffer::resize(int newCapacity)
     oldBufferCapacity = capacity;
 }
 
+//this method checks the available size based on the tail tracking principle
+//thread: main thread, producer thread
 int CircularBuffer::unUsedSize()
 {
     if(minTail == INT_MAX)return capacity;
@@ -108,6 +118,7 @@ int CircularBuffer::unUsedSize()
         return minTail - head;
     }
 }
+//thread: main thread, producer thread
 void CircularBuffer::checkSize(int neededSize)
 {
     if(neededSize >= capacity)
@@ -119,6 +130,8 @@ void CircularBuffer::checkSize(int neededSize)
         dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= unUsedSize()) %d %d",unUsedSize(), neededSize);
     }
 }
+
+//thread: main thread, producer thread
 void CircularBuffer::append(const QByteArray *byteArray)
 {
     //take the raw data out of the byte array
@@ -126,8 +139,10 @@ void CircularBuffer::append(const QByteArray *byteArray)
     append(const_cast<char*>(data), byteArray->length());
 }
 
+//thread: main thread, producer thread
 void CircularBuffer::append(char *inputData, int size)
 {
+    QMutexLocker locker(&writeMutex);
     checkSize(size);
     int noSplitAvailable = capacity - head;
     int firstLength = std::min(noSplitAvailable, size);
@@ -144,9 +159,10 @@ void CircularBuffer::append(char *inputData, int size)
         head += secondLength;
     }
 }
-
+//thread: main thread, producer thread
 void CircularBuffer::appendByte(char *inputData)
 {
+    QMutexLocker locker(&writeMutex);
     *(writeBuffer + head) = *inputData;
     head++;
     if(head == capacity)//at the begin of the buffer
@@ -156,19 +172,24 @@ void CircularBuffer::appendByte(char *inputData)
         iterations++;
     }
 }
-
+//thread: main thread
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
+    QMutexLocker locker(&writeMutex);
     return new CircularBufferReader(this, head, iterations);
 }
 
+//thread: main thread
 void CircularBuffer::resetTail()
 {
     minTail = INT_MAX;
     minTailIteration = INT_MAX;
 }
+
+//thread: main thread
 void CircularBuffer::calcTail(CircularBufferReader* reader)
 {
+    QMutexLocker locker(&writeMutex);
     if(reader->iteration < minTailIteration)
     {
        minTailIteration = reader->iteration;
@@ -184,11 +205,13 @@ void CircularBuffer::calcTail(CircularBufferReader* reader)
 
 }
 
+//thread: main thread
 bool CircularBuffer::isHistoricalCapable() const
 {
     return historicalCapable;
 }
 
+//thread: main thread
 void CircularBuffer::print()
 {
     std::cout << capacity << " buffer: ";

@@ -36,6 +36,7 @@ public slots:
     void process();
 
 signals:
+    void updateDone();
     void finished();
     void error(QString err);
 

@@ -25,7 +25,7 @@ TestGeneratorPropertiesWidget::TestGeneratorPropertiesWidget(QWidget *parent, Db
     mainLayout->addWidget(formContainter);
 
     updateRateBox = new QSpinBox();
-    updateRateBox->setRange(10,10000);
+    updateRateBox->setRange(5,10000);
     updateRateBox->setValue(settings->getUpdateRate());
     updateRateBox->setSuffix("ms");
     updateRateBox->setSingleStep(10);
@@ -33,7 +33,7 @@ TestGeneratorPropertiesWidget::TestGeneratorPropertiesWidget(QWidget *parent, Db
     connect(updateRateBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &TestGeneratorPropertiesWidget::updateRateBoxChanged);
 
     dataPerUpdateBox = new QSpinBox();
-    dataPerUpdateBox->setRange(50,10000);
+    dataPerUpdateBox->setRange(50,100000);
     dataPerUpdateBox->setValue(settings->getDataPerUpdate());
     dataPerUpdateBox->setSingleStep(10);
     dataPerUpdateBox->setSuffix("bytes");
@@ -61,6 +61,11 @@ TestGeneratorPropertiesWidget::TestGeneratorPropertiesWidget(QWidget *parent, Db
     fromThreadCheckbox->setChecked(settings->getFromThread());
     containerLayout->addWidget(fromThreadCheckbox);
     connect(fromThreadCheckbox, SIGNAL(stateChanged(int)), this, SLOT(fromThreadChanged(int)));
+
+    notifyFromThreadCheckbox = new QCheckBox("notify from thread");
+    notifyFromThreadCheckbox->setChecked(settings->getNotifyFromThread());
+    containerLayout->addWidget(notifyFromThreadCheckbox);
+    connect(notifyFromThreadCheckbox, SIGNAL(stateChanged(int)), this, SLOT(notifyFromThreadChanged(int)));
 
     splitOnNewLineCheckbox = new QCheckBox("split on newline");
     splitOnNewLineCheckbox->setChecked(settings->getSplitOnNewLine());
@@ -108,6 +113,11 @@ void TestGeneratorPropertiesWidget::addTimestampChanged(int state)
 void TestGeneratorPropertiesWidget::fromThreadChanged(int state)
 {
     settings->setFromThread(state);
+}
+
+void TestGeneratorPropertiesWidget::notifyFromThreadChanged(int state)
+{
+    settings->setNotifyFromThread(state);
 }
 void TestGeneratorPropertiesWidget::splitOnLineChanged(int state)
 {

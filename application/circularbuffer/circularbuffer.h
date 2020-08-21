@@ -1,8 +1,11 @@
 #pragma once
 #include <QObject>
 #include <iostream>
+#include <QMutexLocker>
+
 #include "circularbufferreader.h"
 #include "dbglogger.h"
+
 class CircularBufferReader;
 class NodeInfoViewer;
 
@@ -33,6 +36,8 @@ private:
     int minTailIteration = 0;
 
     ResizeOperationState_t resizeOperation = NO_OPERATION;
+
+    QMutex writeMutex;
     void checkSize(int neededSize);
     void returnToBegin();
 public:
@@ -43,8 +48,6 @@ public:
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
     void appendByte(char *inputData);
-
-    int getSize();
 
     void resetTail();
     void calcTail(CircularBufferReader *reader);

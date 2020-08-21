@@ -138,5 +138,12 @@ void TestGeneratorWorker::process()
         data.remove(0, length);
     }
     settings->addDataTransferred(length);
-    notifyLambda();
+    if(settings->getNotifyFromThread())
+    {
+        notifyLambda();
+    }
+    else
+    {
+        emit updateDone();
+    }
 }

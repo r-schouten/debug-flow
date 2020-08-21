@@ -7,7 +7,7 @@ TestGeneratorSettings::TestGeneratorSettings(DbgLogger *dbgLogger)
     {
         sentenceEnabled[i] = false;
     }
-    setSentenceEnabled(true, Sentence::VALUE);
+    setSentenceEnabled(true, Sentence::TEST_DATA);
 }
 
 QJsonObject *TestGeneratorSettings::serialize(SerializationHandler &handler)
@@ -124,4 +124,14 @@ uint64_t TestGeneratorSettings::getDataTransferred() const
 void TestGeneratorSettings::addDataTransferred(const uint32_t &value)
 {
     dataTransferred += value;
+}
+
+bool TestGeneratorSettings::getNotifyFromThread() const
+{
+    return notifyFromThread;
+}
+
+void TestGeneratorSettings::setNotifyFromThread(bool value)
+{
+    notifyFromThread = value;
 }
