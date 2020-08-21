@@ -17,7 +17,7 @@ CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const 
 //all buffer reader objects must be deleted first! The parent class is responsible for this
 CircularBuffer::~CircularBuffer()
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     //todo resize
     free(originalBuffer);
 
@@ -30,7 +30,7 @@ CircularBuffer::~CircularBuffer()
 //thread: main thread
 void CircularBuffer::reset()
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     //todo resize
     head = 0;
     iterations = 0;
@@ -74,7 +74,7 @@ void CircularBuffer::returnToBegin()
 //thread: main thread
 void CircularBuffer::resize(int newCapacity)
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     if(resizeOperation != NO_OPERATION)
     {
         dbgLogger->error("CircularBuffer",__FUNCTION__, "resize operation is already going on");
@@ -142,7 +142,7 @@ void CircularBuffer::append(const QByteArray *byteArray)
 //thread: main thread, producer thread
 void CircularBuffer::append(char *inputData, int size)
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     checkSize(size);
     int noSplitAvailable = capacity - head;
     int firstLength = std::min(noSplitAvailable, size);
@@ -162,7 +162,7 @@ void CircularBuffer::append(char *inputData, int size)
 //thread: main thread, producer thread
 void CircularBuffer::appendByte(char *inputData)
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     *(writeBuffer + head) = *inputData;
     head++;
     if(head == capacity)//at the begin of the buffer
@@ -175,7 +175,7 @@ void CircularBuffer::appendByte(char *inputData)
 //thread: main thread
 CircularBufferReader* CircularBuffer::requestNewReader()
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     return new CircularBufferReader(this, head, iterations);
 }
 
@@ -189,7 +189,7 @@ void CircularBuffer::resetTail()
 //thread: main thread
 void CircularBuffer::calcTail(CircularBufferReader* reader)
 {
-    QMutexLocker locker(&writeMutex);
+    //QMutexLocker locker(&writeMutex);
     if(reader->iteration < minTailIteration)
     {
        minTailIteration = reader->iteration;

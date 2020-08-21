@@ -37,7 +37,6 @@ protected:
 private:
     Subscription* subscribe(InputNode* inputNode);
 
-    QMutex mutex;
 
     friend InputNode;
     friend NodeBase;
