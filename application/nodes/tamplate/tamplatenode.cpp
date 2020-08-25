@@ -1,8 +1,8 @@
 #include "tamplatenode.h"
 
 
-TamplateNode::TamplateNode(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+TamplateNode::TamplateNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
+    :NodeBase(updateManager,dbgLogger)
 {
     settings = new TamplateNodeSettings(dbgLogger);
 #ifdef OUTPUTNODE

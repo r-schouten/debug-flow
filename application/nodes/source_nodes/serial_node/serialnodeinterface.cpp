@@ -1,7 +1,6 @@
 #include "serialnodeinterface.h"
 
-SerialNodeInterface::SerialNodeInterface(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+SerialNodeInterface::SerialNodeInterface()
 {
 
 }

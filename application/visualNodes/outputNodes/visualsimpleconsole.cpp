@@ -44,7 +44,7 @@ void VisualSimpleConsole::setWindowManager(WindowManager *_windowManager)
     }
     windowManager = _windowManager;
 
-    node = new SimpleConsole(dbgLogger);
+    node = new SimpleConsole(flowObjects->getUpdateManager(),dbgLogger);
     baseNode = node;
     if(node->hasInput)
     {

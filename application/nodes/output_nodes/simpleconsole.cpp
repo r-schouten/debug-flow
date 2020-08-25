@@ -1,7 +1,7 @@
 #include "simpleconsole.h"
 
-SimpleConsole::SimpleConsole(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+SimpleConsole::SimpleConsole(UpdateManager* updateManager,DbgLogger *dbgLogger)
+    :NodeBase(updateManager,dbgLogger)
 {
     console = new QPlainTextEdit(this);
     console->setReadOnly(true);
@@ -28,7 +28,7 @@ NodeSettingsBase *SimpleConsole::getNodeSettings()
 {
     return nullptr;//todo make settings
 }
-void SimpleConsole::NotifyBufferUpdate(Subscription *source)
+UpdateReturn_t SimpleConsole::NotifyBufferUpdate(Subscription *source)
 {
     console->setUpdatesEnabled(false);
 

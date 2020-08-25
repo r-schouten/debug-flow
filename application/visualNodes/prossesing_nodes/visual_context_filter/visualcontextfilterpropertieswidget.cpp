@@ -12,6 +12,16 @@ VisualContextFilterPropertiesWidget::VisualContextFilterPropertiesWidget(QWidget
     tagsWidget = new TagsAndOptionsWidget(nullptr, &settings->tagAndOptionsSettings->tags);
     layout->addWidget(tagsWidget);
 
+    mergeModeComboBox = new QComboBox(this);
+    layout->addWidget(mergeModeComboBox);
+    for(int i=0;i<settings->mergeModeString.length();i++)
+    {
+        mergeModeComboBox->addItem(settings->mergeModeString.at(i),(MergeMode_t)i);
+    }
+    mergeModeComboBox->setCurrentIndex(settings->getMergeMode());
+
+    connect(mergeModeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(mergeModeChanged(int)));
+
     connect(settings->tagAndOptionsSettings, SIGNAL(optionAdded(Tag*,TagOption*)),tagsWidget,SLOT(optionAdded(Tag*,TagOption*)));
     connect(settings->tagAndOptionsSettings,SIGNAL(tagsChanged()),tagsWidget,SLOT(loadTags()));
 
@@ -23,6 +33,10 @@ VisualContextFilterPropertiesWidget::VisualContextFilterPropertiesWidget(QWidget
 VisualContextFilterPropertiesWidget::~VisualContextFilterPropertiesWidget()
 {
 
+}
+void VisualContextFilterPropertiesWidget::mergeModeChanged(int index)
+{
+    settings->setMergeMode((MergeMode_t)index);
 }
 void VisualContextFilterPropertiesWidget::contextSettingsChanged()
 {

@@ -25,6 +25,7 @@ private:
     char* resizeBuffer = nullptr;
 
     int head;
+    int conditionalHead;
     int iterations = 0;
     int capacity;
     int newBufferCapacity;
@@ -48,6 +49,11 @@ public:
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
     void appendByte(char *inputData);
+
+    void startConditional();
+    void conditionalAppend(char *inputData);
+    void commit();
+
 
     void resetTail();
     void calcTail(CircularBufferReader *reader);

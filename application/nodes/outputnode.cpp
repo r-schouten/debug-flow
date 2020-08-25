@@ -30,7 +30,7 @@ Subscription* OutputNode::subscribe(InputNode *inputNode)
         qFatal("[Fatal,OutputNode] circularBuffer == nullptr");
     }
     CircularBufferReader* reader = circularBuffer->requestNewReader();
-    Subscription* subscription = new Subscription(inputNode, this, reader);
+    Subscription* subscription = new Subscription(inputNode, this, reader, updateManager, dbgLogger);
     subscribers.append(subscription);
     return subscription;
 }
@@ -53,46 +53,27 @@ std::string OutputNode::getNodeName()
 
 
 //-------buffer update-----------
-void OutputNode::notifyAllSubscriptions()
+UpdateReturn_t OutputNode::notifyAllSubscriptions()
 {
+    UpdateReturn_t updateReturn = UPDATE_DONE;
     circularBuffer->resetTail();//part of the tail tracking feature, this doesn't modify the buffer itself
     QListIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
-        subscription->notifyBufferUpdate();
-        OutputNode* outputNode = dynamic_cast<OutputNode*>(subscription->getInputNode());
-
-        //todo: this code might have problems when merging is supported
-        if(outputNode)//if it is a node which is having an output(so an own buffer)
+        UpdateReturn_t updateState = subscription->notifyBufferUpdate();
+        if(updateState == ROUTE_DELAYED)
         {
-            while(outputNode->isProcessingDone() == false)
-            {
-                //save variables for the safety mechanism, when this doesn't change the node has a bug with the processingDone variable
-                int previousIteration = subscription->bufferReader->getIteration();
-                int previousTail = subscription->bufferReader->getTail();
-
-                dbgLogger->debug("OutputNode", __FUNCTION__,"isProcessingDone false, calling notifyBufferUpdate() again");
-                subscription->notifyBufferUpdate();
-                if(outputNode->isProcessingDone() == true)break;
-                if((previousIteration == subscription->bufferReader->getIteration()) && (previousTail == subscription->bufferReader->getTail()))
-                {
-                    dbgLogger->fatal("OutputNode", __FUNCTION__, "safety mechanism triggered, node has processingDone not set but doensn't do anything\ncaused by node:%s",subscription->getInputNode()->getNodeName().c_str());
-                }
-            }
+            updateReturn = ROUTE_DELAYED;
         }
         circularBuffer->calcTail(subscription->bufferReader);//tail tracking
     }
+    return updateReturn;
 }
 
 int OutputNode::getBufferUnusedSize()
 {
     return circularBuffer->unUsedSize();
-}
-
-bool OutputNode::isProcessingDone() const
-{
-    return processingDone;
 }
 
 

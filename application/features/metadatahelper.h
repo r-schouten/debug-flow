@@ -5,47 +5,29 @@
 #define METADATA_MARK '\001'
 #define MARK_INDEX 0
 #define HEADER_INDEX 1
-#define TIMESTAMP_BYTES 8
+#define TIMESTAMP_BYTES 10
 class MetaDataHelper
 {
 public:
     MetaDataHelper();
     void appendTime(CircularBuffer* buffer);
     uint64_t generateHeading();
+private:
+    uint64_t lastMetaData = 0;
 };
 class MetaData_t
 {
 public:
-    MetaData_t()
-    {
-        timestamp = 0;
-    }
-    MetaData_t(uint64_t timestamp)
-        :timestamp(timestamp){}
-    uint64_t getTimestamp() const
-    {
-        return timestamp;
-    }
-    void setTimestamp(const uint64_t value)
-    {
-        timestamp = value;
-    }
-    void toTime_t(std::time_t &time, int &milliseconds)
-    {
-        uint64_t timeStampWithoutHeader = (timestamp>>16);
-        time = static_cast<time_t>(timeStampWithoutHeader/1000);
-        milliseconds = timeStampWithoutHeader % 1000;
-    }
-    QString toHourMinuteSecond(char* buffer, int bufferLength)
-    {
-        std::time_t time;
-        int milliseconds;
-        toTime_t(time, milliseconds);
+    MetaData_t();
+    MetaData_t(uint64_t metadata);
 
-        std::tm * ptm = std::localtime(&time);
-        std::strftime(buffer, bufferLength, "%H:%M:%S", ptm);
-        return buffer;
-    }
+    uint64_t getTimeStamp();
+    void setTimeStamp(const uint64_t &value);
+
+    void toTime_t(std::time_t &time, int &milliseconds);
+    QString toHourMinuteSecond(char* buffer, int bufferLength);
+
 private:
     uint64_t timestamp=0;
+    uint header=0;
 };

@@ -1,11 +1,10 @@
 #include "testgeneratornode.h"
 
 
-TestGeneratorNode::TestGeneratorNode(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger)
+TestGeneratorNode::TestGeneratorNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
+    :NodeBase(updateManager, dbgLogger)
 {
     settings = new TestGeneratorSettings(dbgLogger);
-
 }
 
 TestGeneratorNode::~TestGeneratorNode()
@@ -72,7 +71,9 @@ void TestGeneratorNode::reset()
 }
 void TestGeneratorNode::updateDone()
 {
+    updateManager->initateUpdate();
     notifyAllSubscriptions();
+    updateManager->finishUpdate();
 }
 void TestGeneratorNode::processInMainThread()
 {

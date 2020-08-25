@@ -3,6 +3,7 @@
 #include "outputnode.h"
 #include "subscription.h"
 #include "nodebase.h"
+#include "updatemanager.h"
 
 class OutputNode;
 class Subscription;
@@ -10,11 +11,10 @@ class NodeBase;
 
 class InputNode:public virtual NodeBase
 {
-
 public:
     InputNode();
     virtual ~InputNode();
-    virtual void NotifyBufferUpdate(Subscription* source) = 0;
+    virtual UpdateReturn_t NotifyBufferUpdate(Subscription* source) = 0;
     virtual void notifyHistoricalUpdateFinished();
     void notifyUnsubscribe(Subscription* subscription);
     void addSubscription(OutputNode* outputNode);
@@ -31,6 +31,7 @@ public:
 
     bool isLocked();
 
+    bool areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription *currentSubscription);
 protected:
     QList<Subscription*> subScriptions;
  private:

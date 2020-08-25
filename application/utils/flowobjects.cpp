@@ -16,7 +16,14 @@ HistoricalUpdateManager *FlowObjects::getHistoricalUpdateManager() const
     return historicalUpdateManager;
 }
 
-FlowObjects::FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoRedoManager *_undoredoManager, DbgLogger *_dbgLogger, WindowManager *_windowManager, HistoricalUpdateManager *_historicalUpdateManager)
+UpdateManager *FlowObjects::getUpdateManager() const
+{
+    return updateManager;
+}
+
+
+
+FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoRedoManager *_undoredoManager, DbgLogger *_dbgLogger, WindowManager *_windowManager, HistoricalUpdateManager *_historicalUpdateManager, UpdateManager *_updateManager)
 {
     dbgLogger = _dbgLogger;
     if(_selectionManager == nullptr)
@@ -31,6 +38,7 @@ FlowObjects::FlowObjects::FlowObjects(SelectionManager *_selectionManager, UndoR
     selectionManager = _selectionManager;
     undoRedoManager = _undoredoManager;
     historicalUpdateManager = _historicalUpdateManager;
+    updateManager = _updateManager;
 }
 
 FlowObjects::~FlowObjects()

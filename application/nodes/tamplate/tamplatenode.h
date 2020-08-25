@@ -23,7 +23,7 @@ class TamplateNode :public InputNode
 #endif
 {
 public:
-    TamplateNode(DbgLogger *dbgLogger);
+    TamplateNode(UpdateManager* updateManager,DbgLogger *dbgLogger);
     virtual ~TamplateNode();
     virtual std::string getNodeName();
     virtual TamplateNodeSettings *getNodeSettings();

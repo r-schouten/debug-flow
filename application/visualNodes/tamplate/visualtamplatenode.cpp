@@ -24,7 +24,7 @@ VisualTamplateNode::~VisualTamplateNode()
 
 void VisualTamplateNode::construct()
 {
-    node = new TamplateNode(dbgLogger);
+    node = new TamplateNode(flowObjects->getUpdateManager(), dbgLogger);
     baseNode = node;
 
     settings = node->getNodeSettings();

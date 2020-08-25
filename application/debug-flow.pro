@@ -17,6 +17,7 @@ SOURCES += \
     circularbuffer/circularbufferreader.cpp \
     features/historicalupdatemanager.cpp \
     features/metadatahelper.cpp \
+    features/updatemanager.cpp \
     flowwidget.cpp \
     loadstore/deserialization_handler.cpp \
     loadstore/filesystem.cpp \
@@ -101,6 +102,7 @@ HEADERS += \
     circularbuffer/circularbufferreader.h \
     features/historicalupdatemanager.h \
     features/metadatahelper.h \
+    features/updatemanager.h \
     flowwidget.h \
     globalconfig.h \
     loadstore/deserialistationexception.h \

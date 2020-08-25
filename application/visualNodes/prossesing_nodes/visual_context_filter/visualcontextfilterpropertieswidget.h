@@ -26,7 +26,11 @@ protected:
     ContextFilterSettings* settings = nullptr;
     QList<TagGroupbox*> tagGroupboxes;
 
+private slots:
+    void mergeModeChanged(int index);
 private:
     QVBoxLayout* layout = nullptr;
     TagsAndOptionsWidget* tagsWidget = nullptr;
+
+    QComboBox* mergeModeComboBox = nullptr;
 };

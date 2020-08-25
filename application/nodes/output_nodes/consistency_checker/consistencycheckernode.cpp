@@ -1,10 +1,8 @@
 #include "consistencycheckernode.h"
 
 
-
-
-ConsistencyCheckerNode::ConsistencyCheckerNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
-    :NodeBase(dbgLogger),historcalUpdateManager(historcalUpdateManager)
+ConsistencyCheckerNode::ConsistencyCheckerNode(UpdateManager* updateManager, DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
+    :NodeBase(updateManager, dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
     settings = new ConsistencyCheckerSettings(dbgLogger);
 
@@ -47,10 +45,8 @@ void ConsistencyCheckerNode::reset()
 {
 
 }
-void ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
+UpdateReturn_t ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
 {
-    QMutexLocker locker(&classMutex);
-    lastSource = source;
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {
         bufferString.append(character);
@@ -69,21 +65,12 @@ void ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
     QTextCharFormat format;
     MetaData_t metadata;
 
-    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, &format, &metadata);
-
-//    if(thread() != QThread::currentThread())
-//    {
-
-//        return;
-//    }
-//    else
-//    {
-//        processUpdate();
-//    }
+    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda, source->bufferReader, &format, &metadata);
 }
 
 void ConsistencyCheckerNode::appendConsole(QString line)
 {
+    line = line.replace('|',"");
     QString textPart = line.left(match.length());
     if(textPart.compare(match,textPart) == 0)
     {
@@ -105,10 +92,9 @@ void ConsistencyCheckerNode::appendConsole(QString line)
             {
                 format.setForeground(Qt::red);
             }
-            lastNr++;
-            if(lastNr != number)
+            if(lastNr > number)
             {
-                lastNr = number;
+                lastNr = number + 1;
                 format.setForeground(Qt::red);
                 oke = false;
             }

@@ -11,6 +11,23 @@
 #include "ansi_types.h"
 #include "tagandoptionssettings.h"
 #include "metadatahelper.h"
+
+enum filterReturnValue_t
+{
+    BUFFER_FULL,
+    ALL_DATA_PROCESSED,
+    LAST_NEWLINE,
+    RETURN_ON_METADATA,
+    RETURN_ON_ERROR,
+    RETURN_ON_STYLECHANGE
+};
+enum MetaDataBreak_t
+{
+    DONT_BREAK_ON_METADATA,
+    BREAK_ON_METADATA,
+    BREAK_ON_METADATA_EXEPT_FIRST
+};
+
 class ContextFilterEngine: public QObject
 {
     Q_OBJECT
@@ -19,6 +36,7 @@ public:
     ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
 
     void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed, MetaData_t *currentMetaData);
+    filterReturnValue_t filterDataMerge(CircularBuffer *buffer, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, MetaData_t *currentMetaData, MetaDataBreak_t metaDataBreak, bool stopOnNewLine);
     void filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData);
 private:
     TagAndOptionsSettings* settings = nullptr;
@@ -29,9 +47,11 @@ private:
     bool processANSIEscape(CircularBufferReader *bufferReader, QTextCharFormat *format, int beginIndex, int endIndex);
     void applyANSICode(QTextCharFormat *format, ANSICode ansiCode);
     void processContext(CircularBufferReader *bufferReader, int begin, int end, int &releaseLength);
-    bool proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
     void processOption(QString &optionName, int tagIndex);
-    bool forwardMetaData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe, int &releaseLength);
+
+    bool proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
+    bool readMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i);
+    bool forwardAndReadMetaData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe, int &releaseLength);
 signals:
     //void propertyChanged(Property* property);
 };

@@ -24,7 +24,7 @@ VisualTestGeneratorNode::~VisualTestGeneratorNode()
 
 void VisualTestGeneratorNode::construct()
 {
-    node = new TestGeneratorNode(dbgLogger);
+    node = new TestGeneratorNode(flowObjects->getUpdateManager(),dbgLogger);
     baseNode = node;
 
     settings = node->getNodeSettings();

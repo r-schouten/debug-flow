@@ -15,7 +15,7 @@ VisualSerialNode::VisualSerialNode(FlowObjects *_flowObjects,QJsonObject &baseJs
 }
 void VisualSerialNode::construct()
 {
-    node = new SerialNode(flowObjects->getDbgLogger());
+    node = new SerialNode(flowObjects->getUpdateManager(), flowObjects->getDbgLogger());
     baseNode = node;
 
     serialSettings = node->getNodeSettings();

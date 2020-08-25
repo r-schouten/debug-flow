@@ -65,6 +65,23 @@ void InputNode::bufferReaderToBegin(Subscription *caller)
     caller->bufferReader->toBegin();
 }
 
+bool InputNode::areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription* currentSubscription)
+{
+    if(subScriptions.length() <= 1)return true;
+    QListIterator<Subscription*> iterator(subScriptions);
+    while(iterator.hasNext())
+    {
+        Subscription* subscription = iterator.next();
+        if(subscription != currentSubscription)
+        {
+            if(subscription->getUpdateNr() != updateNr)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 void InputNode::lock()
 {
     locked = true;

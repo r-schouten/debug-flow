@@ -114,6 +114,7 @@ void TestGeneratorWorker::process()
     //it is acceptable now because this code doesn't run in a historical update
     int length = data.length();
     if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
+
     for(int i=0;i<length;i++)
     {
         char a = data.at(i);
@@ -129,6 +130,8 @@ void TestGeneratorWorker::process()
         }
         circularBuffer->appendByte(&a);
     }
+    char mark = '|';
+    circularBuffer->appendByte(&mark);
     if(!settings->getSplitOnNewLine())
     {
         data.clear();

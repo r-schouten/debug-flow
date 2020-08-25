@@ -28,7 +28,7 @@ VisualConsistencyChecker::~VisualConsistencyChecker()
 
 void VisualConsistencyChecker::construct()
 {
-    node = new ConsistencyCheckerNode(dbgLogger, flowObjects->getHistoricalUpdateManager());
+    node = new ConsistencyCheckerNode(flowObjects->getUpdateManager(),dbgLogger, flowObjects->getHistoricalUpdateManager());
     baseNode = node;
 
     settings = node->getNodeSettings();

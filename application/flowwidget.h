@@ -11,6 +11,7 @@
 #include "windowmanager.h"
 #include "propertywidgetmanager.h"
 #include "nodescene.h"
+#include "updatemanager.h"
 #include "ui_flow_widget.h"
 
 #include "loadstore.h"
@@ -51,6 +52,7 @@ private:
     FlowObjects* flowObjects = nullptr;
     SelectionManager* selectionManager = nullptr;
     HistoricalUpdateManager* historicalUpdateManager = nullptr;
+    UpdateManager* updateManager = nullptr;
     bool changesSaved = false;
 public slots:
     void updateUI();

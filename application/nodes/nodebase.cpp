@@ -1,8 +1,7 @@
 #include "nodebase.h"
 
-
-NodeBase::NodeBase(DbgLogger *dbgLogger)
-    :dbgLogger(dbgLogger)
+NodeBase::NodeBase(UpdateManager* updateManager, DbgLogger* dbgLogger)
+    :updateManager(updateManager), dbgLogger(dbgLogger)
 {
 
 }

@@ -10,7 +10,7 @@ class SerialNode :public QObject, public SerialNodeInterface
 {
     Q_OBJECT
 public:
-    SerialNode(DbgLogger *dbgLogger);
+    SerialNode(UpdateManager* updateManager,DbgLogger *dbgLogger);
     virtual ~SerialNode();
 
     virtual std::string getNodeName();

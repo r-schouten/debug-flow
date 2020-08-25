@@ -1,7 +1,7 @@
 #include "serialnode.h"
 
-SerialNode::SerialNode::SerialNode(DbgLogger *dbgLogger)
-    :NodeBase(dbgLogger),SerialNodeInterface(dbgLogger)
+SerialNode::SerialNode::SerialNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
+    :NodeBase(updateManager, dbgLogger)
 {
     settings = new SerialSettings(dbgLogger);
 }

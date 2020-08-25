@@ -8,7 +8,7 @@
 class SerialNodeInterface: public OutputNode
 {
 public:
-    SerialNodeInterface(DbgLogger *dbgLogger);
+    SerialNodeInterface();
     virtual ~SerialNodeInterface();
     virtual std::string getNodeName();
     virtual SerialSettings *getNodeSettings();

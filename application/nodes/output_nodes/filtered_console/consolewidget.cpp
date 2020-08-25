@@ -76,7 +76,7 @@ void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,MetaData_t*
         {
             TextBlockWithMetaData* userData = new TextBlockWithMetaData();
             userData->blockNr = block.blockNumber()+1 + deletedBlocks;
-            userData->metaData.setTimestamp(metaData->getTimestamp());
+            userData->metaData = *metaData;
             block.setUserData(userData);
         }
         block = block.next();

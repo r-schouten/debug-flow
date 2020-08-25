@@ -1,8 +1,7 @@
 #include "filteredconsole.h"
 
-FilteredConsole::FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
-
-    :NodeBase(dbgLogger),historcalUpdateManager(historcalUpdateManager)
+FilteredConsole::FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger)
+   :NodeBase(updateManager,dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
     //initialize settings
     nodeSettings = new FilteredNodeSettings(dbgLogger);
@@ -87,7 +86,7 @@ void FilteredConsole::filterData()
     contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, &currentCharFormat, &metaData);
     formatChangedLambda();
 }
-void FilteredConsole::NotifyBufferUpdate(Subscription *source)
+UpdateReturn_t FilteredConsole::NotifyBufferUpdate(Subscription *source)
 {
     if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");

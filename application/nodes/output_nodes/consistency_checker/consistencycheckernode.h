@@ -20,12 +20,12 @@ class ConsistencyCheckerNode :public QWidget, public InputNode
 {
     Q_OBJECT
 public:
-    ConsistencyCheckerNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager);
+    ConsistencyCheckerNode(UpdateManager* updateManager, DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager);
     virtual ~ConsistencyCheckerNode();
     virtual std::string getNodeName();
     virtual ConsistencyCheckerSettings *getNodeSettings();
     void reset();
-    void NotifyBufferUpdate(Subscription *source);
+    UpdateReturn_t NotifyBufferUpdate(Subscription *source);
     void notifyHistoricalUpdateFinished();
 protected:
     ConsistencyCheckerSettings* settings = nullptr;
@@ -43,7 +43,6 @@ private:
     int lastNr = 0;
     QString bufferString;
     QString bufferStringCopy;
-    Subscription* lastSource = nullptr;
     QMutex classMutex;
 };
 

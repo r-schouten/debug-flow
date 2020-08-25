@@ -67,3 +67,13 @@ void ContextFilterSettings::tagsChanged()
 {
     notifySettingsChanged(DATA_INVALID, SAVE, NODE, 0);
 }
+
+MergeMode_t ContextFilterSettings::getMergeMode() const
+{
+    return mergeMode;
+}
+
+void ContextFilterSettings::setMergeMode(const MergeMode_t &value)
+{
+    mergeMode = value;
+}

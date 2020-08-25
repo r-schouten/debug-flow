@@ -1,4 +1,5 @@
 #pragma once
+#include <QString>
 #include "inputnode.h"
 #include "outputnode.h"
 
@@ -9,21 +10,22 @@ class ContextFilterNode : public QObject, public InputNode, public OutputNode
 {
     Q_OBJECT
 public:
-    ContextFilterNode(DbgLogger *dbgLogger, HistoricalUpdateManager* historicalUpdateManager);
+    ContextFilterNode(UpdateManager* updateManager, DbgLogger *dbgLogger, HistoricalUpdateManager* historicalUpdateManager);
     virtual ~ContextFilterNode();
     virtual std::string getNodeName() override;
     virtual ContextFilterSettings *getNodeSettings() override;
-    virtual void NotifyBufferUpdate(Subscription *source) override;
+    virtual UpdateReturn_t NotifyBufferUpdate(Subscription *source) override;
     virtual void reset() override;
 
 private slots:
     void initiateHistoricalUpdate();
 
 private:
-    void filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
+    filterReturnValue_t filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
     MetaData_t metaData;
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;
     HistoricalUpdateManager* historcalUpdateManager = nullptr;
+
 };
 

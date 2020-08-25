@@ -63,10 +63,10 @@ class FilteredConsole  : public QWidget, public InputNode
 {
     Q_OBJECT
 public:
-    FilteredConsole(DbgLogger *dbgLogger, HistoricalUpdateManager *historcalUpdateManager);
+    FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
-    void NotifyBufferUpdate(Subscription *source)override;
+    UpdateReturn_t NotifyBufferUpdate(Subscription *source)override;
     void notifyHistoricalUpdateFinished() override;
 
 

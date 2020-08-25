@@ -172,6 +172,30 @@ void CircularBuffer::appendByte(char *inputData)
         iterations++;
     }
 }
+void CircularBuffer::startConditional()
+{
+    conditionalHead = head;
+}
+//thread: main thread, producer thread
+void CircularBuffer::conditionalAppend(char *inputData)
+{
+    //QMutexLocker locker(&writeMutex);
+    *(writeBuffer + conditionalHead) = *inputData;
+    conditionalHead++;
+    if(conditionalHead == capacity)//at the begin of the buffer
+    {
+        conditionalHead = 0;
+    }
+}
+void CircularBuffer::commit()
+{
+    if(conditionalHead < head)//it has returned to the begin
+    {
+        returnToBegin();
+        iterations++;
+    }
+    head = conditionalHead;
+}
 //thread: main thread
 CircularBufferReader* CircularBuffer::requestNewReader()
 {

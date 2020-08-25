@@ -7,11 +7,12 @@ enum HistoricalEvent
     PAUSED,
     DONE
 };
+class UpdateManager;
 class NodeSettingsBase;
 class NodeBase
 {
 public:
-    NodeBase(DbgLogger* dbgLogger);
+    NodeBase(UpdateManager* updateManager, DbgLogger* dbgLogger);
     virtual ~NodeBase();
     bool hasInput = false;
     bool hasOutput = false;
@@ -24,7 +25,7 @@ public:
     int HistoricalUpdateEventNr = -1;
     HistoricalEvent eventState;
 protected:
-
+    UpdateManager* updateManager = nullptr;
     DbgLogger* dbgLogger = nullptr;
 };
 
