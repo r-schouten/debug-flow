@@ -12,8 +12,8 @@ public:
     MetaDataHelper();
     void appendTime(CircularBuffer* buffer);
     uint64_t generateHeading();
-private:
     uint64_t lastMetaData = 0;
+
 };
 class MetaData_t
 {
@@ -29,5 +29,5 @@ public:
 
 private:
     uint64_t timestamp=0;
-    uint header=0;
+    uint16_t header=0;
 };

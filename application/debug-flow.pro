@@ -16,6 +16,7 @@ SOURCES += \
     circularbuffer/circularbuffer.cpp \
     circularbuffer/circularbufferreader.cpp \
     features/historicalupdatemanager.cpp \
+    features/mergehelper.cpp \
     features/metadatahelper.cpp \
     features/updatemanager.cpp \
     flowwidget.cpp \
@@ -101,6 +102,7 @@ HEADERS += \
     circularbuffer/circularbuffer.h \
     circularbuffer/circularbufferreader.h \
     features/historicalupdatemanager.h \
+    features/mergehelper.h \
     features/metadatahelper.h \
     features/updatemanager.h \
     flowwidget.h \

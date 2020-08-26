@@ -45,7 +45,7 @@ void ConsistencyCheckerNode::reset()
 {
 
 }
-UpdateReturn_t ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
+void ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int availableSize)
 {
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {
@@ -65,7 +65,7 @@ UpdateReturn_t ConsistencyCheckerNode::NotifyBufferUpdate(Subscription *source)
     QTextCharFormat format;
     MetaData_t metadata;
 
-    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda, source->bufferReader, &format, &metadata);
+    contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda, source->bufferReader, availableSize, &format, &metadata);
 }
 
 void ConsistencyCheckerNode::appendConsole(QString line)

@@ -4,6 +4,7 @@
 #include "subscription.h"
 #include "nodebase.h"
 #include "updatemanager.h"
+#include "mergehelper.h"
 
 class OutputNode;
 class Subscription;
@@ -14,7 +15,8 @@ class InputNode:public virtual NodeBase
 public:
     InputNode();
     virtual ~InputNode();
-    virtual UpdateReturn_t NotifyBufferUpdate(Subscription* source) = 0;
+    void notifyBufferUpdate(Subscription* source);
+    virtual void doBufferUpdate(Subscription* source, int availableSize) = 0;
     virtual void notifyHistoricalUpdateFinished();
     void notifyUnsubscribe(Subscription* subscription);
     void addSubscription(OutputNode* outputNode);
@@ -31,10 +33,15 @@ public:
 
     bool isLocked();
 
-    bool areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription *currentSubscription);
 protected:
     QList<Subscription*> subScriptions;
  private:
+    void doMergeUpdate();
+    bool areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription *currentSubscription);
+
     bool locked = false;
+    MergeHelper* mergeHelper = nullptr;
+    Subscription *findOldest();
+    bool allSubsReady();
 };
 

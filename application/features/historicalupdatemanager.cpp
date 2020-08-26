@@ -9,7 +9,7 @@ HistoricalUpdateManager::HistoricalUpdateManager(DbgLogger* dbgLogger)
 void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
 {
     dbgLogger->debug("HistoricalUpdateManager",__FUNCTION__,"called");
-
+    return;//temporaty disabled for debugging
     historicalEventCounter++;
     historicalUpdate(node,true, 0);
 

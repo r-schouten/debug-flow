@@ -1,8 +1,8 @@
 #include "circularbuffer.h"
 
 //thread: main thread
-CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, const int _capacity, const int _maxCapacity, bool historicalCapable)
-    :dbgLogger(dbgLogger),capacity(_capacity),maxCapacity(_maxCapacity),historicalCapable(historicalCapable)
+CircularBuffer::CircularBuffer(DbgLogger *dbgLogger, std::string name, const int _capacity, const int _maxCapacity, bool historicalCapable)
+    :dbgLogger(dbgLogger),name(name),capacity(_capacity),maxCapacity(_maxCapacity),historicalCapable(historicalCapable)
 {
     originalBuffer = (char*) malloc(capacity * sizeof(char));
     writeBuffer = originalBuffer;
@@ -35,8 +35,7 @@ void CircularBuffer::reset()
     head = 0;
     iterations = 0;
 
-    minTail = 0;
-    minTailIteration = 0;
+    resetTail();
 
     if(resizeOperation != NO_OPERATION)
     {
@@ -77,12 +76,12 @@ void CircularBuffer::resize(int newCapacity)
     //QMutexLocker locker(&writeMutex);
     if(resizeOperation != NO_OPERATION)
     {
-        dbgLogger->error("CircularBuffer",__FUNCTION__, "resize operation is already going on");
+        dbgLogger->error("CircularBuffer",__FUNCTION__, "%s resize operation is already going on",name.c_str());
         return;
     }
     if(newCapacity > maxCapacity)
     {
-        dbgLogger->error("CircularBuffer",__FUNCTION__, "requested is larger than allowed by this node");
+        dbgLogger->error("CircularBuffer",__FUNCTION__, "%s requested is larger than allowed by this node",name.c_str());
     }
     dbgLogger->debug("CircularBuffer",__FUNCTION__, "resize to %d", newCapacity);
 
@@ -103,7 +102,7 @@ int CircularBuffer::unUsedSize()
 #ifdef QT_DEBUG
         if((minTailIteration != iterations)&&(head != 0))
         {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"iteration != tail iterations %d,%d    %d,%d",minTailIteration, minTail,iterations,head);
+            //dbgLogger->error("CircularBuffer",__FUNCTION__ ,"%s iteration != tail iterations %d,%d    %d,%d",name.c_str(),minTailIteration, minTail,iterations,head);
         }
 #endif
         return capacity - (head - minTail);
@@ -112,7 +111,7 @@ int CircularBuffer::unUsedSize()
 #ifdef QT_DEBUG
         if(minTailIteration + 1 != iterations)
         {
-            dbgLogger->error("CircularBuffer",__FUNCTION__ ,"tail iteration + 1 != iterations");
+            //dbgLogger->error("CircularBuffer",__FUNCTION__ ,"%s tail iteration + 1 != iterations",name.c_str());
         }
 #endif
         return minTail - head;
@@ -123,11 +122,11 @@ void CircularBuffer::checkSize(int neededSize)
 {
     if(neededSize >= capacity)
     {
-        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= capacity) %d",neededSize);
+        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"%s if(neededSize >= capacity) %d",name.c_str(),neededSize);
     }
     if(neededSize > unUsedSize())
     {
-        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"if(neededSize >= unUsedSize()) %d %d",unUsedSize(), neededSize);
+        dbgLogger->error("CircularBuffer",__FUNCTION__ ,"%s if(neededSize >= unUsedSize()) %d %d",name.c_str(),unUsedSize(), neededSize);
     }
 }
 
@@ -142,6 +141,7 @@ void CircularBuffer::append(const QByteArray *byteArray)
 //thread: main thread, producer thread
 void CircularBuffer::append(char *inputData, int size)
 {
+    char* dbghelp = writeBuffer+head;
     //QMutexLocker locker(&writeMutex);
     checkSize(size);
     int noSplitAvailable = capacity - head;

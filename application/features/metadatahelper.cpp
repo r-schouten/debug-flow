@@ -2,7 +2,6 @@
 
 MetaDataHelper::MetaDataHelper()
 {
-
 }
 
 void MetaDataHelper::appendTime(CircularBuffer *buffer)
@@ -22,11 +21,11 @@ uint64_t MetaDataHelper::generateHeading()
 {
     uint64_t time =
         std::chrono::system_clock::now().time_since_epoch() /
-        std::chrono::microseconds(1);
+        std::chrono::milliseconds(1);
 
     if(lastMetaData >= time)
     {
-        time += lastMetaData + 1;
+        time = lastMetaData + 1;
     }
     lastMetaData = time;
 
@@ -55,8 +54,8 @@ void MetaData_t::setTimeStamp(const uint64_t &value)
 
 void MetaData_t::toTime_t(std::time_t &time, int &milliseconds)
 {
-    time = static_cast<time_t>(timestamp/1000000);
-    milliseconds = (timestamp/1000) % 1000;
+    time = static_cast<time_t>(timestamp/1000);
+    milliseconds = (timestamp) % 1000;
 }
 
 QString MetaData_t::toHourMinuteSecond(char *buffer, int bufferLength)

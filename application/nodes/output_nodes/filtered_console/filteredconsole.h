@@ -66,7 +66,7 @@ public:
     FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
-    UpdateReturn_t NotifyBufferUpdate(Subscription *source)override;
+    void doBufferUpdate(Subscription *source, int availableSize)override;
     void notifyHistoricalUpdateFinished() override;
 
 
@@ -109,6 +109,6 @@ private slots:
     void initiateHistoricalUpdate();
     void SideLineOptionsChanged();
     void dataChanged();
-    void filterData();
+    void filterData(int availableSize);
 
 };

@@ -6,7 +6,7 @@ TamplateNode::TamplateNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
 {
     settings = new TamplateNodeSettings(dbgLogger);
 #ifdef OUTPUTNODE
-    circularBuffer = new CircularBuffer(dbgLogger, TAMPLATE_BUFFER_SIZE, TAMPLATE_BUFFER_SIZE, true);
+    circularBuffer = new CircularBuffer(dbgLogger,"tamplate", TAMPLATE_BUFFER_SIZE, TAMPLATE_BUFFER_SIZE, true);
     metaDataHelper = new MetaDataHelper;
 #endif
 #ifdef INPUTNODE

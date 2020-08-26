@@ -20,6 +20,7 @@ class CircularBuffer
 {
 private:
     DbgLogger* dbgLogger = nullptr;
+    std::string name;
     char* writeBuffer;//the pointer to the begin of the buffer
     char* originalBuffer = nullptr;
     char* resizeBuffer = nullptr;
@@ -42,7 +43,7 @@ private:
     void checkSize(int neededSize);
     void returnToBegin();
 public:
-    CircularBuffer(DbgLogger *dbgLogger, const int _capacity = 1000, const  int _maxCapacity = 1000, bool historicalCapable = false);
+    CircularBuffer(DbgLogger *dbgLogger, std::string name, const int _capacity = 1000, const  int _maxCapacity = 100000, bool historicalCapable = false);
     ~CircularBuffer();
     //todo copy and move constructor
 

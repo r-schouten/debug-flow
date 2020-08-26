@@ -20,7 +20,7 @@ void TestGeneratorNode::activate()
 {
     //general
     activated = true;
-    circularBuffer = new CircularBuffer(dbgLogger, TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_MAX_BUFFER_SIZE, true);
+    circularBuffer = new CircularBuffer(dbgLogger,"TestGenerator", TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_MAX_BUFFER_SIZE, true);
     metaDataHelper = new MetaDataHelper;
 
     //timer

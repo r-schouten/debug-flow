@@ -8,6 +8,8 @@
 #include "metadatahelper.h"
 #include "contextfilterengine.h"
 
+#include "mergehelper.h"
+
 class InputNode;
 class OutputNode;
 class Subscription
@@ -25,14 +27,13 @@ public:
     OutputNode *getOutputNode();
     InputNode *getInputNode() const;
 
-    UpdateReturn_t notifyBufferUpdate();
+    void notifyBufferUpdate();
     CircularBufferReader* bufferReader;
 
     void remove();
     UpdateNr_t getUpdateNr() const;
 
-    MetaData_t lastMetaData;
-    uint64_t mergeUpdateNr = 0;
-    filterReturnValue_t filterValue = filterReturnValue_t::ALL_DATA_PROCESSED;
+    //for merging
+    MergeState_t mergeState;
 };
 

@@ -34,28 +34,37 @@ void Subscription::remove()//use a function instead of a deconstructor so the ca
 {
     delete this;
 }
-UpdateReturn_t Subscription::notifyBufferUpdate()
+void Subscription::notifyBufferUpdate()
 {
     updateNr = updateManager->getUpdateNr();
 
-    UpdateReturn_t updateState = inputNode->NotifyBufferUpdate(this);
+    inputNode->notifyBufferUpdate(this);
     OutputNode* nextOutputNode = dynamic_cast<OutputNode*>(inputNode);
-
     //review this after merging support, especially processing done
-    while(updateState == NOT_DONE)
+    if(nextOutputNode)
     {
-        //save variables for the safety mechanism, when this doesn't change the node doesn't return a DONE state
-        int previousIteration = bufferReader->getIteration();
-        int previousTail = bufferReader->getTail();
-
-        dbgLogger->debug("Subscription", __FUNCTION__,"calling notifyBufferUpdate() again");
-        updateState = inputNode->NotifyBufferUpdate(this);
-        if(updateState != NOT_DONE)break;
-        if((previousIteration == bufferReader->getIteration()) && (previousTail == bufferReader->getTail()))
+        int counter = 0;
+        while(nextOutputNode->isProcessingDone() == false)
         {
-            dbgLogger->fatal("Subscription", __FUNCTION__, "safety mechanism triggered, node has a NOT_DONE state but doensn't do anything\ncaused by node:%s",getInputNode()->getNodeName().c_str());
-            return updateState;
+            //save variables for the safety mechanism, when this doesn't change the node has a bug with the processingDone variable
+            int previousIteration = bufferReader->getIteration();
+            int previousTail = bufferReader->getTail();
+            if(counter == 0){
+                dbgLogger->debug("Subscription", __FUNCTION__,"calling notifyBufferUpdate() again %s -> %s",getOutputNode()->getNodeName().c_str(),getInputNode()->getNodeName().c_str());
+            }
+            counter++;
+            inputNode->notifyBufferUpdate(this);
+            if(nextOutputNode->isProcessingDone())break;
+            if((previousIteration == bufferReader->getIteration()) && (previousTail == bufferReader->getTail()))
+            {
+                dbgLogger->error("Subscription", __FUNCTION__, "safety mechanism triggered, node has a processing done not set but doensn't do anything\ncaused by node:%s -> %s",getOutputNode()->getNodeName().c_str(),getInputNode()->getNodeName().c_str());
+                break;
+            }
+        }
+        if(counter > 1)
+        {
+            dbgLogger->printf("%d times",counter);
+
         }
     }
-    return updateState;
 }

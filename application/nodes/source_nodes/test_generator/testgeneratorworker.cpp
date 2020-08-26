@@ -122,16 +122,19 @@ void TestGeneratorWorker::process()
         {
             if(a == '[')
             {
-                if(!((i !=0)&&(data.at(i-1)=='\033')))
-                {
+                //if(!((i ==0)&&(data.at(i-1)=='\033')))
+                //{
                     metaDataHelper.appendTime(circularBuffer);
-                }
+//                    char buffer[20];
+//                    sprintf(buffer,"%llu",metaDataHelper.lastMetaData);
+//                    circularBuffer->append(buffer, strlen(buffer));
+                //}
             }
         }
         circularBuffer->appendByte(&a);
     }
-    char mark = '|';
-    circularBuffer->appendByte(&mark);
+    //char mark = '|';
+    //circularBuffer->appendByte(&mark);
     if(!settings->getSplitOnNewLine())
     {
         data.clear();

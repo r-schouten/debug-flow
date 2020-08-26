@@ -30,6 +30,7 @@ int CircularBufferReader::usedSize()
         if(tail < buffer->head)
         {
             buffer->dbgLogger->error("CircularBufferReader",__FUNCTION__ ," reader->tail < head %d,%d    %d,%d",iteration,tail,buffer->iterations,buffer->head);
+            iteration = buffer->iterations;//shit happens, recover it
         }
         return (capacity - tail) + buffer->head;
 
@@ -39,12 +40,14 @@ int CircularBufferReader::usedSize()
         if(tail > buffer->head)
         {
             buffer->dbgLogger->error("CircularBufferReader",__FUNCTION__ ," reader->tail > head %d,%d    %d,%d",iteration,tail,buffer->iterations,buffer->head);
+            iteration = buffer->iterations-1;//shit happens, recover it
         }
         return buffer->head - tail;
     }
     else
     {
         buffer->dbgLogger->error("CircularBufferReader",__FUNCTION__ ," reader->iteration > iterations %d,%d    %d,%d",iteration,tail,buffer->iterations,buffer->head);
+        iteration = buffer->iterations;//shit happens, recover it
     }
     return 0;
 }

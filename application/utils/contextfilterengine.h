@@ -37,7 +37,7 @@ public:
 
     void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed, MetaData_t *currentMetaData);
     filterReturnValue_t filterDataMerge(CircularBuffer *buffer, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, MetaData_t *currentMetaData, MetaDataBreak_t metaDataBreak, bool stopOnNewLine);
-    void filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, QTextCharFormat *format, MetaData_t* currentMetaData);
+    void filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, int availableSize, QTextCharFormat *format, MetaData_t* currentMetaData);
 private:
     TagAndOptionsSettings* settings = nullptr;
     DbgLogger* dbgLogger = nullptr;
@@ -51,7 +51,7 @@ private:
 
     bool proccesMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &releaseLength);
     bool readMetaData(CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i);
-    bool forwardAndReadMetaData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &destinationAvailabe, int &releaseLength);
+    bool forwardAndReadMetaData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, MetaData_t *currentMetaData, int &i, int availabeSize, int &charsAdded, int &releaseLength);
 signals:
     //void propertyChanged(Property* property);
 };

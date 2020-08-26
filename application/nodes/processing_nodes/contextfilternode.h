@@ -14,14 +14,14 @@ public:
     virtual ~ContextFilterNode();
     virtual std::string getNodeName() override;
     virtual ContextFilterSettings *getNodeSettings() override;
-    virtual UpdateReturn_t NotifyBufferUpdate(Subscription *source) override;
+    virtual void doBufferUpdate(Subscription *source, int availableSize) override;
     virtual void reset() override;
 
 private slots:
     void initiateHistoricalUpdate();
 
 private:
-    filterReturnValue_t filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
+    void filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
     MetaData_t metaData;
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;

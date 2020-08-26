@@ -16,7 +16,7 @@ void SerialNode::activate()
 {
     activated = true;
 
-    circularBuffer = new CircularBuffer(dbgLogger, SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE, true);
+    circularBuffer = new CircularBuffer(dbgLogger,"Serial", SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE, true);
     m_serial = new QSerialPort(this);
     metaDataHelper = new MetaDataHelper;
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);

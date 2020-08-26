@@ -69,7 +69,7 @@ void FilteredConsole::reset()
     nodeSettings->clearConsoleClicked();
     clearConsole();
 }
-void FilteredConsole::filterData()
+void FilteredConsole::filterData(int availableSize)
 {
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {bufferString.append(character);};
@@ -83,10 +83,10 @@ void FilteredConsole::filterData()
         console->append(bufferString, currentCharFormat, &metaData, nodeSettings->getAutoScrollEnabled());
         bufferString.clear();
     };
-    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, &currentCharFormat, &metaData);
+    contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, availableSize, &currentCharFormat, &metaData);
     formatChangedLambda();
 }
-UpdateReturn_t FilteredConsole::NotifyBufferUpdate(Subscription *source)
+void FilteredConsole::doBufferUpdate(Subscription *source, int availableSize)
 {
     if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");
@@ -99,7 +99,7 @@ UpdateReturn_t FilteredConsole::NotifyBufferUpdate(Subscription *source)
     }
     else
     {
-        filterData();
+        filterData(availableSize);
     }
 
 }
