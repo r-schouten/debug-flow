@@ -14,7 +14,7 @@ class SimpleConsole : public QWidget, public InputNode
 
 public:
     void clear();
-    void doBufferUpdate(Subscription *source, int availableSize)override;
+    UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize)override;
 
     SimpleConsole(UpdateManager* updateManager,DbgLogger *dbgLogger);
     virtual ~SimpleConsole();

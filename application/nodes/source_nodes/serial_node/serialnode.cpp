@@ -80,9 +80,6 @@ void SerialNode::writeData(const char* data, const size_t length)
     m_serial->write(data, length);
 }
 
-
-
-
 void SerialNode::readData()
 {
     if(!activated) return;

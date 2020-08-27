@@ -12,15 +12,15 @@
 #include "tagandoptionssettings.h"
 #include "metadatahelper.h"
 
-enum filterReturnValue_t
-{
-    BUFFER_FULL,
-    ALL_DATA_PROCESSED,
-    LAST_NEWLINE,
-    RETURN_ON_METADATA,
-    RETURN_ON_ERROR,
-    RETURN_ON_STYLECHANGE
-};
+//enum filterReturnValue_t
+//{
+//    BUFFER_FULL,
+//    ALL_DATA_PROCESSED,
+//    LAST_NEWLINE,
+//    RETURN_ON_METADATA,
+//    RETURN_ON_ERROR,
+//    RETURN_ON_STYLECHANGE
+//};
 enum MetaDataBreak_t
 {
     DONT_BREAK_ON_METADATA,
@@ -36,7 +36,7 @@ public:
     ContextFilterEngine(TagAndOptionsSettings* settings, DbgLogger *dbgLogger);
 
     void filterData(const std::function<void (char)> &addChar, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, bool *allDataProcessed, MetaData_t *currentMetaData);
-    filterReturnValue_t filterDataMerge(CircularBuffer *buffer, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, MetaData_t *currentMetaData, MetaDataBreak_t metaDataBreak, bool stopOnNewLine);
+    //UpdateReturn_t filterDataMerge(CircularBuffer *buffer, CircularBufferReader *bufferReader, int sourceAvailable, int destinationAvailabe, MetaData_t *currentMetaData, MetaDataBreak_t metaDataBreak, bool stopOnNewLine);
     void filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader, int availableSize, QTextCharFormat *format, MetaData_t* currentMetaData);
 private:
     TagAndOptionsSettings* settings = nullptr;

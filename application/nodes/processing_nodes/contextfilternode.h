@@ -14,7 +14,7 @@ public:
     virtual ~ContextFilterNode();
     virtual std::string getNodeName() override;
     virtual ContextFilterSettings *getNodeSettings() override;
-    virtual void doBufferUpdate(Subscription *source, int availableSize) override;
+    virtual UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize) override;
     virtual void reset() override;
 
 private slots:

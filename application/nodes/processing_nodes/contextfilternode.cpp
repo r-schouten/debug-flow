@@ -120,7 +120,7 @@ ContextFilterSettings *ContextFilterNode::getNodeSettings()
 //    }
 //}
 
-void ContextFilterNode::doBufferUpdate(Subscription *source, int availableSize)
+UpdateReturn_t ContextFilterNode::doBufferUpdate(Subscription *source, int availableSize)
 {
     if(source->bufferReader == nullptr){
         qFatal("ContextFilterNode::notifyBufferUpdate() : bufferReader == nullptr");
@@ -128,7 +128,19 @@ void ContextFilterNode::doBufferUpdate(Subscription *source, int availableSize)
 
     auto lambda = [&](char character) mutable {circularBuffer->appendByte(&character);};
     contextFilterEngine->filterData(lambda, source->bufferReader, availableSize, getBufferUnusedSize(),&processingDone, &metaData);
-    notifyAllSubscriptions();
+    UpdateReturn_t updateReturn = notifyAllSubscriptions();
+    if(updateReturn == UpdateReturn_t::ROUTE_DELAYED)
+    {
+            return updateReturn;
+    }
+    if(processingDone)
+    {
+        return UpdateReturn_t::UPDATE_DONE;
+    }
+    else
+    {
+        return UpdateReturn_t::NOT_DONE;
+    }
 
     //    if(settings->getMergeMode() == MergeMode_t::ON_TIMESTAMP)
 //    {

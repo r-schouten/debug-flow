@@ -8,7 +8,6 @@ class CircularBufferReader
 private:
     CircularBuffer* buffer = nullptr;
     int tail = 0;
-    int capacity = 0;//a copy of the original buffer capacity
     int iteration = 0;
     char* readBuffer = nullptr;
     CircularBufferReader(CircularBuffer* buffer, int tail, int iteration);
@@ -27,4 +26,7 @@ public:
     friend CircularBuffer;
     int getIteration() const;
     int getTail() const;
+
+    int capacity = 0;//a copy of the original buffer capacity
+
 };

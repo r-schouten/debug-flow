@@ -9,9 +9,6 @@ enum UpdateReturn_t
 
 typedef uint64_t UpdateNr_t;
 
-class Subscription;
-class InputNode;
-class OutputNode;
 class UpdateManager
 {
 public:
@@ -20,11 +17,9 @@ public:
     UpdateNr_t initateUpdate();
     UpdateNr_t getUpdateNr();
     void finishUpdate();
-    void addDelayedSubscription(Subscription* subscription);
+    int depth = 0;
 private:
     DbgLogger* dbgLogger = nullptr;
     UpdateNr_t updateNr = 0;
-    std::list<Subscription*> delayedSubscription;
-
 };
 

@@ -28,7 +28,7 @@ NodeSettingsBase *SimpleConsole::getNodeSettings()
 {
     return nullptr;//todo make settings
 }
-void SimpleConsole::doBufferUpdate(Subscription *source, int availableSize)
+UpdateReturn_t SimpleConsole::doBufferUpdate(Subscription *source, int availableSize)
 {
     console->setUpdatesEnabled(false);
 

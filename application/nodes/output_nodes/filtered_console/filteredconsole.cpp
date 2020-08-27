@@ -86,7 +86,7 @@ void FilteredConsole::filterData(int availableSize)
     contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, availableSize, &currentCharFormat, &metaData);
     formatChangedLambda();
 }
-void FilteredConsole::doBufferUpdate(Subscription *source, int availableSize)
+UpdateReturn_t FilteredConsole::doBufferUpdate(Subscription *source, int availableSize)
 {
     if(source->bufferReader == nullptr){
         qFatal("FilteredConsole::notifyBufferUpdate() : bufferReader == nullptr");

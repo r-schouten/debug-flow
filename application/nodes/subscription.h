@@ -27,7 +27,7 @@ public:
     OutputNode *getOutputNode();
     InputNode *getInputNode() const;
 
-    void notifyBufferUpdate();
+    UpdateReturn_t notifyBufferUpdate();
     CircularBufferReader* bufferReader;
 
     void remove();

@@ -72,7 +72,9 @@ void TestGeneratorNode::reset()
 void TestGeneratorNode::updateDone()
 {
     updateManager->initateUpdate();
-    notifyAllSubscriptions();
+    //dbgLogger->verbose(CLASSNAME,__FUNCTION__,"start update with %d bytes",settings->getDataPerUpdate());
+    while(notifyAllSubscriptions() != UpdateReturn_t::UPDATE_DONE);
+//    dbgLogger->verbose(CLASSNAME,__FUNCTION__,"update done\n\n\n");
     updateManager->finishUpdate();
 }
 void TestGeneratorNode::processInMainThread()

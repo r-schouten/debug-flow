@@ -66,7 +66,7 @@ public:
     FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
-    void doBufferUpdate(Subscription *source, int availableSize)override;
+    UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize)override;
     void notifyHistoricalUpdateFinished() override;
 
 

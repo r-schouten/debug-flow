@@ -61,20 +61,20 @@ void InputNode::bufferReaderToBegin(Subscription *caller)
     caller->bufferReader->toBegin();
 }
 
-void InputNode::notifyBufferUpdate(Subscription *source)
+UpdateReturn_t InputNode::notifyBufferUpdate(Subscription *source)
 {
     if(subScriptions.count() <= 1)
     {
-        doBufferUpdate(source, source->bufferReader->availableSize());
+        return doBufferUpdate(source, source->bufferReader->availableSize());
     }
     else
     {
-        doMergeUpdate();
+        return doMergeUpdate(source);
     }
 
 }
 
-void InputNode::doMergeUpdate()
+UpdateReturn_t InputNode::doMergeUpdate(Subscription *source)
 {
     QListIterator<Subscription*> iterator(subScriptions);
     while(iterator.hasNext())
@@ -82,7 +82,6 @@ void InputNode::doMergeUpdate()
         Subscription* subscription = iterator.next();
         mergeHelper->analyze(subscription->bufferReader, &subscription->mergeState);//todo, not all of them need this
     }
-
     while(true)
     {
         //dbgLogger->debug("InputNode",__FUNCTION__,"start");
@@ -91,22 +90,31 @@ void InputNode::doMergeUpdate()
         if(oldestUpdate == nullptr)break;
         if(oldestUpdate->mergeState.ready != READY)break;
 
-        //dbgLogger->printf("%llu choosen \n",oldestUpdate->mergeState.lastTimestamp.getTimeStamp());
-        doBufferUpdate(oldestUpdate, oldestUpdate->mergeState.availableSize);
 
+        UpdateReturn_t returnState = doBufferUpdate(oldestUpdate, oldestUpdate->mergeState.availableSize);
+        if(returnState == ROUTE_DELAYED)return ROUTE_DELAYED;
 
         oldestUpdate->mergeState.ready = NOT_READY;
         mergeHelper->analyze(oldestUpdate->bufferReader, &oldestUpdate->mergeState);
     }
 
+    if(source->getOutputNode()->isProcessingDone())
+    {
+        return UpdateReturn_t::UPDATE_DONE;
+    }
+    else
+    {
+        return UpdateReturn_t::ROUTE_DELAYED;
+    }
 }
+
 bool InputNode::allSubsReady()
 {
     QListIterator<Subscription*> iterator(subScriptions);
     while(iterator.hasNext())
     {
         Subscription* subscription = iterator.next();
-        if(subscription->mergeState.ready != MergeReady_t::READY)
+        if(subscription->mergeState.ready == MergeReady_t::NOT_READY)
         {
             return false;
         }
@@ -121,15 +129,24 @@ Subscription* InputNode::findOldest()//can return nullptr
     while(iterator.hasNext())
     {
         Subscription* subscription = iterator.next();
-        if(subscription->mergeState.ready == MergeReady_t::READY)
+        if(subscription->mergeState.ready != MergeReady_t::NOT_READY)
         {
             uint64_t currentTimeStamp = subscription->mergeState.lastTimestamp.getTimeStamp();
             //dbgLogger->printf("%llu \n",currentTimeStamp);
-            if(currentTimeStamp < oldestTimeStamp)
+            if(currentTimeStamp <= oldestTimeStamp)
             {
                 oldestTimeStamp = currentTimeStamp;
                 oldestSubscription = subscription;
             }
+            else if(currentTimeStamp == oldestTimeStamp)
+            {
+                if(oldestSubscription->mergeState.ready == TIMESTAMP_FOUND)
+                {
+                    oldestTimeStamp = currentTimeStamp;
+                    oldestSubscription = subscription;
+                }
+            }
+
         }
     }
     return oldestSubscription;

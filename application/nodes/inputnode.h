@@ -15,8 +15,8 @@ class InputNode:public virtual NodeBase
 public:
     InputNode();
     virtual ~InputNode();
-    void notifyBufferUpdate(Subscription* source);
-    virtual void doBufferUpdate(Subscription* source, int availableSize) = 0;
+    UpdateReturn_t notifyBufferUpdate(Subscription* source);
+    virtual UpdateReturn_t doBufferUpdate(Subscription* source, int availableSize) = 0;
     virtual void notifyHistoricalUpdateFinished();
     void notifyUnsubscribe(Subscription* subscription);
     void addSubscription(OutputNode* outputNode);
@@ -36,7 +36,7 @@ public:
 protected:
     QList<Subscription*> subScriptions;
  private:
-    void doMergeUpdate();
+    UpdateReturn_t doMergeUpdate(Subscription *source);
     bool areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription *currentSubscription);
 
     bool locked = false;

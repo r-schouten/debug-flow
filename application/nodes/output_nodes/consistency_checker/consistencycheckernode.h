@@ -25,7 +25,7 @@ public:
     virtual std::string getNodeName();
     virtual ConsistencyCheckerSettings *getNodeSettings();
     void reset();
-    void doBufferUpdate(Subscription *source, int availableSize);
+    UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize);
     void notifyHistoricalUpdateFinished();
 protected:
     ConsistencyCheckerSettings* settings = nullptr;

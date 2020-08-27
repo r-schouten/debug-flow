@@ -53,16 +53,20 @@ std::string OutputNode::getNodeName()
 
 
 //-------buffer update-----------
-void OutputNode::notifyAllSubscriptions()
+UpdateReturn_t OutputNode::notifyAllSubscriptions()
 {
+    UpdateReturn_t updateReturn = UpdateReturn_t::UPDATE_DONE;
     circularBuffer->resetTail();//part of the tail tracking feature, this doesn't modify the buffer itself
     QListIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
-        subscription->notifyBufferUpdate();
+        UpdateReturn_t currentReturn = subscription->notifyBufferUpdate();
+        if(currentReturn == UpdateReturn_t::ROUTE_DELAYED)
+            updateReturn = currentReturn;
         circularBuffer->calcTail(subscription->bufferReader);//tail tracking
     }
+    return updateReturn;
 }
 
 int OutputNode::getBufferUnusedSize()

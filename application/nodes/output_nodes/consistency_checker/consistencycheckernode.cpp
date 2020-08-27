@@ -43,9 +43,10 @@ ConsistencyCheckerSettings* ConsistencyCheckerNode::getNodeSettings()
 
 void ConsistencyCheckerNode::reset()
 {
-
+    console->clear();
+    bufferString.clear();
 }
-void ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int availableSize)
+UpdateReturn_t ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int availableSize)
 {
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {
@@ -54,7 +55,6 @@ void ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int availableS
         {
             bufferStringCopy = bufferString;
             bufferString.clear();
-            //QMetaObject::invokeMethod(this, "appendConsole" , Qt::QueuedConnection,Q_ARG(QString,bufferStringCopy));
             appendConsole(bufferStringCopy);
         }
     };
@@ -92,12 +92,12 @@ void ConsistencyCheckerNode::appendConsole(QString line)
             {
                 format.setForeground(Qt::red);
             }
-            if(lastNr > number)
+            if(!((lastNr == number)||(lastNr+1 == number)))
             {
-                lastNr = number + 1;
                 format.setForeground(Qt::red);
                 oke = false;
             }
+            lastNr = number;
             console->moveCursor(QTextCursor::End);
             console->setCurrentCharFormat(format);
             console->insertPlainText(numberpart);
