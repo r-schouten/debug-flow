@@ -76,8 +76,11 @@ UpdateReturn_t InputNode::notifyBufferUpdate(Subscription *source)
     }
     else
     {
+        updateManager->measurementPoint(MERGE_BEGIN);
         //multiple nodes are connected to the input, so we need to merge
         return doMergeUpdate(source);
+        updateManager->measurementPoint(MERGE_END);
+
     }
 
 }

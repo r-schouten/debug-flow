@@ -34,7 +34,11 @@ UpdateReturn_t ContextFilterNode::doBufferUpdate(Subscription *source, int avail
     }
 
     auto lambda = [&](char character) mutable {circularBuffer->appendByte(&character);};
+
+    updateManager->measurementPoint(CONTEXT_FILTER_BEGIN);
     contextFilterEngine->filterData(lambda, source->bufferReader, availableSize, getBufferUnusedSize(),&processingDone, &metaData);
+    updateManager->measurementPoint(CONTEXT_FILTER_END);
+
     UpdateReturn_t updateReturn = notifyAllSubscriptions();
     if(updateReturn == UpdateReturn_t::ROUTE_DELAYED)
     {

@@ -53,6 +53,6 @@ void TamplateNode::notifyHistoricalUpdateFinished()
 //send some data into the system, doesn't matter from what kind of function it comes from
 void TamplateNode::dataReceived()
 {
-    notifyAllSubscriptions();
+    updateManager->initateUpdate(this);
 }
 #endif

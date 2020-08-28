@@ -99,7 +99,7 @@ void SerialNode::readData()
         }
         circularBuffer->appendByte(&a);
     }
-    notifyAllSubscriptions();
+    updateManager->initateUpdate(this);
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {

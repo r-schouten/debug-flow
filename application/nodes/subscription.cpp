@@ -38,7 +38,7 @@ QStringList ReturnText = {"UPDATE DONE","NOT DONE","DELAYED"};
 UpdateReturn_t Subscription::notifyBufferUpdate()
 {
     updateNr = updateManager->getUpdateNr();
-
+    updateManager->measurementPoint(SUBSCRIPTION);
 //    int previousIteration = bufferReader->getIteration();
 //    int previousTail = bufferReader->getTail();
 

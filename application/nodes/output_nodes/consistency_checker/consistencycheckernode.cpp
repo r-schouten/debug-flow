@@ -53,9 +53,11 @@ UpdateReturn_t ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int 
         bufferString.append(character);
         if(bufferString.endsWith("\n"))
         {
+            updateManager->measurementPoint(VISUALIZE_BEGIN);
             bufferStringCopy = bufferString;
             bufferString.clear();
             appendConsole(bufferStringCopy);
+            updateManager->measurementPoint(VISUALIZE_END);
         }
     };
     auto formatChangedLambda = [&]() mutable
@@ -65,7 +67,10 @@ UpdateReturn_t ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int 
     QTextCharFormat format;
     MetaData_t metadata;
 
+    updateManager->measurementPoint(FILTER_WITH_STYLE_START);
     contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda, source->bufferReader, availableSize, &format, &metadata);
+    updateManager->measurementPoint(FILTER_WITH_STYLE_END);
+
 }
 
 void ConsistencyCheckerNode::appendConsole(QString line)

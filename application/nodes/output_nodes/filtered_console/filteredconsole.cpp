@@ -80,10 +80,15 @@ void FilteredConsole::filterData(int availableSize)
         if(bufferString.endsWith(QChar('\r'))){
             bufferString.chop(1);
         }
+        updateManager->measurementPoint(VISUALIZE_BEGIN);
         console->append(bufferString, currentCharFormat, &metaData, nodeSettings->getAutoScrollEnabled());
+        updateManager->measurementPoint(VISUALIZE_END);
+
         bufferString.clear();
     };
+    updateManager->measurementPoint(FILTER_WITH_STYLE_START);
     contextFilter->filterDataWithStyle(addCharLambda, formatChangedLambda,  lastSource->bufferReader, availableSize, &currentCharFormat, &metaData);
+    updateManager->measurementPoint(FILTER_WITH_STYLE_END);
     formatChangedLambda();
 }
 UpdateReturn_t FilteredConsole::doBufferUpdate(Subscription *source, int availableSize)
