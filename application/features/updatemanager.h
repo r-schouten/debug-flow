@@ -9,14 +9,14 @@ enum UpdateReturn_t
 
 typedef uint64_t UpdateNr_t;
 
+class OutputNode;
 class UpdateManager
 {
 public:
     UpdateManager(DbgLogger* dbgLogger);
 
-    UpdateNr_t initateUpdate();
+    UpdateNr_t initateUpdate(OutputNode* sourceNode);
     UpdateNr_t getUpdateNr();
-    void finishUpdate();
     int depth = 0;
 private:
     DbgLogger* dbgLogger = nullptr;

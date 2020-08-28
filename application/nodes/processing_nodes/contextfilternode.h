@@ -21,7 +21,6 @@ private slots:
     void initiateHistoricalUpdate();
 
 private:
-    void filterData(CircularBuffer *buffer, CircularBufferReader *bufferReader);
     MetaData_t metaData;
     ContextFilterSettings* settings = nullptr;
     ContextFilterEngine* contextFilterEngine = nullptr;

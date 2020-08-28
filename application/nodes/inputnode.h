@@ -37,7 +37,6 @@ protected:
     QList<Subscription*> subScriptions;
  private:
     UpdateReturn_t doMergeUpdate(Subscription *source);
-    bool areAllOtherSubscriptionsUpdated(UpdateNr_t updateNr, Subscription *currentSubscription);
 
     bool locked = false;
     MergeHelper* mergeHelper = nullptr;

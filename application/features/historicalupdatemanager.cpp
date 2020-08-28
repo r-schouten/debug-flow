@@ -1,10 +1,11 @@
 #include "historicalupdatemanager.h"
 
-HistoricalUpdateManager::HistoricalUpdateManager(DbgLogger* dbgLogger)
-    :dbgLogger(dbgLogger)
+HistoricalUpdateManager::HistoricalUpdateManager(UpdateManager *updateManager, DbgLogger *dbgLogger)
+    :updateManager(updateManager), dbgLogger(dbgLogger)
 {
 
 }
+
 
 void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
 {
@@ -14,7 +15,7 @@ void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
 
     for (auto const& i : sourcesList) {
         i->doHistoricalUpdate();
-        i->notifyAllSubscriptions();
+        updateManager->initateUpdate(i);
     }
     sourcesList.clear();
 
@@ -31,23 +32,29 @@ void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
 //recursive function
 void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset,int depth)
 {
+    InputNode* inputNode = nullptr;
+    OutputNode* outputNode = nullptr;
+
+    if(node->hasInput)//this is needed for a flow with merges
+    {
+        inputNode = dynamic_cast<InputNode*>(node);
+        if(inputNode->isLocked())
+        {
+            inputNode->unlock();
+        }
+    }
     //to prevent circular endles recursion, only run when it is the first update for this event.
     if(node->HistoricalUpdateEventNr != historicalEventCounter)
     {
         node->HistoricalUpdateEventNr = historicalEventCounter;
-        node->eventState = INITIATING;
     }
     else
     {
         return;
     }
-    node->eventState = INITIATED;
 
-    InputNode* inputNode = nullptr;
-    OutputNode* outputNode = nullptr;
     if(node->hasInput)
     {
-        inputNode = dynamic_cast<InputNode*>(node);
         inputNodes.push_front(inputNode);
     }
     if(node->hasOutput) outputNode = dynamic_cast<OutputNode*>(node);

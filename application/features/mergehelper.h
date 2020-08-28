@@ -1,11 +1,12 @@
 #pragma once
 #include "circularbufferreader.h"
 #include "metadatahelper.h"
-
+#include "updatemanager.h"
 
 enum MergeReady_t
 {
     NOT_READY,
+    DISABLED,
     TIMESTAMP_FOUND,
     READY
 };
@@ -13,9 +14,10 @@ enum MergeReady_t
 struct MergeState_t
 {
     MetaData_t lastTimestamp;
-    int updateNr = 0;
+    UpdateNr_t updateNr = 0;
     MergeReady_t ready = NOT_READY;
     int availableSize;
+    UpdateReturn_t lastReturn;
 };
 
 class MergeHelper

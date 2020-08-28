@@ -12,8 +12,8 @@ FlowWidget::FlowWidget(QWidget *parent, FileSystem* _fileSystem) : QWidget(paren
     windowManager = new WindowManager(flow_ui->mdiArea);
     undoRedoManager = new UndoRedoManager(flow_ui->undoRedoWidget);
 
-    historicalUpdateManager = new HistoricalUpdateManager(dbgLogger);
     updateManager = new UpdateManager(dbgLogger);
+    historicalUpdateManager = new HistoricalUpdateManager(updateManager, dbgLogger);
 
     flowObjects = new FlowObjects(selectionManager, undoRedoManager, dbgLogger, windowManager, historicalUpdateManager, updateManager);
 
