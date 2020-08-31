@@ -127,7 +127,7 @@ void FilteredConsole::loadTags()
 {
     while(tagComboBoxes.size() > 0)delete tagComboBoxes.takeAt(0);
 
-    QListIterator<Tag*> tagIterator(nodeSettings->tagAndOptionSettings->tags);
+    QVectorIterator<Tag*> tagIterator(nodeSettings->tagAndOptionSettings->tags);
     while(tagIterator.hasNext())
     {
         Tag* currentTag = tagIterator.next();

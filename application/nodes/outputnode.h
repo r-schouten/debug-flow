@@ -17,7 +17,7 @@ public:
     OutputNode();
     virtual ~OutputNode();
     void notifyUnsubscribe(Subscription* subscription);
-    QList<Subscription *>* getSubscribers();
+    QVector<Subscription *>* getSubscribers();
     virtual std::string getNodeName();
 
     void resetBuffer();
@@ -25,12 +25,15 @@ public:
     void doHistoricalUpdate();
 
     UpdateReturn_t notifyAllSubscriptions();
-    int getBufferUnusedSize();
+    inline int getBufferUnusedSize()
+    {
+        return circularBuffer->unUsedSize();
+    }
 
     bool isProcessingDone() const;
 
 protected:
-    QList<Subscription*> subscribers;
+    QVector<Subscription*> subscribers;
     CircularBuffer* circularBuffer = nullptr;
 
     bool processingDone = true;//this variable indicates whether all data did fit in the output buffer, or wheter a second buffer write is needed.

@@ -15,6 +15,7 @@ CircularBufferReader::CircularBufferReader(CircularBuffer *buffer, int tail, int
     :buffer(buffer),tail(tail),iteration(iteration)
 {
     readBuffer = buffer->writeBuffer;
+    ptrToWriteBuffer = &buffer->writeBuffer;
     capacity = buffer->capacity;
 }
 //thread: main thread
@@ -64,24 +65,7 @@ int CircularBufferReader::availableSize()
     return usedSize();
 }
 
-//thread: main thread, consumer
-char &CircularBufferReader::operator [] (int i)
-{
-    return at(i);
-}
 
-//thread: main thread, consumer
-char &CircularBufferReader::at(int i)
-{
-    if(i + tail < capacity)
-    {
-        return readBuffer[i+tail];
-    }
-    else
-    {
-        return buffer->writeBuffer[i + tail - capacity];
-    }
-}
 
 //thread: main thread, consumer
 void CircularBufferReader::release(int length)

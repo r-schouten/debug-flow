@@ -8,8 +8,11 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLog
 
 void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed, MetaData_t* currentMetaData)
 {
-    int contextBeginIndex = 0;
-    int ANSIBeginIndex = 0;
+    union
+    {
+        int contextBeginIndex = 0;
+        int ANSIBeginIndex;
+    };//ansi in context is not allowed, and the variables are never used at the same time
     int releaseLength = 0;
     int charsAdded = 0;
 
@@ -22,6 +25,7 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
 
         if((character == METADATA_MARK))
         {
+
             if(charsAdded + TIMESTAMP_BYTES >= destinationAvailabe)
             {
                 *allDataProcessed = false;
@@ -33,7 +37,6 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
             }
             else
             {
-
                 break;
             }
             continue;
@@ -91,8 +94,11 @@ void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, C
 }
 void ContextFilterEngine::filterDataWithStyle(const std::function<void(char)>& addCharLambda, const std::function<void()>& styleChangedLambda, CircularBufferReader *bufferReader,int availableSize, QTextCharFormat *format, MetaData_t* currentMetaData)
 {
-    int contextBeginIndex = 0;
-    int ANSIBeginIndex = 0;
+    union
+    {
+        int contextBeginIndex = 0;
+        int ANSIBeginIndex;
+    };//ansi in context is not allowed, and the variables are never used at the same time
     int releaseLength = 0;
 
     bool readingInContext = false;
@@ -257,26 +263,27 @@ void ContextFilterEngine::processContext(CircularBufferReader *bufferReader, int
         if(character == METADATA_MARK)//skip 8 characters
         {
             i += TIMESTAMP_BYTES - 1;//warning, notice that i might overflow and no other operation can be done before checking if its needed to break the loop
+            continue;
         }
-        else
+        releaseLength++;
+        if(character == ',')
         {
-            releaseLength++;
-            if(character == ',')
-            {
-                processOption(property,propertyIndex);
-                propertyIndex++;
-                property.clear();
-            }
-            else {
-                property.append(character);
-            }
+            processOption(property,propertyIndex);
+            propertyIndex++;
+            property.clear();
         }
+        else {
+            property.append(character);
+        }
+
     }
     processOption(property,propertyIndex);
 }
 void ContextFilterEngine::processOption(QString& optionName, int tagIndex)
 {
+#ifdef QT_DEBUG
     if(!settings)return;
+#endif
     if(settings->tags.size() <= tagIndex)
     {
         settings->tags.append(new Tag(QString("tag %0").arg(tagIndex),tagIndex));

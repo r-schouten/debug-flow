@@ -46,7 +46,7 @@ QJsonArray *TagAndOptionsSettings::serialize(SerializationHandler &handler)
     Q_UNUSED(handler);
     QJsonArray *tagsJson = new QJsonArray();
 
-    QListIterator<Tag*>iterator(tags);
+    QVectorIterator<Tag*>iterator(tags);
     while(iterator.hasNext())
     {
         Tag* tag = iterator.next();

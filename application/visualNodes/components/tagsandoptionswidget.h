@@ -8,11 +8,11 @@ class TagsAndOptionsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    TagsAndOptionsWidget(QWidget *parent, QList<Tag *> *tags);
+    TagsAndOptionsWidget(QWidget *parent, QVector<Tag *> *tags);
     virtual ~TagsAndOptionsWidget();
 
     QList<TagGroupbox*> tagGroupboxes;
-    QList<Tag *> *tags;
+    QVector<Tag *> *tags;
 public slots:
     void loadTags();
     void optionAdded(Tag *destinationTag, TagOption *option);

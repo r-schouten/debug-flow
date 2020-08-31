@@ -28,12 +28,15 @@ uint64_t UpdateManager::initateUpdate(OutputNode* sourceNode)
 
 void UpdateManager::measurementPoint(ProfileSource_t source)
 {
-    measurementList[profileCounter].source = source;
-    measurementList[profileCounter].elapsed = timer.nsecsElapsed();
-    profileCounter++;
     if(profileCounter >= MAX_AMOUNT_OF_MEAUSEMENTS)
     {
         dbgLogger->fatal("updateManager",__FUNCTION__,"");
+    }
+    else
+    {
+        measurementList[profileCounter].source = source;
+        measurementList[profileCounter].elapsed = timer.nsecsElapsed();
+        profileCounter++;
     }
 }
 void UpdateManager::printMeasurement()

@@ -20,7 +20,7 @@ class Tag: public QObject
 public:
     QString tagName;
     int tagIndex;
-    QList<TagOption*> options;
+    QVector<TagOption*> options;
     bool visible = true;
 
     Tag(QString tagName, int tagIndex)
@@ -52,7 +52,7 @@ public:
         jsonObject->insert(JSON_FILTEREDCONSOLE_TAG_INDEX, tagIndex);
 
         QJsonArray optionsJsonArray;
-        QListIterator<TagOption*> iterator(options);
+        QVectorIterator<TagOption*> iterator(options);
         while(iterator.hasNext())
         {
             TagOption* option = iterator.next();
@@ -67,7 +67,7 @@ public:
     }
     TagOption* getOption(QString OptionName)
     {
-        QListIterator<TagOption*> iterator(options);
+        QVectorIterator<TagOption*> iterator(options);
         while(iterator.hasNext())
         {
             TagOption* option = iterator.next();

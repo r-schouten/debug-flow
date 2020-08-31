@@ -25,7 +25,7 @@ public:
     void deserialize(QJsonArray &jsonArray, DeserializationHandler &handler);
     void notifySettingsChanged(DataValid dataValid = DATA_VALID,SaveSettings saveSettings = SAVE, SettingsChangeSource source = PROPERIES, int event = 0);
 
-    QList<Tag*> tags;
+    QVector<Tag*> tags;
 
 
 private:

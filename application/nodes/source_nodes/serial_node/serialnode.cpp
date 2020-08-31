@@ -97,7 +97,7 @@ void SerialNode::readData()
                 metaDataHelper->appendTime(circularBuffer);
             }
         }
-        circularBuffer->appendByte(&a);
+        circularBuffer->appendByte(a);
     }
     updateManager->initateUpdate(this);
 }

@@ -6,6 +6,8 @@
 #include "updatemanager.h"
 #include "mergehelper.h"
 
+using namespace std;
+
 class OutputNode;
 class Subscription;
 class NodeBase;
@@ -26,7 +28,7 @@ public:
     void bufferReaderToBegin(Subscription* caller);
 
     virtual std::string getNodeName();
-    QList<Subscription *>* getSubScriptions();
+    QVector<Subscription *> *getSubScriptions();
 
     void lock();
     void unlock();
@@ -34,7 +36,7 @@ public:
     bool isLocked();
 
 protected:
-    QList<Subscription*> subScriptions;
+    QVector<Subscription*> subScriptions;
  private:
     UpdateReturn_t doMergeUpdate(Subscription *source);
 

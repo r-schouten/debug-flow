@@ -6,6 +6,7 @@
 #include <QLineF>
 #include <QPoint>
 #include <QRandomGenerator64>
+#include <random>
 #include <math.h>
 
 class Utils

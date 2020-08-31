@@ -49,7 +49,26 @@ public:
 
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
-    void appendByte(char *inputData);
+    inline void appendByte(char inputData)
+    {
+        *(writeBuffer + head) = inputData;
+        head++;
+        if(head == capacity)//at the begin of the buffer
+        {
+            returnToBegin();
+            head = 0;
+            iterations++;
+        }
+    }
+    void appendByteUnsafe(char inputData)//unsafe means, it will overflow if you don't care about the available size before a return to the begin
+    {
+        *(writeBuffer + head) = inputData;
+        head++;
+    }
+    inline int lengthUntilSplit()
+    {
+        return capacity - head - 1;
+    }
 
     void startConditional();
     void conditionalAppend(char *inputData);

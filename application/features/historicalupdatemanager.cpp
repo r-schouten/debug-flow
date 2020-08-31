@@ -76,7 +76,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
             outputNode->resetBuffer();
         }
         dbgLogger->printf("children on output %d:\n",depth);
-        QListIterator<Subscription*> i(*outputNode->getSubscribers());
+        QVectorIterator<Subscription*> i(*outputNode->getSubscribers());
         while (i.hasNext())
         {
             Subscription* toChildNode = i.next();
@@ -101,7 +101,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
     {
         dbgLogger->printf("parents on input %d:\n",depth);
 
-        QListIterator<Subscription*> i(*inputNode->getSubScriptions());
+        QVectorIterator<Subscription*> i(*inputNode->getSubScriptions());
         while (i.hasNext())
         {
             Subscription* toParentNode = i.next();

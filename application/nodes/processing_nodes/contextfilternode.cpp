@@ -29,11 +29,12 @@ ContextFilterSettings *ContextFilterNode::getNodeSettings()
 
 UpdateReturn_t ContextFilterNode::doBufferUpdate(Subscription *source, int availableSize)
 {
+#ifdef QT_DEBUG
     if(source->bufferReader == nullptr){
         qFatal("ContextFilterNode::notifyBufferUpdate() : bufferReader == nullptr");
     }
-
-    auto lambda = [&](char character) mutable {circularBuffer->appendByte(&character);};
+#endif
+    auto lambda = [&](char character) mutable {circularBuffer->appendByte(character);};
 
     updateManager->measurementPoint(CONTEXT_FILTER_BEGIN);
     contextFilterEngine->filterData(lambda, source->bufferReader, availableSize, getBufferUnusedSize(),&processingDone, &metaData);
@@ -53,7 +54,6 @@ UpdateReturn_t ContextFilterNode::doBufferUpdate(Subscription *source, int avail
         return UpdateReturn_t::NOT_DONE;
     }
 }
-
 
 void ContextFilterNode::reset()
 {

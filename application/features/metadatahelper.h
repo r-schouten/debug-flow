@@ -11,8 +11,10 @@ class MetaDataHelper
 public:
     MetaDataHelper();
     void appendTime(CircularBuffer* buffer);
+    void appendTime(QByteArray &bytearray);
     uint64_t generateHeading();
     uint64_t lastMetaData = 0;
+    uint64_t startClock = 0;
 
 };
 class MetaData_t

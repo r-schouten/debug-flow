@@ -1,6 +1,6 @@
 #include "tagsandoptionswidget.h"
 
-TagsAndOptionsWidget::TagsAndOptionsWidget(QWidget *parent, QList<Tag*> *tags)
+TagsAndOptionsWidget::TagsAndOptionsWidget(QWidget *parent, QVector<Tag*> *tags)
     : QWidget(parent), tags(tags)
 {
     layout = new QVBoxLayout();
@@ -17,7 +17,7 @@ void TagsAndOptionsWidget::loadTags()
     while(tagGroupboxes.size() > 0) delete tagGroupboxes.takeAt(0);
 
 
-    QListIterator<Tag*> tagIterator(*tags);
+    QVectorIterator<Tag*> tagIterator(*tags);
     while(tagIterator.hasNext())
     {
         Tag* currentTag = tagIterator.next();

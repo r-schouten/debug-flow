@@ -42,7 +42,6 @@ private:
     QString match = "[debug, testdata] this should match exactly ";
     int lastNr = 0;
     QString bufferString;
-    QString bufferStringCopy;
     QMutex classMutex;
 };
 

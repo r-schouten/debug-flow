@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QTimer>
-#include <QRandomGenerator>
 #include <QDataStream>
 #include <QThread>
 #include <QApplication>

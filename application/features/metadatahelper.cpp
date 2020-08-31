@@ -2,26 +2,39 @@
 
 MetaDataHelper::MetaDataHelper()
 {
+    startClock = std::chrono::system_clock::now().time_since_epoch() /
+            std::chrono::milliseconds(1);
+    startClock -= clock() / CLOCKS_PER_SEC * 1000;
+
 }
 
 void MetaDataHelper::appendTime(CircularBuffer *buffer)
 {
     uint64_t headerWithTime = generateHeading();
-    char* charRepresentation = (char*)&headerWithTime;
 
-    //calculate result, overwrite some of the milliseconds_since_epoch since the full 64 bits are not needed.
     char header = METADATA_MARK;
-    buffer->appendByte(&header);
+    buffer->appendByte(header);
     header = 1;//standard header without extra options
-    buffer->appendByte(&header);
-    buffer->append(charRepresentation,sizeof(uint64_t));
+    buffer->appendByte(header);
+    buffer->append((char*)&headerWithTime,sizeof(uint64_t));
+}
+void MetaDataHelper::appendTime(QByteArray & bytearray)
+{
+    uint64_t headerWithTime = generateHeading();
+
+    char header = METADATA_MARK;
+    bytearray.append(header);
+    header = 1;//standard header without extra options
+    bytearray.append(header);
+    bytearray.append((char*)&headerWithTime,sizeof(uint64_t));
 }
 // Get time stamp in milliseconds.
 uint64_t MetaDataHelper::generateHeading()
 {
-    uint64_t time =
-        std::chrono::system_clock::now().time_since_epoch() /
-        std::chrono::milliseconds(1);
+//    uint64_t time =
+//        std::chrono::system_clock::now().time_since_epoch() /
+//        std::chrono::milliseconds(1);
+    uint64_t time = startClock + clock();
 
     if(lastMetaData >= time)
     {

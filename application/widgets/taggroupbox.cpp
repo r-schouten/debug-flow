@@ -32,7 +32,7 @@ TagGroupbox::~TagGroupbox()
 void TagGroupbox::loadTag()
 {
     itemModel->clear();
-    QListIterator<TagOption*> optionIterator(tag->options);
+    QVectorIterator<TagOption*> optionIterator(tag->options);
     while(optionIterator.hasNext())
     {
         TagOption* currentOption = optionIterator.next();

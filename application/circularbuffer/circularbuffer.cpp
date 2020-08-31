@@ -160,18 +160,7 @@ void CircularBuffer::append(char *inputData, int size)
     }
 }
 //thread: main thread, producer thread
-void CircularBuffer::appendByte(char *inputData)
-{
-    //QMutexLocker locker(&writeMutex);
-    *(writeBuffer + head) = *inputData;
-    head++;
-    if(head == capacity)//at the begin of the buffer
-    {
-        returnToBegin();
-        head = 0;
-        iterations++;
-    }
-}
+
 void CircularBuffer::startConditional()
 {
     conditionalHead = head;

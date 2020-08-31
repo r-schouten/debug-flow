@@ -7,10 +7,10 @@ OutputNode::OutputNode()
 
 OutputNode::~OutputNode()
 {
-    QListIterator<Subscription*> iterator(subscribers);
+    QVectorIterator<Subscription*> iterator(subscribers);
     while(iterator.hasNext())
     {
-        iterator.next()->remove();
+        delete iterator.next();
     }
     if(circularBuffer != nullptr)
     {
@@ -41,7 +41,7 @@ void OutputNode::notifyUnsubscribe(Subscription *subscription)
 }
 
 
-QList<Subscription *>* OutputNode::getSubscribers()
+QVector<Subscription *>* OutputNode::getSubscribers()
 {
     return &subscribers;
 }
@@ -57,7 +57,7 @@ UpdateReturn_t OutputNode::notifyAllSubscriptions()
 {
     UpdateReturn_t updateReturn = UpdateReturn_t::UPDATE_DONE;
     circularBuffer->resetTail();//part of the tail tracking feature, this doesn't modify the buffer itself
-    QListIterator<Subscription*> i(subscribers);
+    QVectorIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
@@ -69,10 +69,7 @@ UpdateReturn_t OutputNode::notifyAllSubscriptions()
     return updateReturn;
 }
 
-int OutputNode::getBufferUnusedSize()
-{
-    return circularBuffer->unUsedSize();
-}
+
 
 bool OutputNode::isProcessingDone() const
 {
@@ -83,7 +80,7 @@ bool OutputNode::isProcessingDone() const
 void OutputNode::resetBuffer()
 {
     circularBuffer->reset();
-    QListIterator<Subscription*> i(subscribers);
+    QVectorIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
@@ -98,7 +95,7 @@ bool OutputNode::bufferHistoricalCapable()
 void OutputNode::doHistoricalUpdate()
 {
     dbgLogger->debug("OutputNode",__FUNCTION__,"called");
-    QListIterator<Subscription*> i(subscribers);
+    QVectorIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();

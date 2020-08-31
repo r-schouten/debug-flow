@@ -51,12 +51,11 @@ UpdateReturn_t ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int 
     //callback function/lambda to add data to the result string
     auto addCharLambda = [&](char character) mutable {
         bufferString.append(character);
-        if(bufferString.endsWith("\n"))
+        if(character == '\n')
         {
             updateManager->measurementPoint(VISUALIZE_BEGIN);
-            bufferStringCopy = bufferString;
+            appendConsole(bufferString);
             bufferString.clear();
-            appendConsole(bufferStringCopy);
             updateManager->measurementPoint(VISUALIZE_END);
         }
     };
@@ -70,7 +69,6 @@ UpdateReturn_t ConsistencyCheckerNode::doBufferUpdate(Subscription *source, int 
     updateManager->measurementPoint(FILTER_WITH_STYLE_START);
     contextFilterEngine->filterDataWithStyle(addCharLambda, formatChangedLambda, source->bufferReader, availableSize, &format, &metadata);
     updateManager->measurementPoint(FILTER_WITH_STYLE_END);
-
 }
 
 void ConsistencyCheckerNode::appendConsole(QString line)

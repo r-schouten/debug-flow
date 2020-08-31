@@ -104,7 +104,7 @@ QJsonObject *FilteredNodeSettings::serialize(SerializationHandler &handler)
     {
         QJsonArray tagsJson;
 
-        QListIterator<Tag*>iterator(tagAndOptionSettings->tags);
+        QVectorIterator<Tag*>iterator(tagAndOptionSettings->tags);
         while(iterator.hasNext())
         {
             Tag* tag = iterator.next();

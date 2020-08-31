@@ -21,16 +21,16 @@ private:
     DbgLogger* dbgLogger;
 
     UpdateNr_t updateNr=0;
-    ~Subscription();
 public:
     Subscription(InputNode *_inputNode, OutputNode *_outputNode, CircularBufferReader *reader, UpdateManager* updageManager, DbgLogger *dbgLogger);
+    ~Subscription();
+
     OutputNode *getOutputNode();
     InputNode *getInputNode() const;
 
     UpdateReturn_t notifyBufferUpdate();
     CircularBufferReader* bufferReader;
 
-    void remove();
     UpdateNr_t getUpdateNr() const;
 
     //for merging

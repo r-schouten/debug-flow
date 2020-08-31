@@ -3,7 +3,7 @@
 #include "dbglogger.h"
 
 
-#define MAX_AMOUNT_OF_MEAUSEMENTS 1000
+#define MAX_AMOUNT_OF_MEAUSEMENTS 10000
 enum UpdateReturn_t
 {
     UPDATE_DONE,

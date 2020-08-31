@@ -31,7 +31,6 @@ class TestGeneratorWorker : public QObject {
 public:
     TestGeneratorWorker(TestGeneratorSettings *settings, CircularBuffer *circularBuffer, const std::function<void()>& notifyLambda);
     ~TestGeneratorWorker();
-
 public slots:
     void process();
 
@@ -49,4 +48,5 @@ private:
     MetaDataHelper metaDataHelper;
     int generatorIndex = 0;
     const std::function<void()> notifyLambda;
+
 };

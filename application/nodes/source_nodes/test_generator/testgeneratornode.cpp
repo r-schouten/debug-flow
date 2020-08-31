@@ -71,10 +71,7 @@ void TestGeneratorNode::reset()
 }
 void TestGeneratorNode::updateDone()
 {
-    //dbgLogger->verbose(CLASSNAME,__FUNCTION__,"start update with %d bytes",settings->getDataPerUpdate());
     updateManager->initateUpdate(this);
-    //    dbgLogger->verbose(CLASSNAME,__FUNCTION__,"update done\n\n\n");
-
 }
 void TestGeneratorNode::processInMainThread()
 {
