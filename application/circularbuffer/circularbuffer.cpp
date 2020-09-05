@@ -137,7 +137,13 @@ void CircularBuffer::append(const QByteArray *byteArray)
     const char* data = static_cast<const char*>(*byteArray);
     append(const_cast<char*>(data), byteArray->length());
 }
-
+//thread: main thread, producer thread
+void CircularBuffer::append(const QByteArray *byteArray, int size)
+{
+    //take the raw data out of the byte array
+    const char* data = static_cast<const char*>(*byteArray);
+    append(const_cast<char*>(data), size);
+}
 //thread: main thread, producer thread
 void CircularBuffer::append(char *inputData, int size)
 {

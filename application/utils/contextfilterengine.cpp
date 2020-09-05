@@ -4,6 +4,7 @@ ContextFilterEngine::ContextFilterEngine(TagAndOptionsSettings *settings, DbgLog
     :settings(settings),dbgLogger(dbgLogger)
 {
     metaDataHelper = new MetaDataHelper();
+    ansiColors << Qt::black << Qt::red << Qt::green << Qt::yellow << Qt::blue << Qt::magenta << Qt::cyan << Qt::white;
 }
 
 void ContextFilterEngine::filterData(const std::function<void(char)>& addChar, CircularBufferReader *bufferReader, int sourceAvailable,int destinationAvailabe, bool* allDataProcessed, MetaData_t* currentMetaData)
@@ -398,15 +399,10 @@ void ContextFilterEngine::applyANSICode(QTextCharFormat* format, ANSICode ansiCo
         }
         else if((ansiCode.value >= 30) && (ansiCode.value <= 37))
         {
-            QList<QColor> ansiColors;
-            ansiColors << Qt::black << Qt::red << Qt::green << Qt::yellow << Qt::blue << Qt::magenta << Qt::cyan << Qt::white;
-
             format->setForeground(ansiColors[ansiCode.value-30]);
         }
         else if((ansiCode.value >= 40) && (ansiCode.value <= 47))
         {
-            QList<QColor> ansiColors;
-            ansiColors << Qt::black << Qt::red << Qt::green << Qt::yellow << Qt::blue << Qt::magenta << Qt::cyan << Qt::white;
             format->setBackground(ansiColors[ansiCode.value-40]);
         }
 

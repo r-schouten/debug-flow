@@ -4,7 +4,6 @@
 #include <QVBoxLayout>
 #include <QPlainTextEdit>
 #include <QScrollBar>
-#include "ansiescapereader.h"
 
 #include "outputnode.h"
 
@@ -31,7 +30,6 @@ private:
 
     QTextCharFormat currentCharFormat;
     QPlainTextEdit* console = nullptr;
-    AnsiEscapeReader *ansiReader = nullptr;
 
     // NodeBase interface
 public:

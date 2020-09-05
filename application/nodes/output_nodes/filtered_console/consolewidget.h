@@ -5,13 +5,14 @@
 #include <QTextBlock>
 #include <Qtooltip>
 
+#include "updatemanager.h"
 #include "textblockwithmetadata.h"
 #include "metadatahelper.h"
 class ConsoleWidget: public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    ConsoleWidget(QWidget* parent = nullptr);
+    ConsoleWidget(QWidget* parent, UpdateManager* updateManager);
     void setMaxLines(int lines);
     int lineNumberAreaWidth();
 
@@ -21,6 +22,7 @@ public:
     virtual void clear();
     void setLineNumbersEnabled(bool enabled);
     void setTimeEnabled(bool enabled);
+    void appendBlock(QString textToAdd, QTextCharFormat format, MetaData_t *metaData, bool autoScroll);
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
     void updateLineNumberArea(const QRect &rect, int dy);
@@ -28,6 +30,9 @@ private slots:
 private:
     void resizeEvent(QResizeEvent *e);
     QWidget *lineNumberArea = nullptr;
+    UpdateManager* updateManager;
+
+
     int maxBlockCount = 100;
     int oldBlockCount = 0;
     int deletedBlocks = 0;

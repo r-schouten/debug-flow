@@ -49,6 +49,7 @@ public:
 
     void append(char *inputData, int size);//prefered
     void append(const QByteArray *data);
+    void append(const QByteArray *byteArray, int size);
     inline void appendByte(char inputData)
     {
         *(writeBuffer + head) = inputData;

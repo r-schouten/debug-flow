@@ -17,7 +17,7 @@ class InputNode:public virtual NodeBase
 public:
     InputNode();
     virtual ~InputNode();
-    UpdateReturn_t notifyBufferUpdate(Subscription* source);
+    virtual UpdateReturn_t notifyBufferUpdate(Subscription* source);
     virtual UpdateReturn_t doBufferUpdate(Subscription* source, int availableSize) = 0;
     virtual void notifyHistoricalUpdateFinished();
     void notifyUnsubscribe(Subscription* subscription);

@@ -28,11 +28,12 @@ public:
     OutputNode *getOutputNode();
     InputNode *getInputNode() const;
 
-    UpdateReturn_t notifyBufferUpdate();
-    CircularBufferReader* bufferReader;
-
     UpdateNr_t getUpdateNr() const;
 
+    UpdateReturn_t notifyBufferUpdate();
+
+
+    CircularBufferReader* bufferReader;
     //for merging
     MergeState_t mergeState;
 };

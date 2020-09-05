@@ -7,7 +7,7 @@ FilteredConsole::FilteredConsole(UpdateManager* updateManager, HistoricalUpdateM
     nodeSettings = new FilteredNodeSettings(dbgLogger);
 
     //make textEdit filed
-    console = new ConsoleWidget(this);
+    console = new ConsoleWidget(this, updateManager);
     loadMaxLines();
     SideLineOptionsChanged();
 
@@ -83,6 +83,7 @@ void FilteredConsole::filterData(int availableSize)
         updateManager->measurementPoint(VISUALIZE_BEGIN);
         console->append(bufferString, currentCharFormat, &metaData, nodeSettings->getAutoScrollEnabled());
         updateManager->measurementPoint(VISUALIZE_END);
+
 
         bufferString.clear();
     };

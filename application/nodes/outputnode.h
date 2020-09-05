@@ -25,10 +25,7 @@ public:
     void doHistoricalUpdate();
 
     UpdateReturn_t notifyAllSubscriptions();
-    inline int getBufferUnusedSize()
-    {
-        return circularBuffer->unUsedSize();
-    }
+    int getBufferUnusedSize();
 
     bool isProcessingDone() const;
 

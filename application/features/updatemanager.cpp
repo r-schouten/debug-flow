@@ -28,9 +28,10 @@ uint64_t UpdateManager::initateUpdate(OutputNode* sourceNode)
 
 void UpdateManager::measurementPoint(ProfileSource_t source)
 {
+#ifdef PROFILE_ENABLED
     if(profileCounter >= MAX_AMOUNT_OF_MEAUSEMENTS)
     {
-        dbgLogger->fatal("updateManager",__FUNCTION__,"");
+        //dbgLogger->fatal("updateManager",__FUNCTION__,"");
     }
     else
     {
@@ -38,9 +39,11 @@ void UpdateManager::measurementPoint(ProfileSource_t source)
         measurementList[profileCounter].elapsed = timer.nsecsElapsed();
         profileCounter++;
     }
+#endif
 }
 void UpdateManager::printMeasurement()
 {
+#ifdef PROFILE_ENABLED
     dbgLogger->debug("updateManager", __FUNCTION__, "measurement result");
     for(int i=0;i < profileCounter; i++)
     {
@@ -51,6 +54,7 @@ void UpdateManager::printMeasurement()
         }
         dbgLogger->printf("%d %d     %s:    %d\n", i,deltaT, profileSourceText.at((int)measurementList[i].source).toStdString().c_str(), measurementList[i].elapsed);
     }
+#endif
 }
 uint64_t UpdateManager::getUpdateNr()
 {

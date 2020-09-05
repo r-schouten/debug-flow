@@ -28,6 +28,7 @@ SOURCES += \
     nodes/inputnode.cpp \
     nodes/nodebase.cpp \
     nodes/nodesettingsbase.cpp \
+    nodes/numericalinputnode.cpp \
     nodes/output_nodes/consistency_checker/consistencycheckernode.cpp \
     nodes/output_nodes/consistency_checker/consistencycheckersettings.cpp \
     nodes/output_nodes/filtered_console/consolewidget.cpp \
@@ -55,7 +56,6 @@ SOURCES += \
     undo_redo/commands/createnodecommand.cpp \
     undo_redo/commands/movecommand.cpp \
     undo_redo/undoredomanager.cpp \
-    utils/ansiescapereader.cpp \
     utils/contextfilterengine.cpp \
     utils/dbglogger.cpp \
     utils/flowobjects.cpp \
@@ -119,6 +119,7 @@ HEADERS += \
     nodes/inputnode.h \
     nodes/nodebase.h \
     nodes/nodesettingsbase.h \
+    nodes/numericalinputnode.h \
     nodes/output_nodes/consistency_checker/consistencycheckernode.h \
     nodes/output_nodes/consistency_checker/consistencycheckersettings.h \
     nodes/output_nodes/filtered_console/consolewidget.h \
@@ -149,7 +150,6 @@ HEADERS += \
     userinterface/ui_flow_widget.h \
     userinterface/ui_mainwindow.h \
     utils/ansi_types.h \
-    utils/ansiescapereader.h \
     utils/contextfilterengine.h \
     utils/dbglogger.h \
     utils/flowobjects.h \

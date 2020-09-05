@@ -16,12 +16,10 @@ SimpleConsole::SimpleConsole(UpdateManager* updateManager,DbgLogger *dbgLogger)
     p.setColor(QPalette::Text, Qt::black);
     console->setPalette(p);
 
-    ansiReader = new AnsiEscapeReader();
 }
 
 SimpleConsole::~SimpleConsole()
 {
-    delete ansiReader;
 }
 
 NodeSettingsBase *SimpleConsole::getNodeSettings()
@@ -30,28 +28,7 @@ NodeSettingsBase *SimpleConsole::getNodeSettings()
 }
 UpdateReturn_t SimpleConsole::doBufferUpdate(Subscription *source, int availableSize)
 {
-    console->setUpdatesEnabled(false);
 
-    if(source->bufferReader == nullptr){
-        qFatal("SimpleConsole::notifyBufferUpdate() : bufferReader == nullptr");
-    }
-    bool styleChanged = true;
-    while(styleChanged)
-    {
-        QString result;
-       // result.reserve(source->bufferReader->availableSize());
-
-        QTextCharFormat oldFormat = currentCharFormat;
-        styleChanged = ansiReader->filterData(&result, source->bufferReader, &currentCharFormat);
-
-
-        console->moveCursor(QTextCursor::End);
-        console->setCurrentCharFormat(oldFormat);
-        console->insertPlainText(result);
-        console->moveCursor(QTextCursor::End);
-
-    }
-    console->setUpdatesEnabled(true);
 
 }
 

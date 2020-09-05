@@ -69,6 +69,11 @@ UpdateReturn_t OutputNode::notifyAllSubscriptions()
     return updateReturn;
 }
 
+int OutputNode::getBufferUnusedSize()
+{
+    return circularBuffer->unUsedSize();
+}
+
 
 
 bool OutputNode::isProcessingDone() const

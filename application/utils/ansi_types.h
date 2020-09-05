@@ -16,8 +16,4 @@ struct ANSICode
     ANSIType type = ANSIType::NONE;
     int value = 0;
 };
-struct ANSICodes
-{
-    QList<ANSICode> code;
-    bool found = false;
-};
+

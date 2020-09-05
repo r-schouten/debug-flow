@@ -1,7 +1,7 @@
 #include "consolewidget.h"
 
-ConsoleWidget::ConsoleWidget(QWidget *parent):
-    QPlainTextEdit(parent)
+ConsoleWidget::ConsoleWidget(QWidget *parent, UpdateManager* updateManager):
+    QPlainTextEdit(parent),updateManager(updateManager)
 {
     setReadOnly(true);
 
@@ -42,9 +42,10 @@ void ConsoleWidget::setTimeEnabled(bool enabled)
     sideLineEnabled = lineNumbersEnabled | timeEnabled;
 
 }
+//https://stackoverflow.com/questions/54501745/performantly-appending-rich-text-into-qtextedit-or-qtextbrowser-in-qt/54501760#54501760
 void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,MetaData_t* metaData, bool autoScroll)
 {
-    document()->setMaximumBlockCount(0);
+    document()->setMaximumBlockCount(0);//unlimited
     oldBlockCount = document()->blockCount();
     if(autoScroll)
     {
@@ -55,17 +56,17 @@ void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,MetaData_t*
     }
     else {
         QTextCursor cursor = textCursor();
-
         cursor.movePosition(QTextCursor::End);
         cursor.setCharFormat(format);
         cursor.insertText(textToAdd);
     }
+    updateManager->measurementPoint(APPEND);
     //setMaximumBlockCount is a bit misused here,
     //when blocks are deleted at the end the QDocument class provides no way to find how much blocks that where.
     int blockCountBeforeDeletion = document()->blockCount();
     document()->setMaximumBlockCount(maxBlockCount);
     int blockCountAfter = document()->blockCount();
-
+    updateManager->measurementPoint(MAX_BLOCK_COUNT);
     deletedBlocks += blockCountBeforeDeletion - blockCountAfter;
     int insertedBlocks = blockCountBeforeDeletion-oldBlockCount;
 
@@ -81,6 +82,7 @@ void ConsoleWidget::append(QString textToAdd, QTextCharFormat format,MetaData_t*
         }
         block = block.next();
     }
+    updateManager->measurementPoint(FIND_BLOCK);
 }
 
 //------functions for the line number widget

@@ -127,7 +127,7 @@ void TestGeneratorWorker::process()
     int length = data.length();
     if(settings->getSplitOnNewLine())length = settings->getDataPerUpdate();
 
-    circularBuffer->append(&data);
+    circularBuffer->append(&data,length);
 
     //char mark = '|';
     //circularBuffer->appendByte(&mark);
