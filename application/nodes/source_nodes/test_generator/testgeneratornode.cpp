@@ -4,11 +4,15 @@
 TestGeneratorNode::TestGeneratorNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
     :NodeBase(updateManager, dbgLogger)
 {
+    circularBuffer = new CircularBuffer(dbgLogger,"TestGenerator", TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_MAX_BUFFER_SIZE, true);
+    nodeOutput = new NodeOutput(updateManager, circularBuffer, dbgLogger, this);
+
     settings = new TestGeneratorSettings(dbgLogger);
 }
 
 TestGeneratorNode::~TestGeneratorNode()
 {
+    delete nodeOutput;
     delete settings;
     if(activated)
     {
@@ -20,7 +24,7 @@ void TestGeneratorNode::activate()
 {
     //general
     activated = true;
-    circularBuffer = new CircularBuffer(dbgLogger,"TestGenerator", TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_MAX_BUFFER_SIZE, true);
+    //circularBuffer = new CircularBuffer(dbgLogger,"TestGenerator", TEST_GENERATOR_BUFFER_SIZE, TEST_GENERATOR_MAX_BUFFER_SIZE, true);
     metaDataHelper = new MetaDataHelper;
 
     //timer
@@ -31,7 +35,7 @@ void TestGeneratorNode::activate()
     updateTimer->start(settings->getUpdateRate());
 
     //lambda for the from thread notify setting
-    auto notifyLambda = [&]() mutable {notifyAllSubscriptions();};
+    auto notifyLambda = [&]() mutable {nodeOutput->notifyAllSubscriptions();};
 
 
     worker = new TestGeneratorWorker(settings, circularBuffer, notifyLambda);
@@ -71,7 +75,7 @@ void TestGeneratorNode::reset()
 }
 void TestGeneratorNode::updateDone()
 {
-    updateManager->initateUpdate(this);
+    updateManager->initateUpdate(nodeOutput);
 }
 void TestGeneratorNode::processInMainThread()
 {

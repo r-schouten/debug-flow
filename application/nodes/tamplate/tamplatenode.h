@@ -3,7 +3,7 @@
 
 #include "tamplatenodesettings.h"
 #ifdef OUTPUTNODE
-    #include "outputnode.h"
+    #include "nodeoutput.h"
     #include "metadatahelper.h"
     #define TAMPLATE_BUFFER_SIZE 100000
 #endif
@@ -11,16 +11,8 @@
     #include "inputnode.h"
 #endif
 
-#if defined (OUTPUTNODE) && defined (INPUTNODE)
-class TamplateNode :public OutputNode, public InputNode
-#else
-#ifdef OUTPUTNODE
-class TamplateNode :public OutputNode
-#endif
-#ifdef INPUTNODE
-class TamplateNode :public InputNode
-#endif
-#endif
+
+class TamplateNode :public NodeBase
 {
 public:
     TamplateNode(UpdateManager* updateManager,DbgLogger *dbgLogger);
@@ -28,6 +20,11 @@ public:
     virtual std::string getNodeName();
     virtual TamplateNodeSettings *getNodeSettings();
     void reset();
+
+    virtual int amountOfInputs();
+    virtual int amountOfOutputs();
+    virtual NodeInput *getInput(int index);
+    virtual NodeOutput *getOutput(int index);
 #ifdef INPUTNODE
     void NotifyBufferUpdate(Subscription *source);
     void notifyHistoricalUpdateFinished();
@@ -38,6 +35,13 @@ protected:
 #ifdef OUTPUTNODE
     MetaDataHelper* metaDataHelper = nullptr;
     void dataReceived();
+#endif
+#ifdef INPUTNODE
+    NodeInput* nodeInput = nullptr;
+#endif
+#ifdef OUTPUTNODE
+    NodeOutput* nodeOutput = nullptr;
+    CircularBuffer* circularBuffer = nullptr;
 #endif
 
 

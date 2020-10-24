@@ -32,12 +32,11 @@ void HistoricalUpdateManager::initatiateHistoricalUpdate(NodeBase *node)
 //recursive function
 void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset,int depth)
 {
-    InputNode* inputNode = nullptr;
-    OutputNode* outputNode = nullptr;
+    NodeInput* inputNode = node->getInput(0);
+    NodeOutput* outputNode = node->getOutput(0);
 
-    if(node->hasInput)//this is needed for a flow with merges
+    if(node->hasInput())//this is needed for a flow with merges
     {
-        inputNode = dynamic_cast<InputNode*>(node);
         if(inputNode->isLocked())
         {
             inputNode->unlock();
@@ -53,11 +52,10 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
         return;
     }
 
-    if(node->hasInput)
+    if(node->hasInput())
     {
         inputNodes.push_front(inputNode);
     }
-    if(node->hasOutput) outputNode = dynamic_cast<OutputNode*>(node);
 
     //reset this node
     if(forwardReset)
@@ -65,7 +63,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
         node->reset();
     }
 
-    if(node->hasOutput)
+    if(node->hasOutput())
     {
         if(outputNode->bufferHistoricalCapable())
         {
@@ -80,15 +78,16 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
         while (i.hasNext())
         {
             Subscription* toChildNode = i.next();
-            InputNode* childNode = toChildNode->getInputNode();
+            NodeInput* childInput = toChildNode->getInput();
+            NodeBase* childNode = childInput->getParent();
             dbgLogger->printf("- %s\n",childNode->getNodeName().c_str());
 
             if(childNode->HistoricalUpdateEventNr != historicalEventCounter)
             {
                 if((forwardReset == false)||(outputNode->bufferHistoricalCapable()))
                 {
-                    childNode->lock();
-                    lockedNodes.push_front(childNode);
+                    childInput->lock();
+                    lockedNodes.push_front(childInput);
                 }
                 else
                 {
@@ -97,7 +96,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
             }
         }
     }
-    if(node->hasInput)
+    if(node->hasInput())
     {
         dbgLogger->printf("parents on input %d:\n",depth);
 
@@ -105,7 +104,7 @@ void HistoricalUpdateManager::historicalUpdate(NodeBase *node, bool forwardReset
         while (i.hasNext())
         {
             Subscription* toParentNode = i.next();
-            OutputNode* parentNode = toParentNode->getOutputNode();
+            NodeBase* parentNode = toParentNode->getOutputNode()->getParent();
             dbgLogger->printf("- %s\n",parentNode->getNodeName().c_str());
 
             historicalUpdate(parentNode, false, depth-1);

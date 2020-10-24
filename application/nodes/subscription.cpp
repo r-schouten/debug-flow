@@ -1,9 +1,9 @@
 #include "subscription.h"
-#include "inputnode.h"
-#include "outputnode.h"
+#include "nodeInput.h"
+#include "nodeoutput.h"
 
-Subscription::Subscription(InputNode *_inputNode, OutputNode *_outputNode, CircularBufferReader *reader, UpdateManager *updageManager, DbgLogger* dbgLogger)
-    :inputNode(_inputNode),outputNode(_outputNode),bufferReader(reader),updateManager(updageManager),dbgLogger(dbgLogger)
+Subscription::Subscription(NodeInput *_inputNode, NodeOutput *_outputNode, CircularBufferReader *reader, UpdateManager *updageManager, DbgLogger* dbgLogger)
+    :input(_inputNode),outputNode(_outputNode),bufferReader(reader),updateManager(updageManager),dbgLogger(dbgLogger)
 {
 
 }
@@ -16,16 +16,16 @@ UpdateNr_t Subscription::getUpdateNr() const
 
 Subscription::~Subscription()
 {
-    inputNode->notifyUnsubscribe(this);
+    input->notifyUnsubscribe(this);
     outputNode->notifyUnsubscribe(this);
     delete bufferReader;
 }
 
-InputNode *Subscription::getInputNode() const
+NodeInput *Subscription::getInput() const
 {
-    return inputNode;
+    return input;
 }
-OutputNode *Subscription::getOutputNode()
+NodeOutput *Subscription::getOutputNode()
 {
     return outputNode;
 }
@@ -39,7 +39,7 @@ UpdateReturn_t Subscription::notifyBufferUpdate()
 //    int previousTail = bufferReader->getTail();
 
 //    updateManager->depth++;
-    UpdateReturn_t updateReturn = inputNode->notifyBufferUpdate(this);
+    UpdateReturn_t updateReturn = input->notifyBufferUpdate(this);
     //updateManager->depth--;
 
 //    int bytes = (bufferReader->getIteration()-previousIteration) * bufferReader->capacity  + (bufferReader->getTail() - previousTail);

@@ -1,7 +1,7 @@
 #include "serialnode.h"
 
-SerialNode::SerialNode::SerialNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
-    :NodeBase(updateManager, dbgLogger)
+SerialNode::SerialNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
+    :SerialNodeInterface(updateManager,dbgLogger)
 {
     settings = new SerialSettings(dbgLogger);
 }
@@ -16,7 +16,7 @@ void SerialNode::activate()
 {
     activated = true;
 
-    circularBuffer = new CircularBuffer(dbgLogger,"Serial", SERIAL_NODE_BUFFER_SIZE, SERIAL_NODE_BUFFER_SIZE, true);
+
     m_serial = new QSerialPort(this);
     metaDataHelper = new MetaDataHelper;
     connect(m_serial, &QSerialPort::errorOccurred, this, &SerialNode::handleError);
@@ -99,7 +99,7 @@ void SerialNode::readData()
         }
         circularBuffer->appendByte(a);
     }
-    updateManager->initateUpdate(this);
+    updateManager->initateUpdate(nodeOutput);
 }
 void SerialNode::handleError(QSerialPort::SerialPortError error)
 {

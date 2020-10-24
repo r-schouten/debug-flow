@@ -1,11 +1,12 @@
-#include "outputnode.h"
+#include "nodeoutput.h"
 
-OutputNode::OutputNode()
+NodeOutput::NodeOutput(UpdateManager *updateManager,CircularBuffer* circularBuffer, DbgLogger *dbgLogger, NodeBase *parent)
+    :updateManager(updateManager), circularBuffer(circularBuffer), dbgLogger(dbgLogger), parent(parent)
 {
-    hasOutput = true;
+
 }
 
-OutputNode::~OutputNode()
+NodeOutput::~NodeOutput()
 {
     QVectorIterator<Subscription*> iterator(subscribers);
     while(iterator.hasNext())
@@ -19,7 +20,7 @@ OutputNode::~OutputNode()
     }
 }
 
-Subscription* OutputNode::subscribe(InputNode *inputNode)
+Subscription* NodeOutput::subscribe(NodeInput *inputNode)
 {
     if(inputNode == nullptr)
     {
@@ -35,25 +36,19 @@ Subscription* OutputNode::subscribe(InputNode *inputNode)
     return subscription;
 }
 
-void OutputNode::notifyUnsubscribe(Subscription *subscription)
+void NodeOutput::notifyUnsubscribe(Subscription *subscription)
 {
     subscribers.removeOne(subscription);
 }
 
 
-QVector<Subscription *>* OutputNode::getSubscribers()
+QVector<Subscription *>* NodeOutput::getSubscribers()
 {
     return &subscribers;
 }
 
-std::string OutputNode::getNodeName()
-{
-    return "OutputNode";
-}
-
-
 //-------buffer update-----------
-UpdateReturn_t OutputNode::notifyAllSubscriptions()
+UpdateReturn_t NodeOutput::notifyAllSubscriptions()
 {
     UpdateReturn_t updateReturn = UpdateReturn_t::UPDATE_DONE;
     circularBuffer->resetTail();//part of the tail tracking feature, this doesn't modify the buffer itself
@@ -69,48 +64,58 @@ UpdateReturn_t OutputNode::notifyAllSubscriptions()
     return updateReturn;
 }
 
-int OutputNode::getBufferUnusedSize()
+int NodeOutput::getBufferUnusedSize()
 {
     return circularBuffer->unUsedSize();
 }
 
 
 
-bool OutputNode::isProcessingDone() const
+bool NodeOutput::isProcessingDone() const
 {
     return processingDone;
 }
 
+NodeBase *NodeOutput::getParent() const
+{
+    return parent;
+}
+
+CircularBuffer *NodeOutput::getCircularBuffer() const
+{
+    return circularBuffer;
+}
+
 //-------historical update feature----------
-void OutputNode::resetBuffer()
+void NodeOutput::resetBuffer()
 {
     circularBuffer->reset();
     QVectorIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
-        subscription->getInputNode()->resetBufferReader(subscription);
+        subscription->getInput()->resetBufferReader(subscription);
     }
 }
-bool OutputNode::bufferHistoricalCapable()
+bool NodeOutput::bufferHistoricalCapable()
 {
     return circularBuffer->isHistoricalCapable();
 }
 
-void OutputNode::doHistoricalUpdate()
+void NodeOutput::doHistoricalUpdate()
 {
     dbgLogger->debug("OutputNode",__FUNCTION__,"called");
     QVectorIterator<Subscription*> i(subscribers);
     while (i.hasNext())
     {
         Subscription* subscription = i.next();
-        if(subscription->getInputNode()->isLocked())
+        if(subscription->getInput()->isLocked())
         {
 
         }
         else
         {
-            subscription->getInputNode()->bufferReaderToBegin(subscription);
+            subscription->getInput()->bufferReaderToBegin(subscription);
         }
     }
 }

@@ -1,10 +1,9 @@
 #pragma once
-#include "inputnode.h"
+#include "nodeInput.h"
 
-class NumericalInputNode : public InputNode
+class NumericalInputNode : public NodeInput
 {
 public:
-    NumericalInputNode();
-    ~NumericalInputNode();
+
 };
 

@@ -38,13 +38,13 @@ struct ProfilePoint
 
 typedef uint64_t UpdateNr_t;
 
-class OutputNode;
+class NodeOutput;
 class UpdateManager
 {
 public:
     UpdateManager(DbgLogger* dbgLogger);
 
-    UpdateNr_t initateUpdate(OutputNode* sourceNode);
+    UpdateNr_t initateUpdate(NodeOutput* sourceNode);
     UpdateNr_t getUpdateNr();
 
     void measurementPoint(ProfileSource_t waitpoint);

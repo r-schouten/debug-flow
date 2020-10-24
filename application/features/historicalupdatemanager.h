@@ -1,7 +1,7 @@
 #pragma once
 #include "dbglogger.h"
-#include "inputnode.h"
-#include "outputnode.h"
+#include "nodeInput.h"
+#include "nodeoutput.h"
 #include "updatemanager.h"
 
 class HistoricalUpdateManager
@@ -16,9 +16,9 @@ protected:
     DbgLogger* dbgLogger = nullptr;
     int historicalEventCounter = 0;
 
-    std::list<OutputNode*> sourcesList;
-    std::list<InputNode*> lockedNodes;
-    std::list<InputNode*> inputNodes;
+    std::list<NodeOutput*> sourcesList;
+    std::list<NodeInput*> lockedNodes;
+    std::list<NodeInput*> inputNodes;
 
 };
 

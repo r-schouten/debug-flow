@@ -2,10 +2,11 @@
 #include <QSerialPort>
 #include <QMessageBox>
 
-#include "outputnode.h"
+#include "nodeoutput.h"
 #include "serialnodeinterface.h"
 #include "serialsettings.h"
 #include "metadatahelper.h"
+
 class SerialNode :public QObject, public SerialNodeInterface
 {
     Q_OBJECT

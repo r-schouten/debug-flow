@@ -9,7 +9,7 @@
 #include <QThread>
 
 #include "consolewidget.h"
-#include "outputnode.h"
+#include "nodeoutput.h"
 #include "contextfilterengine.h"
 #include "filterednodesettings.h"
 #include "tag-option-item.h"
@@ -59,19 +59,24 @@ private:
 };
 
 
-class FilteredConsole  : public QWidget, public InputNode
+class FilteredConsole  : public QWidget, public NodeBase
 {
     Q_OBJECT
 public:
     FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger);
     virtual ~FilteredConsole();
 
-    UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize)override;
-    void notifyHistoricalUpdateFinished() override;
+    UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize);
+    void notifyHistoricalUpdateFinished();
 
 
     NodeSettingsBase *getNodeSettings();
     virtual std::string getNodeName();
+    int amountOfInputs(){return 1;}
+    int amountOfOutputs(){return 0;}
+    NodeInput *getInput(int index){return nodeInput;}
+    NodeOutput *getOutput(int index){return nullptr;}
+
     FilteredNodeSettings* nodeSettings = nullptr;
 
     virtual void reset();
@@ -97,6 +102,8 @@ private:
     MetaData_t metaData;
 
     Subscription* lastSource = nullptr;
+
+    NodeInput* nodeInput = nullptr;
 public slots:
     void optionAdded(Tag *tag, TagOption *option);
     void clearConsole();
@@ -110,5 +117,4 @@ private slots:
     void SideLineOptionsChanged();
     void dataChanged();
     void filterData(int availableSize);
-
 };

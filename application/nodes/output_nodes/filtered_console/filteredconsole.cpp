@@ -1,8 +1,10 @@
 #include "filteredconsole.h"
 
 FilteredConsole::FilteredConsole(UpdateManager* updateManager, HistoricalUpdateManager *historcalUpdateManager,DbgLogger *dbgLogger)
-   :NodeBase(updateManager,dbgLogger),historcalUpdateManager(historcalUpdateManager)
+   :NodeBase(updateManager, dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
+    nodeInput = new NodeInput(updateManager, dbgLogger, this);
+    nodeInput->setDoBufferUpdateCallback(std::bind(&FilteredConsole::doBufferUpdate,this,std::placeholders::_1,std::placeholders::_2));
     //initialize settings
     nodeSettings = new FilteredNodeSettings(dbgLogger);
 
@@ -45,6 +47,7 @@ FilteredConsole::FilteredConsole(UpdateManager* updateManager, HistoricalUpdateM
 }
 FilteredConsole::~FilteredConsole()
 {
+    delete nodeInput;
     delete contextFilter;
     contextFilter = nullptr;
 

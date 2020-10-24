@@ -33,11 +33,11 @@ void VisualTestGeneratorNode::construct()
 
     name = "test data generator";
     shortDiscription = "this node generates data for test purposes";
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }

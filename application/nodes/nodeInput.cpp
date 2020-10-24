@@ -1,12 +1,12 @@
-#include "inputnode.h"
+#include "nodeInput.h"
 
-InputNode::InputNode()
+NodeInput::NodeInput(UpdateManager* updateManager, DbgLogger *dbgLogger, NodeBase* parent)
+    :updateManager(updateManager), dbgLogger(dbgLogger), parent(parent)
 {
-    hasInput = true;
     mergeHelper = new MergeHelper;
 }
 
-InputNode::~InputNode()
+NodeInput::~NodeInput()
 {
     QVectorIterator<Subscription*> iterator(subScriptions);
     while(iterator.hasNext())
@@ -15,17 +15,17 @@ InputNode::~InputNode()
     }
 }
 
-void InputNode::notifyUnsubscribe(Subscription *subscription)
+void NodeInput::notifyUnsubscribe(Subscription *subscription)
 {
     subScriptions.removeOne(subscription);
 }
 
-void InputNode::addSubscription(OutputNode *outputNode)
+void NodeInput::addSubscription(NodeOutput *outputNode)
 {
     subScriptions.append(outputNode->subscribe(this));
 }
 
-void InputNode::deleteSubscription(OutputNode *outputNode)
+void NodeInput::deleteSubscription(NodeOutput *outputNode)
 {
     QVectorIterator<Subscription*> iterator(subScriptions);
     while(iterator.hasNext())
@@ -37,18 +37,19 @@ void InputNode::deleteSubscription(OutputNode *outputNode)
         }
     }
 }
-std::string InputNode::getNodeName()
-{
-    return "InputNode";
-}
 
-QVector<Subscription*>* InputNode::getSubScriptions()
+QVector<Subscription*>* NodeInput::getSubScriptions()
 {
     return &subScriptions;
 }
 
+void NodeInput::setDoBufferUpdateCallback(const std::function<UpdateReturn_t (Subscription *, int)> &value)
+{
+    doBufferUpdateCallback = value;
+}
+
 //------historical update feature--------
-void InputNode::resetBufferReader(Subscription *caller)
+void NodeInput::resetBufferReader(Subscription *caller)
 {
     caller->bufferReader->reset();
 
@@ -61,19 +62,24 @@ void InputNode::resetBufferReader(Subscription *caller)
     }
 }
 
-void InputNode::bufferReaderToBegin(Subscription *caller)
+void NodeInput::bufferReaderToBegin(Subscription *caller)
 {
     dbgLogger->debug("InputNode",__FUNCTION__,"called");
     caller->bufferReader->toBegin();
 }
 
-UpdateReturn_t InputNode::notifyBufferUpdate(Subscription *source)
+UpdateReturn_t NodeInput::notifyBufferUpdate(Subscription *source)
 {
+    if(doBufferUpdateCallback == nullptr)
+    {
+        dbgLogger->error("NodeInput",__FUNCTION__,"nullptr");
+        return UpdateReturn_t::UPDATE_DONE;
+    }
     if(subScriptions.count() <= 1)
     {
-        UpdateReturn_t updateReturn = doBufferUpdate(source, source->bufferReader->availableSize());
+        UpdateReturn_t updateReturn = doBufferUpdateCallback(source, source->bufferReader->availableSize());//doBufferUpdate(source, source->bufferReader->availableSize());
 
-        OutputNode* nextOutputNode = dynamic_cast<OutputNode*>(this);
+        NodeOutput* nextOutputNode = parent->getOutput(0);
         if(nextOutputNode)
         {
             int counter = 0;
@@ -83,14 +89,14 @@ UpdateReturn_t InputNode::notifyBufferUpdate(Subscription *source)
                 int previousIteration = source->bufferReader->getIteration();
                 int previousTail = source->bufferReader->getTail();
                 if(counter == 0){
-                    dbgLogger->debug("InputNode", __FUNCTION__,"calling notifyBufferUpdate() again %s -> %s",source->getOutputNode()->getNodeName().c_str(),getNodeName().c_str());
+                    dbgLogger->debug("InputNode", __FUNCTION__,"calling notifyBufferUpdate() again %s -> %s",source->getOutputNode()->getParent()->getNodeName().c_str(),parent->getNodeName().c_str());
                 }
                 counter++;
-                updateReturn = doBufferUpdate(source, source->bufferReader->availableSize());
+                updateReturn = doBufferUpdateCallback(source, source->bufferReader->availableSize());
                 if(updateReturn != UpdateReturn_t::NOT_DONE)break;
                 if((previousIteration == source->bufferReader->getIteration()) && (previousTail == source->bufferReader->getTail()))
                 {
-                    dbgLogger->error("InputNode", __FUNCTION__, "safety mechanism triggered, node has a processing done not set but doensn't do anything\ncaused by node:%s -> %s",source->getOutputNode()->getNodeName().c_str(),getNodeName().c_str());
+                    dbgLogger->error("InputNode", __FUNCTION__, "safety mechanism triggered, node has a processing done not set but doensn't do anything\ncaused by node:%s -> %s",source->getOutputNode()->getParent()->getNodeName().c_str(),parent->getNodeName().c_str());
                     break;
                 }
             }
@@ -111,8 +117,7 @@ UpdateReturn_t InputNode::notifyBufferUpdate(Subscription *source)
     }
 
 }
-
-UpdateReturn_t InputNode::doMergeUpdate(Subscription *source)
+UpdateReturn_t NodeInput::doMergeUpdate(Subscription *source)
 {
     bool hasAlreadyHadAnUpdate = (source->mergeState.updateNr == updateManager->getUpdateNr());
 
@@ -154,7 +159,7 @@ UpdateReturn_t InputNode::doMergeUpdate(Subscription *source)
 
         //do the update with this piece of data
         //todo implement segmentation, which can be rarely occur
-        UpdateReturn_t returnState = doBufferUpdate(oldestUpdate, oldestUpdate->mergeState.availableSize);
+        UpdateReturn_t returnState =  doBufferUpdateCallback(oldestUpdate, oldestUpdate->mergeState.availableSize);
         if(returnState == ROUTE_DELAYED)
         {
             delayed = true;
@@ -188,7 +193,7 @@ UpdateReturn_t InputNode::doMergeUpdate(Subscription *source)
     }
 }
 
-bool InputNode::allSubsReady()
+bool NodeInput::allSubsReady()
 {
     QVectorIterator<Subscription*> iterator(subScriptions);
     while(iterator.hasNext())
@@ -201,7 +206,9 @@ bool InputNode::allSubsReady()
     }
     return true;
 }
-Subscription* InputNode::findOldest()//can return nullptr
+
+
+Subscription* NodeInput::findOldest()//can return nullptr
 {
     uint64_t oldestTimeStamp = UINT64_MAX;
     Subscription* oldestSubscription = nullptr;
@@ -232,23 +239,30 @@ Subscription* InputNode::findOldest()//can return nullptr
     return oldestSubscription;
 }
 
-void InputNode::notifyHistoricalUpdateFinished()
+void NodeInput::notifyHistoricalUpdateFinished()
 {
     //do nothing, this function can be optionally overrided
 }
 
-void InputNode::lock()
+void NodeInput::lock()
 {
     locked = true;
 }
 
-void InputNode::unlock()
+void NodeInput::unlock()
 {
     locked = false;
 }
 
-bool InputNode::isLocked()
+bool NodeInput::isLocked()
 {
     return locked;
 }
+
+NodeBase *NodeInput::getParent() const
+{
+    return parent;
+}
+
+
 

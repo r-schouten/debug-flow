@@ -2,31 +2,31 @@
 #include "dbglogger.h"
 #include "circularbuffer.h"
 #include "nodebase.h"
-#include "inputnode.h"
-#include "outputnode.h"
+#include "nodeInput.h"
+#include "nodeoutput.h"
 #include "updatemanager.h"
 #include "metadatahelper.h"
 #include "contextfilterengine.h"
 
 #include "mergehelper.h"
 
-class InputNode;
-class OutputNode;
+class NodeInput;
+class NodeOutput;
 class Subscription
 {
 private:
-    InputNode* inputNode;
-    OutputNode* outputNode;
+    NodeInput* input;
+    NodeOutput* outputNode;
     UpdateManager* updateManager;
     DbgLogger* dbgLogger;
 
     UpdateNr_t updateNr=0;
 public:
-    Subscription(InputNode *_inputNode, OutputNode *_outputNode, CircularBufferReader *reader, UpdateManager* updageManager, DbgLogger *dbgLogger);
+    Subscription(NodeInput *_inputNode, NodeOutput *_outputNode, CircularBufferReader *reader, UpdateManager* updageManager, DbgLogger *dbgLogger);
     ~Subscription();
 
-    OutputNode *getOutputNode();
-    InputNode *getInputNode() const;
+    NodeOutput *getOutputNode();
+    NodeInput *getInput() const;
 
     UpdateNr_t getUpdateNr() const;
 

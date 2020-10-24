@@ -9,14 +9,14 @@
 #include <QMutexLocker>
 
 #include "consistencycheckersettings.h"
-#include "inputnode.h"
+#include "nodeInput.h"
 #include "historicalupdatemanager.h"
 
 #include "contextfilterengine.h"
 #include "metadatahelper.h"
 #include "tagandoptionssettings.h"
 
-class ConsistencyCheckerNode :public QWidget, public InputNode
+class ConsistencyCheckerNode :public QWidget, public NodeBase
 {
     Q_OBJECT
 public:
@@ -24,6 +24,10 @@ public:
     virtual ~ConsistencyCheckerNode();
     virtual std::string getNodeName();
     virtual ConsistencyCheckerSettings *getNodeSettings();
+    int amountOfInputs();
+    int amountOfOutputs();
+    NodeInput *getInput(int index);
+    NodeOutput *getOutput(int index);
     void reset();
     UpdateReturn_t doBufferUpdate(Subscription *source, int availableSize);
     void notifyHistoricalUpdateFinished();
@@ -43,5 +47,7 @@ private:
     int lastNr = 0;
     QString bufferString;
     QMutex classMutex;
+
+    NodeInput* nodeInput = nullptr;
 };
 

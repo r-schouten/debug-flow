@@ -33,11 +33,11 @@ void VisualTamplateNode::construct()
 
     name = "tamplate node";
     shortDiscription = "an easy start for building a node";
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }

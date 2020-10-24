@@ -109,7 +109,7 @@ void NodeInfoViewer::resizeBuffer()
     if(activeNode == nullptr)return;
 
     int newCapacity = bufferCapacitySelector->value();
-    OutputNode* outputNode = dynamic_cast<OutputNode*>(activeNode->getNode());
+    NodeOutput* outputNode = activeNode->getNode()->getOutput(0);
 
     outputNode->circularBuffer->resize(newCapacity);
 
@@ -131,14 +131,14 @@ void NodeInfoViewer::updateLabels()
     nodeContainer->setVisible(true);
 
     NodeBase* node = activeNode->getNode();
-    OutputNode* outputNode = dynamic_cast<OutputNode*>(node);
-    InputNode* inputNode = dynamic_cast<InputNode*>(node);
+    NodeOutput* outputNode = node->getOutput(0);
+    NodeInput* inputNode = node->getInput(0);
 
     nodeNameLabel->setText(activeNode->name);
     discriptionLabel->setText(activeNode->shortDiscription);
     uniqueIdLabel->setText(QString::number(activeNode->getUniqueId()));
 
-    if(node->hasOutput)
+    if(outputNode)
     {
         outputNodeContainer->setVisible(true);
 
@@ -193,7 +193,7 @@ void NodeInfoViewer::updateLabels()
         outputNodeContainer->hide();
 
     }
-    if(node->hasInput)
+    if(inputNode)
     {
         inputNodeContainer->setVisible(true);
     }

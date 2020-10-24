@@ -24,11 +24,11 @@ void VisualContextFilter::construct()
     settings = node->getNodeSettings();
     connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
 
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }

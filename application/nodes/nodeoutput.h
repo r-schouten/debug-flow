@@ -1,24 +1,22 @@
-#pragma once
+﻿#pragma once
 
 #include <QMutexLocker>
 
 #include "circularbuffer.h"
-#include "inputnode.h"
+#include "nodeInput.h"
 #include "subscription.h"
-#include "nodebase.h"
 #include "updatemanager.h"
 
-class InputNode;
+class NodeInput;
 class Subscription;
 class NodeBase;
-class OutputNode: public virtual NodeBase
+class NodeOutput
 {
 public:
-    OutputNode();
-    virtual ~OutputNode();
+    NodeOutput(UpdateManager* updateManager, CircularBuffer* circularBuffer, DbgLogger* dbgLogger, NodeBase* parent);
+    virtual ~NodeOutput();
     void notifyUnsubscribe(Subscription* subscription);
     QVector<Subscription *>* getSubscribers();
-    virtual std::string getNodeName();
 
     void resetBuffer();
     bool bufferHistoricalCapable();
@@ -29,17 +27,23 @@ public:
 
     bool isProcessingDone() const;
 
-protected:
-    QVector<Subscription*> subscribers;
-    CircularBuffer* circularBuffer = nullptr;
+    NodeBase *getParent() const;
+
+    CircularBuffer *getCircularBuffer() const;
 
     bool processingDone = true;//this variable indicates whether all data did fit in the output buffer, or wheter a second buffer write is needed.
                                     //care about this variable, when processing done stays false this may result in a infinite loop somewere, or it triggers a safetey meganism
 private:
-    Subscription* subscribe(InputNode* inputNode);
+    Subscription* subscribe(NodeInput* inputNode);
 
+    QVector<Subscription*> subscribers;
+    CircularBuffer* circularBuffer = nullptr;
 
-    friend InputNode;
+    NodeBase* parent = nullptr;
+    UpdateManager* updateManager = nullptr;
+    DbgLogger* dbgLogger = nullptr;
+
+    friend NodeInput;
     friend NodeBase;
     friend NodeInfoViewer;
 };

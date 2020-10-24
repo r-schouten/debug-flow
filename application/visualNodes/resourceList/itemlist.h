@@ -16,7 +16,6 @@
 
 #include "visualfilteredconsole.h"
 #include "visualserialnode.h"
-#include "visualsimpleconsole.h"
 #include "visualtestgeneratornode.h"
 #include "visualtamplatenode.h"
 #include "visualconsistencychecker.h"

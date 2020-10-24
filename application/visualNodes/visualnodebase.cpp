@@ -95,12 +95,12 @@ void VisualNodeBase::makeConnection(VisualConnection* connection)
         inputConnector = connection->getConnector2();
         outputConnector = connection->getConnector1();
     }
-    OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
+    NodeOutput* outputNode = outputConnector->getParent()->getNode()->getOutput(0);
     if(outputNode == nullptr)
     {
         qFatal("[fatal][VisualNodeBase] given output is not a outputnode");
     }
-    InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
+    NodeInput* inputNode = inputConnector->getParent()->getNode()->getInput(0);
     if(outputNode == nullptr)
     {
         qFatal("[fatal][VisualNodeBase] given input is not a inputNode");
@@ -109,7 +109,7 @@ void VisualNodeBase::makeConnection(VisualConnection* connection)
     //make the connection at the low level node
     inputNode->addSubscription(outputNode);
 
-    flowObjects->getHistoricalUpdateManager()->initatiateHistoricalUpdate(inputNode);
+    flowObjects->getHistoricalUpdateManager()->initatiateHistoricalUpdate(inputNode->getParent());
 }
 
 bool VisualNodeBase::requestConnection(Connector *connector)

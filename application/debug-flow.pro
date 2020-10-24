@@ -25,8 +25,9 @@ SOURCES += \
     loadstore/serialization_handler.cpp \
     main.cpp \
     mainwindow.cpp \
-    nodes/inputnode.cpp \
+    nodes/nodeInput.cpp \
     nodes/nodebase.cpp \
+    nodes/nodeoutput.cpp \
     nodes/nodesettingsbase.cpp \
     nodes/numericalinputnode.cpp \
     nodes/output_nodes/consistency_checker/consistencycheckernode.cpp \
@@ -37,8 +38,6 @@ SOURCES += \
     nodes/output_nodes/filtered_console/filtertag.cpp \
     nodes/output_nodes/filtered_console/tag-option-item.cpp \
     nodes/output_nodes/filtered_console/textblockwithmetadata.cpp \
-    nodes/output_nodes/simpleconsole.cpp \
-    nodes/outputnode.cpp \
     nodes/processing_nodes/contextfilternode.cpp \
     nodes/processing_nodes/contextfiltersettings.cpp \
     nodes/source_nodes/serial_node/serialnode.cpp \
@@ -69,7 +68,6 @@ SOURCES += \
     visualNodes/outputNodes/filtered_console/filteredconsolepropertieswidget.cpp \
     visualNodes/outputNodes/filtered_console/visualfilteredconsole.cpp \
     visualNodes/outputNodes/visualoutputnodebase.cpp \
-    visualNodes/outputNodes/visualsimpleconsole.cpp \
     visualNodes/propertywidgetbase.cpp \
     visualNodes/propertywidgetmanager.cpp \
     visualNodes/prossesing_nodes/visual_context_filter/visualcontextfilter.cpp \
@@ -116,8 +114,9 @@ HEADERS += \
     loadstore/serialization_handler.h \
     main.h \
     mainwindow.h \
-    nodes/inputnode.h \
+    nodes/nodeInput.h \
     nodes/nodebase.h \
+    nodes/nodeoutput.h \
     nodes/nodesettingsbase.h \
     nodes/numericalinputnode.h \
     nodes/output_nodes/consistency_checker/consistencycheckernode.h \
@@ -128,8 +127,6 @@ HEADERS += \
     nodes/output_nodes/filtered_console/filtertag.h \
     nodes/output_nodes/filtered_console/tag-option-item.h \
     nodes/output_nodes/filtered_console/textblockwithmetadata.h \
-    nodes/output_nodes/simpleconsole.h \
-    nodes/outputnode.h \
     nodes/processing_nodes/contextfilternode.h \
     nodes/processing_nodes/contextfiltersettings.h \
     nodes/source_nodes/serial_node/serialnode.h \
@@ -166,7 +163,6 @@ HEADERS += \
     visualNodes/outputNodes/filtered_console/visualfilteredconsole.h \
     visualNodes/outputNodes/outputstyle.h \
     visualNodes/outputNodes/visualoutputnodebase.h \
-    visualNodes/outputNodes/visualsimpleconsole.h \
     visualNodes/propertywidgetbase.h \
     visualNodes/propertywidgetmanager.h \
     visualNodes/prossesing_nodes/processingstyle.h \

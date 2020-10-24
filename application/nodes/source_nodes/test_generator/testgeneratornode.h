@@ -4,7 +4,7 @@
 #include <QDataStream>
 #include <QThread>
 #include <QApplication>
-#include "outputnode.h"
+#include "nodeoutput.h"
 #include "testgeneratorsettings.h"
 #include "metadatahelper.h"
 #include "utils.h"
@@ -13,7 +13,7 @@
 #define TEST_GENERATOR_BUFFER_SIZE 100000
 #define TEST_GENERATOR_MAX_BUFFER_SIZE 1000000
 
-class TestGeneratorNode : public QObject, public OutputNode
+class TestGeneratorNode : public QObject, public NodeBase
 {
     Q_OBJECT
 public:
@@ -24,6 +24,11 @@ public:
     void reset();
 
     void activate();
+
+    int amountOfInputs(){return 0;}
+    int amountOfOutputs(){return 1;}
+    NodeInput *getInput(int index){return nullptr;}
+    NodeOutput *getOutput(int index){return nodeOutput;}
 protected:
     TestGeneratorSettings* settings = nullptr;
     MetaDataHelper* metaDataHelper = nullptr;
@@ -37,6 +42,8 @@ protected:
 
     bool generateData();
 
+    NodeOutput* nodeOutput = nullptr;
+    CircularBuffer* circularBuffer = nullptr;
 private slots:
     void updateRateChanged();
     void threadSettingsChanged();

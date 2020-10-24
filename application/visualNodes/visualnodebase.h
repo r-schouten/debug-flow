@@ -4,7 +4,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "flowobjects.h"
-#include "outputnode.h"
+#include "nodeoutput.h"
 #include "visualnodeconfig.h"
 #include "nodebase.h"
 #include "nodestylebase.h"

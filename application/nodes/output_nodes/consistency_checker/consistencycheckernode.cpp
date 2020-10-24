@@ -4,6 +4,8 @@
 ConsistencyCheckerNode::ConsistencyCheckerNode(UpdateManager* updateManager, DbgLogger *dbgLogger, HistoricalUpdateManager* historcalUpdateManager)
     :NodeBase(updateManager, dbgLogger),historcalUpdateManager(historcalUpdateManager)
 {
+    nodeInput = new NodeInput(updateManager, dbgLogger, this);
+    nodeInput->setDoBufferUpdateCallback(std::bind(&ConsistencyCheckerNode::doBufferUpdate,this,std::placeholders::_1,std::placeholders::_2));
     settings = new ConsistencyCheckerSettings(dbgLogger);
 
     tagAndOptionsSettings = new TagAndOptionsSettings();
@@ -22,6 +24,7 @@ ConsistencyCheckerNode::ConsistencyCheckerNode(UpdateManager* updateManager, Dbg
 ConsistencyCheckerNode::~ConsistencyCheckerNode()
 {
     QMutexLocker locker(&classMutex);
+    delete nodeInput;
     //VisualNodeBase decontructor will be called afterwards
     //it will delete the node using the baseNode pointer, set the node pointer to 0 to prevent a dangling pointer
     settings = nullptr;
@@ -39,6 +42,26 @@ std::string ConsistencyCheckerNode::getNodeName()
 ConsistencyCheckerSettings* ConsistencyCheckerNode::getNodeSettings()
 {
     return settings;
+}
+
+int ConsistencyCheckerNode::amountOfInputs()
+{
+    return 1;
+}
+
+int ConsistencyCheckerNode::amountOfOutputs()
+{
+    return 0;
+}
+
+NodeInput *ConsistencyCheckerNode::getInput(int index)
+{
+    return nodeInput;
+}
+
+NodeOutput *ConsistencyCheckerNode::getOutput(int index)
+{
+    return nullptr;
 }
 
 void ConsistencyCheckerNode::reset()

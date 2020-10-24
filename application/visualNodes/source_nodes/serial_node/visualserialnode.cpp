@@ -24,11 +24,11 @@ void VisualSerialNode::construct()
 
     name = "Serial node";
     shortDiscription = "this node provide access to serial ports";
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }

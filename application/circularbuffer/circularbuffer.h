@@ -1,5 +1,4 @@
 #pragma once
-#include <QObject>
 #include <iostream>
 #include <QMutexLocker>
 

@@ -1,11 +1,11 @@
 #include "updatemanager.h"
-#include "outputnode.h"
+#include "nodeoutput.h"
 UpdateManager::UpdateManager(DbgLogger *dbgLogger)
     :dbgLogger(dbgLogger)
 {
 
 }
-uint64_t UpdateManager::initateUpdate(OutputNode* sourceNode)
+uint64_t UpdateManager::initateUpdate(NodeOutput* sourceNode)
 {
     updateNr++;
     depth = 0;

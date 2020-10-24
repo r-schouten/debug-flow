@@ -23,11 +23,11 @@ void VisualFilteredConsole::construct()
     node = new FilteredConsole(flowObjects->getUpdateManager(),flowObjects->getHistoricalUpdateManager(), dbgLogger);
     connect(node->getNodeSettings(), SIGNAL(saveAbleChangeOccured()),flowObjects->getUndoRedoManager(),SLOT(notifySettingsChanged()));
     baseNode = node;
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }

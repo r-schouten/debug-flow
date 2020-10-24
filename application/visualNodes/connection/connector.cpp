@@ -1,6 +1,6 @@
 #include "connector.h"
 
-#include <inputnode.h>
+#include <nodeInput.h>
 
 
 Connector::Connector(VisualNodeBase *parent, int x, int y, ConnectorType type, int diameter, double angle, QString name)
@@ -52,8 +52,8 @@ void Connector::disconnect(VisualConnection *connection)
                 inputConnector = connection->getConnector2();
                 outputConnector = connection->getConnector1();
             }
-            InputNode* inputNode = dynamic_cast<InputNode*>(inputConnector->getParent()->getNode());
-            OutputNode* outputNode = dynamic_cast<OutputNode*>(outputConnector->getParent()->getNode());
+            NodeInput* inputNode = inputConnector->getParent()->getNode()->getInput(0);
+            NodeOutput* outputNode = outputConnector->getParent()->getNode()->getOutput(0);
             if((inputNode) && (outputNode))
             {
                 inputNode->deleteSubscription(outputNode);

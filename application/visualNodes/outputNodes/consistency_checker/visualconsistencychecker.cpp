@@ -37,11 +37,11 @@ void VisualConsistencyChecker::construct()
 
     name = "consistency checker";
     shortDiscription = "a node to check whether there are errors in the system";
-    if(node->hasInput)
+    if(node->amountOfInputs() > 0)
     {
         addInputConnector();
     }
-    if(node->hasOutput)
+    if(node->amountOfOutputs() > 0)
     {
         addOutputConnector();
     }
