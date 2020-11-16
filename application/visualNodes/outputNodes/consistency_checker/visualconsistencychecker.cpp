@@ -19,11 +19,10 @@ VisualConsistencyChecker::~VisualConsistencyChecker()
 {
     if(window)
     {
-        windowManager->deleteMdiWindow(window);
+        windowManager->removeMdiWindow(window);
     }
     //node is already deleted with deleteMdiWindow(window);
-    node = nullptr;
-    baseNode = nullptr;
+    //node = nullptr;
 }
 
 void VisualConsistencyChecker::construct()

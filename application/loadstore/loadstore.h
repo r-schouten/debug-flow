@@ -11,6 +11,7 @@
 #include "visualcontextfilter.h"
 #include "visualtestgeneratornode.h"
 #include "visualconsistencychecker.h"
+#include "visualudpreceivernode.h"
 
 #include "json_defs.h"
 #include "serialization_handler.h"

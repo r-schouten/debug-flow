@@ -130,6 +130,10 @@ VisualNodeBase *LoadStore::constructNode(QJsonObject &baseJson, QJsonObject &der
     {
         newNode = new VisualConsistencyChecker(flowObjects, baseJson, derivedJson, settingsJson, handler);
     }
+    if(VisualUdpReceiverNode::classNameEquals(type))
+    {
+        newNode = new VisualUdpReceiverNode(flowObjects, baseJson, derivedJson, settingsJson, handler);
+    }
     return newNode;
 }
 

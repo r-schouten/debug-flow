@@ -29,6 +29,7 @@ VisualNodeBase::~VisualNodeBase()
         delete iterator.next();
     }
 
+
     if(propertyWidget != nullptr)
     {
         delete propertyWidget;

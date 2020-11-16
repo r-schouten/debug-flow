@@ -19,6 +19,7 @@
 #include "visualtestgeneratornode.h"
 #include "visualtamplatenode.h"
 #include "visualconsistencychecker.h"
+#include "visualudpreceivernode.h"
 class ItemList :public QObject
 {
     Q_OBJECT

@@ -12,7 +12,7 @@ public:
     QWidget *getMdiWindow();
     DialogWindow *getDialogWindow();
     MdiWindow *getMdiWindow(QWidget *widget);
-    void deleteMdiWindow(QWidget *window);
+    void removeMdiWindow(QWidget *window);
 private:
     QMdiArea* mdiArea = nullptr;
 };

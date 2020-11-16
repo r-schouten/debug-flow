@@ -26,7 +26,7 @@ void ItemList::generateList()
 {
     //ownership of this nodes will be given to myTreeWidgetItem, don't delete!
 
-    nodes << new VisualContextFilter(flowObjects) << new VisualSerialNode(flowObjects) << new VisualFilteredConsole(flowObjects) << new VisualTestGeneratorNode(flowObjects) << new VisualConsistencyChecker(flowObjects);
+    nodes << new VisualContextFilter(flowObjects) << new VisualSerialNode(flowObjects) << new VisualFilteredConsole(flowObjects) << new VisualTestGeneratorNode(flowObjects) << new VisualConsistencyChecker(flowObjects) << new VisualUdpReceiverNode(flowObjects);
     generateCategory<SourceStyle>(nodes, "data source nodes", ":/images/data_source_icon.png");
     generateCategory<ProcessingStyle>(nodes, "processing nodes", ":/images/filtering_icon.png");
     generateCategory<OutputStyle>(nodes, "output nodes", ":/images/output_icon.png");

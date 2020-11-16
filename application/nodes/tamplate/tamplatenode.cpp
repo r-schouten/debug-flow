@@ -11,12 +11,10 @@ TamplateNode::TamplateNode(UpdateManager* updateManager,DbgLogger *dbgLogger)
 #ifdef OUTPUTNODE
     circularBuffer = new CircularBuffer(dbgLogger,"tamplate", TAMPLATE_BUFFER_SIZE, TAMPLATE_BUFFER_SIZE, true);
     nodeOutput = new NodeOutput(updateManager, circularBuffer, dbgLogger, this);
-#endif
-    settings = new TamplateNodeSettings(dbgLogger);
-#ifdef OUTPUTNODE
-    circularBuffer = new CircularBuffer(dbgLogger,"tamplate", TAMPLATE_BUFFER_SIZE, TAMPLATE_BUFFER_SIZE, true);
     metaDataHelper = new MetaDataHelper;
 #endif
+    settings = new TamplateNodeSettings(dbgLogger);
+
 #ifdef INPUTNODE
     //connect(settings,SIGNAL(notifyDataInvalid()), this, SLOT(initiateHistoricalUpdate()));
 #endif

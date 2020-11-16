@@ -1,5 +1,6 @@
 QT += widgets serialport
 QT += testlib
+QT += network
 requires(qtConfig(combobox))
 
 CONFIG += c++20
@@ -25,6 +26,7 @@ SOURCES += \
     loadstore/serialization_handler.cpp \
     main.cpp \
     mainwindow.cpp \
+    nodes/dataTypes/stream_nodeinput.cpp \
     nodes/nodeInput.cpp \
     nodes/nodebase.cpp \
     nodes/nodeoutput.cpp \
@@ -46,6 +48,8 @@ SOURCES += \
     nodes/source_nodes/test_generator/testgeneratornode.cpp \
     nodes/source_nodes/test_generator/testgeneratorsettings.cpp \
     nodes/source_nodes/test_generator/testgeneratorworker.cpp \
+    nodes/source_nodes/udp_receiver/udpreceiver.cpp \
+    nodes/source_nodes/udp_receiver/udpreceiversettings.cpp \
     nodes/subscription.cpp \
     nodes/tamplate/tamplatenode.cpp \
     nodes/tamplate/tamplatenodesettings.cpp \
@@ -82,6 +86,8 @@ SOURCES += \
     visualNodes/source_nodes/serial_node/visualserialnode.cpp \
     visualNodes/source_nodes/test_generator/testgeneratorpropertieswidget.cpp \
     visualNodes/source_nodes/test_generator/visualtestgeneratornode.cpp \
+    visualNodes/source_nodes/udp_receiver/udpreceivernodepropertieswidget.cpp \
+    visualNodes/source_nodes/udp_receiver/visualudpreceivernode.cpp \
     visualNodes/source_nodes/visualsourcenodebase.cpp \
     visualNodes/tamplate/tamplatenodepropertieswidget.cpp \
     visualNodes/tamplate/visualtamplatenode.cpp \
@@ -114,6 +120,7 @@ HEADERS += \
     loadstore/serialization_handler.h \
     main.h \
     mainwindow.h \
+    nodes/dataTypes/stream_nodeinput.h \
     nodes/nodeInput.h \
     nodes/nodebase.h \
     nodes/nodeoutput.h \
@@ -135,6 +142,8 @@ HEADERS += \
     nodes/source_nodes/test_generator/testgeneratornode.h \
     nodes/source_nodes/test_generator/testgeneratorsettings.h \
     nodes/source_nodes/test_generator/testgeneratorworker.h \
+    nodes/source_nodes/udp_receiver/udpreceiver.h \
+    nodes/source_nodes/udp_receiver/udpreceiversettings.h \
     nodes/subscription.h \
     nodes/tamplate/tamplatenode.h \
     nodes/tamplate/tamplatenodesettings.h \
@@ -179,6 +188,8 @@ HEADERS += \
     visualNodes/source_nodes/sourcestyle.h \
     visualNodes/source_nodes/test_generator/testgeneratorpropertieswidget.h \
     visualNodes/source_nodes/test_generator/visualtestgeneratornode.h \
+    visualNodes/source_nodes/udp_receiver/udpreceivernodepropertieswidget.h \
+    visualNodes/source_nodes/udp_receiver/visualudpreceivernode.h \
     visualNodes/source_nodes/visualsourcenodebase.h \
     visualNodes/tamplate/tamplatenodepropertieswidget.h \
    visualNodes/tamplate/visualtamplatenode.h \
@@ -210,6 +221,7 @@ INCLUDEPATH += \
     visualNodes/components \
     visualNodes/tamplate \
     visualNodes/source_nodes \
+    visualNodes/source_nodes/udp_receiver \
     visualNodes/source_nodes/serial_node \
     visualNodes/source_nodes/test_generator \
     visualNodes/scene \
@@ -226,6 +238,7 @@ INCLUDEPATH += \
     nodes/source_nodes \
     nodes/source_nodes/test_generator \
     nodes/source_nodes/serial_node \
+    nodes/source_nodes/udp_receiver \
     nodes/output_nodes \
     nodes/output_nodes/consistency_checker \
     nodes/tamplate \

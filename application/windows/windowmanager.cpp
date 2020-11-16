@@ -18,8 +18,7 @@ DialogWindow* WindowManager::getDialogWindow()
 {
     return new DialogWindow();
 }
-void WindowManager::deleteMdiWindow(QWidget* window)
+void WindowManager::removeMdiWindow(QWidget* window)
 {
     mdiArea->removeSubWindow(window);
-    delete window;
 }
